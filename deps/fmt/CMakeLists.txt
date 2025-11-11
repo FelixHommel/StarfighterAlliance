@@ -1,0 +1,13 @@
+option(FMT_PEDANTIC OFF)
+option(FMT_WERROR OFF)
+option(FMT_DOC OFF)
+option(FMT_INSTALL OFF)
+option(FMT_TEST OFF)
+option(FMT_FUZZ OFF)
+option(FMT_CUDA_TEST OFF)
+option(FMT_OS ON)
+option(FMT_MODULE OFF)
+option(FMT_SYSTEM_HEADERS OFF)
+option(FMT_UNICODE ON)
+
+FetchContent_MakeAvailable(fmt)

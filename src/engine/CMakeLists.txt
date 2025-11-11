@@ -1,0 +1,88 @@
+set(NAME "StarfighterAllianceEngine")
+
+include(${PROJECT_SOURCE_DIR}/cmake/StaticAnalyzers.cmake)
+
+add_library(${NAME}
+    ./Application.cpp
+    ./Game.cpp
+    ./core/EndState.cpp
+    ./core/GameState.cpp
+    ./core/MenuState.cpp
+    ./core/SpaceshipSelectionState.cpp
+    ./internal/Button.cpp
+    ./internal/ParticleGenerator.cpp
+    ./internal/ResourceManager.cpp
+    ./internal/Shader.cpp
+    ./internal/SpriteRenderer.cpp
+    ./internal/TextRenderer.cpp
+    ./internal/Texture.cpp
+    ./internal/Websocket.cpp
+    ./gameObjects/EnemyWave.cpp
+    ./gameObjects/EnemyWaveGenerator.cpp
+    ./gameObjects/GameObject.hpp
+    ./gameObjects/MovementComponent.cpp
+    ./gameObjects/ShootingComponent.cpp
+    ./gameObjects/enemies/Alien.cpp
+    ./gameObjects/enemies/Meteorite.cpp
+    ./gameObjects/spaceship/Projectile.cpp
+    ./gameObjects/spaceship/Spaceship.cpp
+    ./external/stb_image_impl.cpp
+)
+
+target_sources(${NAME}
+    PRIVATE
+        FILE_SET HEADERS
+        FILES
+            ./Application.hpp
+            ./Game.hpp
+            ./core/Color.hpp
+            ./core/EndState.hpp
+            ./core/GameState.hpp
+            ./core/MenuState.hpp
+            ./core/Score.hpp
+            ./core/SpaceshipSelectionState.hpp
+            ./core/State.hpp
+            ./core/WindowInfo.hpp
+            ./internal/Button.hpp
+            ./internal/JSONReader.hpp
+            ./internal/ParticleGenerator.hpp
+            ./internal/ResourceManager.hpp
+            ./internal/Shader.hpp
+            ./internal/SpriteRenderer.hpp
+            ./internal/TextRenderer.hpp
+            ./internal/Texture.hpp
+            ./internal/Websocket.hpp
+            ./gameObjects/EnemyWave.hpp
+            ./gameObjects/EnemyWaveGenerator.hpp
+            ./gameObjects/GameObject.hpp
+            ./gameObjects/MovementComponent.hpp
+            ./gameObjects/ShootingComponent.hpp
+            ./gameObjects/enemies/Alien.hpp
+            ./gameObjects/enemies/Enemy.hpp
+            ./gameObjects/enemies/Meteorite.hpp
+            ./gameObjects/spaceship/Projectile.hpp
+            ./gameObjects/spaceship/Spaceship.hpp
+            ./external/stb_image.h
+)
+
+target_compile_features(${NAME} PRIVATE cxx_std_20)
+target_link_libraries(${NAME}
+    PRIVATE
+        project_warnings
+        OpenGL::GL
+        Glad2
+        SQLiteCpp
+        freetype
+        nlohmann_json::nlohmann_json
+        OpenSSL::SSL
+        OpenSSL::Crypto
+        glm
+        glfw
+        spdlog::spdlog
+)
+target_include_directories(${NAME}
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}
+    PRIVATE
+        ${websocketpp_SOURCE_DIR}
+)

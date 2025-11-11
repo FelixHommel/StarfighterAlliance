@@ -1,0 +1,11 @@
+option(CODE_COVERAGE "Enable code coverage analysis" OFF)
+
+if(CODE_COVERAGE)
+    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+        add_compile_options(--coverage -O0 -g)
+        add_link_options(--coverage)
+        message(INFO "Code coverage configured")
+    else()
+        message(WARNING "Code coverage only supported with GCC")
+    endif()
+endif()
