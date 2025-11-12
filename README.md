@@ -1,4 +1,7 @@
 # Starfighter Alliance
+![Build](https://github.com/FelixHommel/StarfighterAlliance/actions/workflows/cmake-multi-platform.yml/badge.svg)
+![Coverage](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/FelixHommel/StarfighterAlliance/badges/.github/badges/coverage-badge.json)
+
 A 2D game about shooting Meteorites and other Spae objects, in order to achieve the highest score.
 
 ## About
@@ -15,43 +18,49 @@ will be shown to the player after a game eneded.
 - Highscore system
 - Pausing while in-game
 
-## Building on Linux
-### Using the play.sh script
-Just run the play.sh script and the game will launch if it is already built, or it will build itself and then launch.
+## TODO List
 
+> Items are not in any particular order
+
+- [] Reenable tests (add\_directory)
+    - Fix tests
+    - figure out gmock issue
+    - classes for each test type
+- [] Fix All warnings
+    - Turn on Warnings as errors
+- [x] Websocketpp c++23 compatibility patch
+    - consider switching to an alternative
+    - turn everything back into c++23 mode (CMAKE\_CXX\_STANDARD, target\_compile\_features)
+- [] Convert comments to Doxygen
+- [] Namespaces for everything
+- [] Clean up architecture
+    - JSONReader class complete overhaul
+    - better/different solution for ResourceManager?
+- [] Resolve the color picking service issue (Server not online anymore)
+
+## Building on Linux
 ### Debian based
 1. Clone the repository:
     ```bash
-    git clone https://gitlab.uni-ulm.de/softwaregrundprojekt/2024-2025/einzelprojekt/tutorium-julian/hommel-felix.git
-    ```
-2. Ensure that the dependenices are installed:
-    ```bash
-    sudo apt install libglfw3-dev libglm-dev libfreetype-dev libstb-dev nlohmann-json3-dev libboost-dev libwebsocketpp-dev
+    git clone https://github.com/FelixHommel/StarfighterAlliance.git
     ```
 3. Build from source
-
-    To build either run one of the build scripts, for either makefile or ninja (both of these use clang-19 as compiler), or
-
     - Build yourself:
-
         ```bash
         cmake -B build -GNinja
         ```
         Use default compiler, for building without Ninja leave out -GNinja.
-
-        Then use 
+        Then use:
         ```bash
         cmake --build build
         ```
         to build the game.
-
 4. Run the game
-
     to run execute
     ```bash
     ./build/starfighterAlliance
     ```
 
 ## Acknowledgements / Credits
-[LeranOpenGL.com](https://learnopengl.com/)
-[How to use websocket++](https://medium.com/nerd-for-tech/your-first-c-websocket-client-4e7b36353d26)
+- [LeranOpenGL.com](https://learnopengl.com/)
+- [How to use websocket++](https://medium.com/nerd-for-tech/your-first-c-websocket-client-4e7b36353d26)

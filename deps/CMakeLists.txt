@@ -9,8 +9,8 @@ FetchContent_MakeAvailable(freetype)
 
 FetchContent_Declare(
     websocketpp
-    GIT_REPOSITORY "https://github.com/zaphoyd/websocketpp.git"
-    GIT_TAG 0.8.2
+    GIT_REPOSITORY "https://github.com/FelixHommel/websocketpp.git"
+    GIT_TAG b6d67195bc689e597ffabdb06a4fdd8bc5c9ec39
 )
 FetchContent_MakeAvailable(websocketpp)
 
