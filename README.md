@@ -16,37 +16,25 @@ will be shown to the player after a game eneded.
 - Pausing while in-game
 
 ## Building on Linux
-### Using the play.sh script
-Just run the play.sh script and the game will launch if it is already built, or it will build itself and then launch.
 
 ### Debian based
 1. Clone the repository:
     ```bash
-    git clone https://gitlab.uni-ulm.de/softwaregrundprojekt/2024-2025/einzelprojekt/tutorium-julian/hommel-felix.git
-    ```
-2. Ensure that the dependenices are installed:
-    ```bash
-    sudo apt install libglfw3-dev libglm-dev libfreetype-dev libstb-dev nlohmann-json3-dev libboost-dev libwebsocketpp-dev
+    git clone https://github.com/FelixHommel/StarfighterAlliance.git
     ```
 3. Build from source
-
-    To build either run one of the build scripts, for either makefile or ninja (both of these use clang-19 as compiler), or
-
     - Build yourself:
-
         ```bash
         cmake -B build -GNinja
         ```
         Use default compiler, for building without Ninja leave out -GNinja.
-
-        Then use 
+        Then use:
         ```bash
         cmake --build build
         ```
         to build the game.
 
 4. Run the game
-
     to run execute
     ```bash
     ./build/starfighterAlliance
