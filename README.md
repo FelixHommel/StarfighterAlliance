@@ -53,5 +53,6 @@ Just run the play.sh script and the game will launch if it is already built, or 
     ```
 
 ## Acknowledgements / Credits
-[LeranOpenGL.com](https://learnopengl.com/)
-[How to use websocket++](https://medium.com/nerd-for-tech/your-first-c-websocket-client-4e7b36353d26)
+
+- [LeranOpenGL.com](https://learnopengl.com/)
+- [How to use websocket++](https://medium.com/nerd-for-tech/your-first-c-websocket-client-4e7b36353d26)
