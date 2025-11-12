@@ -2,9 +2,9 @@ name: CMake on multiple platforms
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "dev" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "dev" ]
 
 jobs:
   build:
@@ -48,25 +48,43 @@ jobs:
             c_compiler: gcc
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout
+      uses: actions/checkout@v4
 
-    - name: Set reusable strings
-      # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
-      id: strings
-      shell: bash
+    - name: Setup CMake and Ninja
+      uses: lukka/get-cmake@v4
+      with:
+        cmake-version: '3.30'
+
+    - name: Install ubuntu dependencies
+      if: matrix.os == 'ubuntu-latest'
       run: |
-        echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+        sudo apg-get update
+        sudo apt-get install -y libboost-all-dev libssl-dev build-essentials zlib1g-dev
+
+    - name: Install MacOS dependencies
+      if: matrix.os == 'macos-latest'
+      run: |
+        brew update
+        brew install boost openssl zlib
+
+    - name: Install Windows dependencies
+      if: matrix.os == 'windows-latest'
+      run: |
+        choco feature enable -n allowGlobalConfirmation
+        choco install -y visualstudio2019buildTools
+        choco install -y boost-msvc --version=1.83.0 || choco install -y boost
 
     - name: Configure CMake
       run: >
-        cmake -B ${{ steps.strings.outputs.build-output-dir }}
+        cmake -B build
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-        -S ${{ github.workspace }}
+        -S .
 
     - name: Build
-      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
+      run: cmake --build build --config ${{ matrix.build_type }}
 
     - name: Test
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
