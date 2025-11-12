@@ -12,7 +12,7 @@ FetchContent_Declare(
     GIT_REPOSITORY "https://github.com/FelixHommel/websocketpp.git"
     GIT_TAG b6d67195bc689e597ffabdb06a4fdd8bc5c9ec39
 )
-find_package(Boost 1.83 COMPONENTS system REQUIRED)
+find_package(Boost COMPONENTS system REQUIRED)
 FetchContent_MakeAvailable(websocketpp)
 
 FetchContent_Declare(
