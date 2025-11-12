@@ -56,6 +56,9 @@ jobs:
       with:
         cmake-version: '3.30'
 
+    - name: Setup OpenGL
+      uses: openrndr/setup-opengl@v1.1
+
     - name: Install ubuntu dependencies
       if: matrix.os == 'ubuntu-latest'
       run: |
@@ -73,7 +76,7 @@ jobs:
       run: |
         choco feature enable -n allowGlobalConfirmation
         choco install -y visualstudio2019buildTools
-        choco install -y boost-msvc --version=1.83.0 || choco install -y boost
+        choco install -y boost-msvc-14.3
 
     - name: Configure CMake
       run: >
