@@ -37,6 +37,7 @@ will be shown to the player after a game eneded.
     - JSONReader class complete overhaul
     - better/different solution for ResourceManager?
 - [] Resolve the color picking service issue (Server not online anymore)
+- [] Figure out what is wrong with the multi build workflow
 
 ## Building on Linux
 ### Debian based
