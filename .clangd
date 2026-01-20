@@ -1,0 +1,6 @@
+Diagnostics:
+  Includes:
+    IgnoreHeader:
+      - "glm/.*"
+Documentation:
+  CommentFormat: Doxygen
