@@ -24,8 +24,6 @@ MenuState::MenuState(const Texture2D& background, const WindowInfo* windowInfo, 
 
 	m_startButton->setOnClick([&play = m_play]() { play = true; });
 	m_quitButton->setOnClick([&quit = m_quit]() { quit = true; });
-
-    w.connect();
 }
 
 MenuState::~MenuState()
@@ -39,35 +37,7 @@ void MenuState::update(float dt)
 	m_startButton->update(m_mouse->posX, m_mouse->posY, m_mouse->isPressed);
 	m_quitButton->update(m_mouse->posX, m_mouse->posY, m_mouse->isPressed);
 
-    /** connection to the server is not established instantly, so check that condition until it was established and request was sent */
-    if(w.isConnected() && !w.requestSent())
-        w.send();
-
-    /*
-     * retreieve the server response and convert it to a ColorType if possible
-    */
-    std::string response;
-    if(!m_colorRecieved && w.getResponse(response))
-    {
-        JSONReader json;
-        json.readFromString(response);
-        auto code{ json.get<int>("code") };
-        if(!code.has_value())
-            throw std::runtime_error("no response code recieved");
-
-        if(code.value() == 200)
-        {
-            auto val{ json.get<std::string>("color") };
-            if(val.has_value())
-            {
-                std::cout << val.value() << std::endl;
-                m_color = Color::toEnum(val.value());
-                m_colorRecieved = true;
-            }
-        }
-        else if(code.value() == 400)
-            std::cerr << "[ERROR] server request resulted in an error: code 400\n" << json.get<std::string>("error").value() << std::endl;
-    }
+    m_color = ColorType::red;
 }
 
 void MenuState::render(SpriteRenderer& renderer, TextRenderer& textRenderer)

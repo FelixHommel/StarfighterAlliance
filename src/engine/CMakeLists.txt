@@ -1,5 +1,4 @@
 set(NAME "StarfighterAllianceEngine")
-
 include(${PROJECT_SOURCE_DIR}/cmake/StaticAnalyzers.cmake)
 
 add_library(${NAME}
@@ -16,7 +15,6 @@ add_library(${NAME}
     ./internal/SpriteRenderer.cpp
     ./internal/TextRenderer.cpp
     ./internal/Texture.cpp
-    ./internal/Websocket.cpp
     ./gameObjects/EnemyWave.cpp
     ./gameObjects/EnemyWaveGenerator.cpp
     ./gameObjects/GameObject.hpp
@@ -51,7 +49,6 @@ target_sources(${NAME}
             ./internal/SpriteRenderer.hpp
             ./internal/TextRenderer.hpp
             ./internal/Texture.hpp
-            ./internal/Websocket.hpp
             ./gameObjects/EnemyWave.hpp
             ./gameObjects/EnemyWaveGenerator.hpp
             ./gameObjects/GameObject.hpp
@@ -72,17 +69,16 @@ target_link_libraries(${NAME}
         OpenGL::GL
         Glad2
         SQLiteCpp
-        freetype
+        sqlite3
+        Freetype::Freetype
         nlohmann_json::nlohmann_json
-        OpenSSL::SSL
-        OpenSSL::Crypto
-        glm
+        glm::glm
         glfw
         spdlog::spdlog
+        valijson
+        fmt::fmt
 )
 target_include_directories(${NAME}
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
-    PRIVATE
-        ${websocketpp_SOURCE_DIR}
 )
