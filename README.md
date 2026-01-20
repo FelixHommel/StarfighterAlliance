@@ -36,11 +36,6 @@ will be shown to the player after a game ended.
 
   - Turn on Warnings as errors
 
-- [x] Websocketpp c++23 compatibility patch
-
-  - consider switching to an alternative
-  - turn everything back into c++23 mode (CMAKE\_CXX\_STANDARD, target\_compile\_features)
-
 - [ ] Convert comments to Doxygen
 - [ ] Namespaces for everything
 - [ ] Clean up architecture

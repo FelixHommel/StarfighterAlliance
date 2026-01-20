@@ -67,9 +67,8 @@ target_link_libraries(${NAME}
     PRIVATE
         project_warnings
         OpenGL::GL
-        Glad2
+        glad2cmake
         SQLiteCpp
-        sqlite3
         Freetype::Freetype
         nlohmann_json::nlohmann_json
         glm::glm

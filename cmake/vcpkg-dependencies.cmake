@@ -1,4 +1,5 @@
 find_package(OpenGL REQUIRED COMPONENTS OpenGL)
+find_package(glad2cmake CONFIG REQUIRED)
 find_package(SQLiteCpp CONFIG REQUIRED)
 find_package(Freetype REQUIRED)
 find_package(GTest CONFIG REQUIRED)
