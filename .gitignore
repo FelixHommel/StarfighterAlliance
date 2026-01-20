@@ -2,6 +2,7 @@
 build
 .vscode
 *.db3
+.idea
 
 # Created by https://www.toptal.com/developers/gitignore/api/windows,linux,c++,cmake,latex
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,linux,c++,cmake,latex
