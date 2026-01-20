@@ -1,6 +1,4 @@
 function(set_project_warnings project_name)
-    option(WARNINGS_AS_ERRORS "Treat compiler warnings as errors" OFF)
-
     set(MSVC_WARNINGS
         /W4
         /w14242
@@ -41,10 +39,13 @@ function(set_project_warnings project_name)
         -Wformat=2
     )
 
+    option(WARNINGS_AS_ERRORS "Treat compiler warnings as errors" ON)
     if(WARNINGS_AS_ERRORS)
-        message(WARNING "Werror is on")
+        message(STATUS "Compiling with warnings as errors")
         set(MSVC_WARNINGS ${MSVC_WARNINGS} /WX)
         set(CLANG_WARNINGS ${CLANG_WARNINGS} -Werror)
+    elseif()
+        message(STATUS "Not compiling with warnings as errors")
     endif()
 
     set(GCC_WARNINGS
@@ -62,8 +63,6 @@ function(set_project_warnings project_name)
         set(PROJECT_WARNINGS ${CLANG_WARNINGS})
     elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
         set(PROJECT_WARNINGS ${GCC_WARNINGS})
-    else()
-        message(AUTHOR_WARNING "No compiler warnings set for '${CMAKE_CXX_COMPILER_ID}' compiler")
     endif()
 
     target_compile_options(${project_name} INTERFACE ${PROJECT_WARNINGS})

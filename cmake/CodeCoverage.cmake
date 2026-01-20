@@ -1,5 +1,4 @@
 option(CODE_COVERAGE "Enable code coverage analysis" OFF)
-
 if(CODE_COVERAGE)
     if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
         add_compile_options(--coverage -O0 -g)

@@ -1,5 +1,7 @@
 #include "ParticleGenerator.hpp"
 
+#include "Shader.hpp"
+
 #include "glad/gl.h"
 
 #include <array>

@@ -4,7 +4,6 @@
 #include "internal/Button.hpp"
 #include "Color.hpp"
 #include "State.hpp"
-#include "internal/Websocket.hpp"
 
 /*
  * @file MenuState.hpp
@@ -44,7 +43,6 @@ class MenuState : public State
 
 	private:
 		/** Member variables */
-        Websocket w;
 		Button* m_startButton;
 		Button* m_quitButton;
 		ColorType m_color;

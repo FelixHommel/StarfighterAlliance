@@ -1,0 +1,14 @@
+{
+  "dependencies": [
+    "freetype",
+    "glfw3",
+    "glm",
+    "gtest",
+    "nlohmann-json",
+    "opengl",
+    "spdlog",
+    "sqlitecpp",
+    "valijson",
+    "fmt"
+  ]
+}

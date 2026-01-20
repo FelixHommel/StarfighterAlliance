@@ -1,5 +1,7 @@
 #include "SpriteRenderer.hpp"
 
+#include "Shader.hpp"
+
 #include "glad/gl.h"
 #include "glm/ext/matrix_transform.hpp"
 

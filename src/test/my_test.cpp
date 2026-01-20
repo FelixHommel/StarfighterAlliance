@@ -5,6 +5,7 @@
 #include "gameObjects/ShootingComponent.hpp"
 #include "internal/JSONReader.hpp"
 #include "MockTexture.hpp"
+#include "core/EndState.hpp"
 
 #include "SQLiteCpp/SQLiteCpp.h"
 

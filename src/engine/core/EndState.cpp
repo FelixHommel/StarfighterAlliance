@@ -6,6 +6,7 @@
 #include "SQLiteCpp/Statement.h"
 #include "SQLiteCpp/Transaction.h"
 
+#include <sstream>
 #include <iostream>
 
 EndState::EndState(const Texture2D& background, const WindowInfo* windowInfo, const Mouse* mouse, const Score& currentScore)

@@ -18,10 +18,9 @@ target_compile_features(${NAME} PRIVATE cxx_std_23)
 target_link_libraries(${NAME}
     PRIVATE
         project_warnings
-        gmock
         GTest::gtest
+        GTest::gmock
         StarfighterAllianceEngine
 )
 
 add_test(NAME ${NAME} COMMAND ${NAME})
-add_compile_definitions("${PROJECT_SOURCE_DIR}/src/test/resources/")
