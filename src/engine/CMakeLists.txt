@@ -62,12 +62,21 @@ target_sources(${NAME}
             ./external/stb_image.h
 )
 
+set(glad2cmake_target glad2cmake)
+if(TARGET glad2cmake::glad2cmake)
+    set(glad2cmake_target glad2cmake::glad2cmake)
+elseif(TARGET glad2cmake::glad)
+    set(glad2cmake_target glad2cmake::glad)
+elseif(TARGET glad)
+    set(glad2cmake_target glad)
+endif()
+
 target_compile_features(${NAME} PRIVATE cxx_std_23)
 target_link_libraries(${NAME}
     PRIVATE
         project_warnings
         OpenGL::GL
-        glad2cmake
+        Glad2CMake::glad2cmake
         SQLiteCpp
         Freetype::Freetype
         nlohmann_json::nlohmann_json
