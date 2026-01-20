@@ -3,6 +3,7 @@
 .vscode
 build
 *.db3
+.harper-dictionary.txt
 
 # Created by https://www.toptal.com/developers/gitignore/api/c++,cmake,linux,windows,vcpkg
 # Edit at https://www.toptal.com/developers/gitignore?templates=c++,cmake,linux,windows,vcpkg
