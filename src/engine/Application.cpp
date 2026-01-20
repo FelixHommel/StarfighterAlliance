@@ -4,33 +4,35 @@
 
 #include "glad/gl.h"
 
-Application::Application(int width, int height) : m_windowInfo {width, height, 60, applicationName}, m_mouseInfo {}, m_game {nullptr} {}
+Application::Application(int width, int height)
+    : m_windowInfo{ width, height, 60, applicationName }, m_mouseInfo{}, m_game{ nullptr }
+{}
 
 Application::~Application()
 {
-	ResourceManager::clear();
-	glfwTerminate();
+    ResourceManager::clear();
+    glfwTerminate();
 }
 
 /**
-* The order of initialization is important.
-*   1. GLFW -- Windowing
-*   2. GLAD -- OpenGL Function loading
-*   3. GLState -- OpenGL settings
-*   4. Callbacks -- GLFW Callbacks
-*   5. Application -- Prepare for running the game
-*
-*   After that the game can be started
-*/
+ * The order of initialization is important.
+ *   1. GLFW -- Windowing
+ *   2. GLAD -- OpenGL Function loading
+ *   3. GLState -- OpenGL settings
+ *   4. Callbacks -- GLFW Callbacks
+ *   5. Application -- Prepare for running the game
+ *
+ *   After that the game can be started
+ */
 void Application::run()
 {
-	initGLFW();
-	initGLAD();
-	initGLState();
-	registerCallbacks();
-	initApplication();
+    initGLFW();
+    initGLAD();
+    initGLState();
+    registerCallbacks();
+    initApplication();
 
-	gameLoop();
+    gameLoop();
 }
 
 /**
@@ -40,9 +42,9 @@ void Application::run()
  */
 void Application::framebufferResizeCallbackHandler(int width, int height)
 {
-	m_windowInfo.width = width;
-	m_windowInfo.height = height;
-	glViewport(0, 0, m_windowInfo.width, m_windowInfo.height);
+    m_windowInfo.width = width;
+    m_windowInfo.height = height;
+    glViewport(0, 0, m_windowInfo.width, m_windowInfo.height);
 }
 
 /*
@@ -52,8 +54,8 @@ void Application::framebufferResizeCallbackHandler(int width, int height)
  */
 void Application::cursorPosCallbackHandler(double posX, double posY)
 {
-	m_mouseInfo.posX = static_cast<float>(posX);
-	m_mouseInfo.posY = static_cast<float>(posY);
+    m_mouseInfo.posX = static_cast<float>(posX);
+    m_mouseInfo.posY = static_cast<float>(posY);
 }
 
 /*
@@ -62,7 +64,7 @@ void Application::cursorPosCallbackHandler(double posX, double posY)
  */
 void Application::mouseButtonCallbackHandler(bool isPressed)
 {
-	m_mouseInfo.isPressed = isPressed;
+    m_mouseInfo.isPressed = isPressed;
 }
 
 /*
@@ -72,28 +74,28 @@ void Application::mouseButtonCallbackHandler(bool isPressed)
  */
 void Application::initGLFW()
 {
-	if(glfwInit() == 0)
-		throw std::runtime_error("[ERROR] An error occured while initializing GLFW");
+    if(glfwInit() == 0)
+        throw std::runtime_error("[ERROR] An error occured while initializing GLFW");
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #ifdef __APPLE__
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
-	// glfwWindowHint(GLFW_RESIZABLE, 1);
+    // glfwWindowHint(GLFW_RESIZABLE, 1);
 
-	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-	const GLFWvidmode* vm = glfwGetVideoMode(monitor);
-	m_windowInfo.width = vm->width;
-	m_windowInfo.height = vm->height;
-	m_windowInfo.refreshRate = vm->refreshRate;
+    GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+    const GLFWvidmode* vm = glfwGetVideoMode(monitor);
+    m_windowInfo.width = vm->width;
+    m_windowInfo.height = vm->height;
+    m_windowInfo.refreshRate = vm->refreshRate;
 
-	m_window = createWindow(m_windowInfo.width, m_windowInfo.height, m_windowInfo.title);
-	glfwMakeContextCurrent(m_window.get());
-	m_windowInfo.window = m_window;
+    m_window = createWindow(m_windowInfo.width, m_windowInfo.height, m_windowInfo.title);
+    glfwMakeContextCurrent(m_window.get());
+    m_windowInfo.window = m_window;
 
-	glfwSetWindowUserPointer(m_window.get(), this);
+    glfwSetWindowUserPointer(m_window.get(), this);
 }
 
 /*
@@ -103,8 +105,8 @@ void Application::initGLFW()
  */
 void Application::initGLAD()
 {
-	if(gladLoadGL(glfwGetProcAddress) == 0)
-		throw std::runtime_error("[ERROR] An error occured while initializing GLAD");
+    if(gladLoadGL(glfwGetProcAddress) == 0)
+        throw std::runtime_error("[ERROR] An error occured while initializing GLAD");
 }
 
 /*
@@ -112,9 +114,9 @@ void Application::initGLAD()
  */
 void Application::initGLState() const
 {
-	glViewport(0, 0, static_cast<int>(m_windowInfo.width), static_cast<int>(m_windowInfo.height));
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glViewport(0, 0, static_cast<int>(m_windowInfo.width), static_cast<int>(m_windowInfo.height));
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 /*
@@ -122,9 +124,9 @@ void Application::initGLState() const
  */
 void Application::registerCallbacks()
 {
-	glfwSetFramebufferSizeCallback(m_window.get(), framebufferResizeCallback);
-	glfwSetCursorPosCallback(m_window.get(), cursorPosCallback);
-	glfwSetMouseButtonCallback(m_window.get(), mouseButtonCallback);
+    glfwSetFramebufferSizeCallback(m_window.get(), framebufferResizeCallback);
+    glfwSetCursorPosCallback(m_window.get(), cursorPosCallback);
+    glfwSetMouseButtonCallback(m_window.get(), mouseButtonCallback);
 }
 
 /*
@@ -132,7 +134,7 @@ void Application::registerCallbacks()
  */
 void Application::initApplication()
 {
-	m_game = std::make_unique<Game>(&m_windowInfo, &m_mouseInfo);
+    m_game = std::make_unique<Game>(&m_windowInfo, &m_mouseInfo);
 }
 
 /*
@@ -144,10 +146,10 @@ void Application::initApplication()
  */
 void Application::gameLoop()
 {
-	float deltaTime = 0.0f;
-	float lastFrame = 0.0f;
+    float deltaTime = 0.0f;
+    float lastFrame = 0.0f;
 
-	while(glfwWindowShouldClose(m_window.get()) == 0)
+    while(glfwWindowShouldClose(m_window.get()) == 0)
     {
         float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
@@ -173,10 +175,10 @@ void Application::gameLoop()
  */
 void Application::masterUpdate(float dt)
 {
-	m_game->update(dt);
+    m_game->update(dt);
 
-	if(m_game->getQuit())
-		glfwSetWindowShouldClose(m_window.get(), 1);
+    if(m_game->getQuit())
+        glfwSetWindowShouldClose(m_window.get(), 1);
 }
 
 /*
@@ -186,8 +188,8 @@ void Application::masterUpdate(float dt)
  */
 void Application::processInput(float dt)
 {
-	if(glfwGetKey(m_window.get(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(m_window.get(), 1);
+    if(glfwGetKey(m_window.get(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(m_window.get(), 1);
 }
 
 /*
@@ -195,5 +197,5 @@ void Application::processInput(float dt)
  */
 void Application::masterRender()
 {
-	m_game->render();
+    m_game->render();
 }

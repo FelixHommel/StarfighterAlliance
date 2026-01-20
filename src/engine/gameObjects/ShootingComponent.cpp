@@ -1,11 +1,9 @@
 #include "ShootingComponent.hpp"
 
-ShootingComponent::ShootingComponent(const Texture2D& texture, const glm::vec2* spaceshipPos, int damage, const WindowInfo* windowInfo)
-	: windowInfo(windowInfo)
-	, spaceshipPos(spaceshipPos)
-	, m_damage(damage)
-	, m_texture(texture)
-    , m_shotCooldown(0.f)
+ShootingComponent::ShootingComponent(
+    const Texture2D& texture, const glm::vec2* spaceshipPos, int damage, const WindowInfo* windowInfo
+)
+    : windowInfo(windowInfo), spaceshipPos(spaceshipPos), m_damage(damage), m_texture(texture), m_shotCooldown(0.f)
 {}
 
 void ShootingComponent::update(float dt)
@@ -20,7 +18,16 @@ void ShootingComponent::shoot(bool& didShoot)
     {
         didShoot = true;
         m_shotCooldown = ShootingComponent::shotCooldownMax;
-	    m_projectiles.emplace_back(m_texture, m_damage, glm::vec2(spaceshipPos->x + ((static_cast<float>(windowInfo->width) * 0.1f) / 2.f) - (static_cast<float>(m_texture.getWidth()) * 0.5f), spaceshipPos->y), windowInfo);
+        m_projectiles.emplace_back(
+            m_texture,
+            m_damage,
+            glm::vec2(
+                spaceshipPos->x + ((static_cast<float>(windowInfo->width) * 0.1f) / 2.f)
+                    - (static_cast<float>(m_texture.getWidth()) * 0.5f),
+                spaceshipPos->y
+            ),
+            windowInfo
+        );
     }
     else
         didShoot = false;

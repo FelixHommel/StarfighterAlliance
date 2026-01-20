@@ -23,7 +23,7 @@ Texture2D::Texture2D(bool flag)
  * @param width, the width of the texture
  * @param height, the height of the texture
  * @param data, the image data
-*/
+ */
 void Texture2D::generate(int width, int height, unsigned char* data)
 {
     m_width = width;
@@ -48,5 +48,5 @@ void Texture2D::bind() const
 void Texture2D::setRGBA()
 {
     m_imageFormat = GL_RGBA;
-    m_internalFormat  =GL_RGBA;
+    m_internalFormat = GL_RGBA;
 }

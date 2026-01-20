@@ -4,10 +4,12 @@
 
 #include "GLFW/glfw3.h"
 
-GameState::GameState(const Texture2D& background, const WindowInfo* windowInfo, const Mouse* mouse, SpaceshipType type, ColorType color)
-	: State(background, windowInfo, mouse, StateName::Playing)
-	, m_spaceship(std::make_shared<Spaceship>(type, color, windowInfo))
-    , m_currentScore{0, 0}
+GameState::GameState(
+    const Texture2D& background, const WindowInfo* windowInfo, const Mouse* mouse, SpaceshipType type, ColorType color
+)
+    : State(background, windowInfo, mouse, StateName::Playing)
+    , m_spaceship(std::make_shared<Spaceship>(type, color, windowInfo))
+    , m_currentScore{ 0, 0 }
     , m_gameOver(false)
     , m_paused(true)
     , m_blinkCounter(0.f)
@@ -15,9 +17,12 @@ GameState::GameState(const Texture2D& background, const WindowInfo* windowInfo, 
     , m_countdown(countdownMax)
     , m_showStart(false)
     , m_showStartDuration(showStartDurationMax)
-    , m_waveGenerator(std::make_unique<EnemyWaveGenerator>(ResourceManager::getTexture("Meteorite"), ResourceManager::getTexture("alien"), m_windowInfo))
-{
-}
+    , m_waveGenerator(
+          std::make_unique<EnemyWaveGenerator>(
+              ResourceManager::getTexture("Meteorite"), ResourceManager::getTexture("alien"), m_windowInfo
+          )
+      )
+{}
 
 void GameState::update(float dt)
 {
@@ -91,7 +96,7 @@ void GameState::update(float dt)
 
 void GameState::render(SpriteRenderer& renderer, TextRenderer& textRenderer)
 {
-	renderer.draw(m_background, glm::vec2(0.f, 0.f), glm::vec2(m_windowInfo->width, m_windowInfo->height));
+    renderer.draw(m_background, glm::vec2(0.f, 0.f), glm::vec2(m_windowInfo->width, m_windowInfo->height));
 
     m_spaceship->render(renderer);
     m_waveGenerator->render(renderer);
@@ -101,30 +106,60 @@ void GameState::render(SpriteRenderer& renderer, TextRenderer& textRenderer)
 
     std::stringstream ssScore;
     ssScore << "Points: " << m_currentScore.score;
-    textRenderer.draw(ssScore.str(), static_cast<float>(m_windowInfo->width) * 0.01f, static_cast<float>(m_windowInfo->height) * 0.01f);
+    textRenderer.draw(
+        ssScore.str(), static_cast<float>(m_windowInfo->width) * 0.01f, static_cast<float>(m_windowInfo->height) * 0.01f
+    );
 
     std::stringstream ssWave;
     ssWave << "Wave  : " << m_currentScore.wave;
-    textRenderer.draw(ssWave.str(), static_cast<float>(m_windowInfo->width) * 0.01f, static_cast<float>(m_windowInfo->height) * 0.05f);
+    textRenderer.draw(
+        ssWave.str(), static_cast<float>(m_windowInfo->width) * 0.01f, static_cast<float>(m_windowInfo->height) * 0.05f
+    );
 
     std::stringstream ssLives;
     ssLives << "Lives: " << std::to_string(m_spaceship->getLives());
-    textRenderer.draw(ssLives.str(), static_cast<float>(m_windowInfo->width) * 0.89f, static_cast<float>(m_windowInfo->height) * 0.01f);
+    textRenderer.draw(
+        ssLives.str(), static_cast<float>(m_windowInfo->width) * 0.89f, static_cast<float>(m_windowInfo->height) * 0.01f
+    );
 
     if(m_paused)
-        renderBlinking(textRenderer, "PRESS ENTER TO PLAY", static_cast<float>(m_windowInfo->width) * 0.265f, static_cast<float>(m_windowInfo->height) * 0.45f);
+        renderBlinking(
+            textRenderer,
+            "PRESS ENTER TO PLAY",
+            static_cast<float>(m_windowInfo->width) * 0.265f,
+            static_cast<float>(m_windowInfo->height) * 0.45f
+        );
     else if(m_playCountdown)
     {
         /** Cast to int removes floating portion */
-        textRenderer.draw(std::to_string(
-            static_cast<int>(m_countdown)), static_cast<float>(m_windowInfo->width) * 0.48f, static_cast<float>(m_windowInfo->height) * 0.5f, 2.f);
+        textRenderer.draw(
+            std::to_string(static_cast<int>(m_countdown)),
+            static_cast<float>(m_windowInfo->width) * 0.48f,
+            static_cast<float>(m_windowInfo->height) * 0.5f,
+            2.f
+        );
     }
     else if(m_showStart)
-        textRenderer.draw("START", static_cast<float>(m_windowInfo->width) * 0.43f, static_cast<float>(m_windowInfo->height) * 0.5f, 2.f);
+        textRenderer.draw(
+            "START",
+            static_cast<float>(m_windowInfo->width) * 0.43f,
+            static_cast<float>(m_windowInfo->height) * 0.5f,
+            2.f
+        );
     else if(m_spaceship->getLives() < 0)
     {
-        renderBlinking(textRenderer, "GAME OVER!", static_cast<float>(m_windowInfo->width) * 0.39f, static_cast<float>(m_windowInfo->height) * 0.45f);
-        renderBlinking(textRenderer, "Press space to continue", static_cast<float>(m_windowInfo->width) * 0.215f, static_cast<float>(m_windowInfo->height) * 0.55f);
+        renderBlinking(
+            textRenderer,
+            "GAME OVER!",
+            static_cast<float>(m_windowInfo->width) * 0.39f,
+            static_cast<float>(m_windowInfo->height) * 0.45f
+        );
+        renderBlinking(
+            textRenderer,
+            "Press space to continue",
+            static_cast<float>(m_windowInfo->width) * 0.215f,
+            static_cast<float>(m_windowInfo->height) * 0.55f
+        );
     }
 }
 
@@ -160,7 +195,9 @@ void GameState::checkCollision()
                 {
                     hit = true;
                     damage = m_spaceship->getProjectiles()[proIdx].getDamage();
-                    m_spaceship->getProjectiles().erase(m_spaceship->getProjectiles().begin() + static_cast<long>(proIdx));
+                    m_spaceship->getProjectiles().erase(
+                        m_spaceship->getProjectiles().begin() + static_cast<long>(proIdx)
+                    );
                     break;
                 }
                 else

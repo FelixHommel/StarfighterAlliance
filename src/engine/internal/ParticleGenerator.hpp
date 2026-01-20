@@ -6,7 +6,8 @@
 
 #include <vector>
 
-struct Particle {
+struct Particle
+{
     glm::vec2 position{ 0.f };
     glm::vec2 velocity{ 0.f };
     glm::vec4 color{ 1.f };
@@ -16,11 +17,7 @@ struct Particle {
 class ParticleGenerator
 {
 public:
-    ParticleGenerator(
-        const Shader& shader,
-        const Texture2D& texture,
-        unsigned int amount
-    );
+    ParticleGenerator(const Shader& shader, const Texture2D& texture, unsigned int amount);
     ~ParticleGenerator();
 
     ParticleGenerator(const ParticleGenerator&) = default;
@@ -45,4 +42,4 @@ private:
     // void respawnParticle(Particle &particle, GameObject &object, const glm::vec2& offset = glm::vec2(0.0f, 0.0f));
 };
 
-#endif //!INTERNAL_PARTICLE_GENERATOR_HPP
+#endif //! INTERNAL_PARTICLE_GENERATOR_HPP

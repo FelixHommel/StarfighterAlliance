@@ -11,30 +11,30 @@
  *
  * @author Felix Hommel
  * @date Nov 24, 2024
-*/ 
+ */
 class MovementComponent
 {
-	public:
-        /** Constructor */
-		MovementComponent(glm::vec2* obj, const glm::vec2& size, float maxWidth, float maxHeight);
+public:
+    /** Constructor */
+    MovementComponent(glm::vec2* obj, const glm::vec2& size, float maxWidth, float maxHeight);
 
-        /** Public member functions */
-		void move(const glm::vec2& offset);
-		void moveX(float offset) { move({offset, 0.f}); }
-		void moveY(float offset) { move({0.f, offset}); }
+    /** Public member functions */
+    void move(const glm::vec2& offset);
+    void moveX(float offset) { move({ offset, 0.f }); }
+    void moveY(float offset) { move({ 0.f, offset }); }
 
-	private:
-        /* 
-        *  Accessor for the GameObjects position variable
-        *  !!CAREFUL, modifies the actual GameObject position!!
-        */
-		glm::vec2* pos;
+private:
+    /*
+     *  Accessor for the GameObjects position variable
+     *  !!CAREFUL, modifies the actual GameObject position!!
+     */
+    glm::vec2* pos;
 
-        /** Member variables */
-		glm::vec2 m_size;
+    /** Member variables */
+    glm::vec2 m_size;
 
-		float m_maxWidth;
-		float m_maxHeight;
+    float m_maxWidth;
+    float m_maxHeight;
 };
 
-#endif //!GAME_OBJECTS_MOVEMENT_COMPONENT_HPP
+#endif //! GAME_OBJECTS_MOVEMENT_COMPONENT_HPP

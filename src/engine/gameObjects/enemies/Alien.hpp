@@ -11,13 +11,13 @@
  *
  * @author Felix Hommel
  * @date Dec 10, 2024
-*/
+ */
 class Alien : public Enemy
 {
-	public:
-		/** Constructor / Destructor */
-		Alien(const Texture2D& texture, const glm::vec2& pos, float sizeX, const WindowInfo* windowInfo);
-        ~Alien() override = default;
+public:
+    /** Constructor / Destructor */
+    Alien(const Texture2D& texture, const glm::vec2& pos, float sizeX, const WindowInfo* windowInfo);
+    ~Alien() override = default;
 };
 
-#endif //!GAME_OBJECTS_ENEMIES_ALIEN_HPP
+#endif //! GAME_OBJECTS_ENEMIES_ALIEN_HPP

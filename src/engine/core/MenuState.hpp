@@ -1,9 +1,9 @@
 #ifndef CORE_MENU_STATE_HPP
 #define CORE_MENU_STATE_HPP
 
-#include "internal/Button.hpp"
 #include "Color.hpp"
 #include "State.hpp"
+#include "internal/Button.hpp"
 
 /*
  * @file MenuState.hpp
@@ -14,42 +14,42 @@
  *
  * @author Felix Hommel
  * @date Nov 17, 2024
-*/
+ */
 class MenuState : public State
 {
-	public:
-		/** Constructor / Destructor */
-		MenuState(const Texture2D& background, const WindowInfo* windowInfo, const Mouse* mouseInfo);
-		~MenuState() override;
+public:
+    /** Constructor / Destructor */
+    MenuState(const Texture2D& background, const WindowInfo* windowInfo, const Mouse* mouseInfo);
+    ~MenuState() override;
 
-		/** Delete move constructor / assignment operator and leave the copy constructor / assignment operator at default */
-		MenuState(const MenuState&) = delete;
-		MenuState(MenuState&&) = delete;
-		MenuState& operator=(const MenuState&) = delete;
-		MenuState& operator=(MenuState&&) = delete;
+    /** Delete move constructor / assignment operator and leave the copy constructor / assignment operator at default */
+    MenuState(const MenuState&) = delete;
+    MenuState(MenuState&&) = delete;
+    MenuState& operator=(const MenuState&) = delete;
+    MenuState& operator=(MenuState&&) = delete;
 
-		/** Public member functions */
-		void update(float dt) override;
-		void render(SpriteRenderer& renderer, TextRenderer& textRenderer) override;
+    /** Public member functions */
+    void update(float dt) override;
+    void render(SpriteRenderer& renderer, TextRenderer& textRenderer) override;
 
-		[[nodiscard]] bool getQuit() const { return m_quit; }
-        [[nodiscard]] bool getPlay() const { return m_play; }
-		[[nodiscard]] bool getColorRecieved() const { return m_colorRecieved; }
-		[[nodiscard]] ColorType getColor() const { return m_color; }
+    [[nodiscard]] bool getQuit() const { return m_quit; }
+    [[nodiscard]] bool getPlay() const { return m_play; }
+    [[nodiscard]] bool getColorRecieved() const { return m_colorRecieved; }
+    [[nodiscard]] ColorType getColor() const { return m_color; }
 
-        void resetPlay() { m_play = false; }
+    void resetPlay() { m_play = false; }
 
-        void resetColorRecieved() { m_colorRecieved = false; }
+    void resetColorRecieved() { m_colorRecieved = false; }
 
-	private:
-		/** Member variables */
-		Button* m_startButton;
-		Button* m_quitButton;
-		ColorType m_color;
+private:
+    /** Member variables */
+    Button* m_startButton;
+    Button* m_quitButton;
+    ColorType m_color;
 
-		bool m_quit;
-        bool m_play;
-		bool m_colorRecieved;
+    bool m_quit;
+    bool m_play;
+    bool m_colorRecieved;
 };
 
-#endif //!CORE_MENU_STATE_HPP
+#endif //! CORE_MENU_STATE_HPP

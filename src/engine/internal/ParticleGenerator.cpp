@@ -7,21 +7,11 @@
 #include <array>
 
 ParticleGenerator::ParticleGenerator(const Shader& shader, const Texture2D& texture, unsigned int amount)
-    : m_shader(shader)
-    , m_texture(texture)
-    , m_amount(amount)
-    , m_lastUsedParticle(0)
-    , m_vao(0)
+    : m_shader(shader), m_texture(texture), m_amount(amount), m_lastUsedParticle(0), m_vao(0)
 {
-    std::array<float, 6 * 4> particle_quad = {
-        0.0f, 1.0f, 0.0f, 1.0f,
-        1.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 0.0f, 0.0f,
+    std::array<float, 6 * 4> particle_quad = { 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
 
-        0.0f, 1.0f, 0.0f, 1.0f,
-        1.0f, 1.0f, 1.0f, 1.0f,
-        1.0f, 0.0f, 1.0f, 0.0f
-    }; 
+                                               0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f };
 
     unsigned int VBO{};
 
@@ -36,7 +26,7 @@ ParticleGenerator::ParticleGenerator(const Shader& shader, const Texture2D& text
     glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), nullptr);
     glBindVertexArray(0);
 
-    for (unsigned int i = 0; i < m_amount; ++i)
+    for(unsigned int i = 0; i < m_amount; ++i)
         m_particles.emplace_back();
 }
 
@@ -46,8 +36,8 @@ ParticleGenerator::~ParticleGenerator()
 }
 
 /*
-*   @brief Needs to be optimiezed for the specific GameObject type
-*/
+ *   @brief Needs to be optimiezed for the specific GameObject type
+ */
 // void ParticleGenerator::update(float dt, GameObject &object, unsigned int newParticles, const glm::vec2& offset)
 // {
 //     for (unsigned int i = 0; i < newParticles; ++i)
@@ -62,7 +52,7 @@ ParticleGenerator::~ParticleGenerator()
 //         p.life -= dt;
 //         if (p.life > 0.0f)
 //         {
-//             p.position -= p.velocity * dt; 
+//             p.position -= p.velocity * dt;
 //             p.color.a -= dt * 2.5f;
 //         }
 //     }
@@ -72,9 +62,9 @@ void ParticleGenerator::draw()
 {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
     m_shader.use();
-    for (Particle particle : m_particles)
+    for(Particle particle : m_particles)
     {
-        if (particle.life > 0.0f)
+        if(particle.life > 0.0f)
         {
             m_shader.setVector2f("offset", particle.position);
             m_shader.setVector4f("color", particle.color);
@@ -90,15 +80,19 @@ void ParticleGenerator::draw()
 
 unsigned int ParticleGenerator::firstUnusedParticle()
 {
-    for (unsigned int i = m_lastUsedParticle; i < m_amount; ++i){
-        if (m_particles[i].life <= 0.0f){
+    for(unsigned int i = m_lastUsedParticle; i < m_amount; ++i)
+    {
+        if(m_particles[i].life <= 0.0f)
+        {
             m_lastUsedParticle = i;
             return i;
         }
     }
 
-    for (unsigned int i = 0; i < m_lastUsedParticle; ++i){
-        if (m_particles[i].life <= 0.0f){
+    for(unsigned int i = 0; i < m_lastUsedParticle; ++i)
+    {
+        if(m_particles[i].life <= 0.0f)
+        {
             m_lastUsedParticle = i;
             return i;
         }
@@ -109,8 +103,8 @@ unsigned int ParticleGenerator::firstUnusedParticle()
 }
 
 /*
-*   @brief Needs to be optimiezed for the specific GameObject type
-*/
+ *   @brief Needs to be optimiezed for the specific GameObject type
+ */
 // void ParticleGenerator::respawnParticle(Particle &particle, GameObject &object, const glm::vec2& offset)
 // {
 //     float random = ((rand() % 100) - 50) / 10.0f;

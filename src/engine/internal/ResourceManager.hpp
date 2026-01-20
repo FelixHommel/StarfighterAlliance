@@ -16,31 +16,35 @@
  *
  * @author Felix Hommel
  * @date Nov 16, 2024
-*/
+ */
 class ResourceManager
 {
-	public:
-		ResourceManager() = delete;
+public:
+    ResourceManager() = delete;
 
-        /** Loading and accessing Shaders */
-		static Shader loadShader(const char* vertexShaderFilepath, const char* fShaderFile, const char* gShaderFile, const std::string& name);
-		static Shader& getShader(const std::string& name);
+    /** Loading and accessing Shaders */
+    static Shader loadShader(
+        const char* vertexShaderFilepath, const char* fShaderFile, const char* gShaderFile, const std::string& name
+    );
+    static Shader& getShader(const std::string& name);
 
-        /** Loading and accessing Textures */
-		static Texture2D loadTexture(const char* filepath, const std::string& name);
-		static Texture2D& getTexture(const std::string& name);
+    /** Loading and accessing Textures */
+    static Texture2D loadTexture(const char* filepath, const std::string& name);
+    static Texture2D& getTexture(const std::string& name);
 
-        /** Clearing all resources */
-		static void clear();
+    /** Clearing all resources */
+    static void clear();
 
-	private:
-        /** Private members */
-		static std::map<std::string, Shader> m_shaders;
-		static std::map<std::string, Texture2D> m_textures;
+private:
+    /** Private members */
+    static std::map<std::string, Shader> m_shaders;
+    static std::map<std::string, Texture2D> m_textures;
 
-        /** Private member functions */
-		static Shader loadShaderFromFile(const char* vertexShaderFilepath, const char* fShaderFile, const char* gShaderFile = nullptr);
-		static Texture2D loadTextureFromFile(const char* filepath);
+    /** Private member functions */
+    static Shader loadShaderFromFile(
+        const char* vertexShaderFilepath, const char* fShaderFile, const char* gShaderFile = nullptr
+    );
+    static Texture2D loadTextureFromFile(const char* filepath);
 };
 
-#endif //!INTERNAL_RESOURCE_MANAGER_HPP
+#endif //! INTERNAL_RESOURCE_MANAGER_HPP

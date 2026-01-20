@@ -5,9 +5,9 @@
 
 enum class MeteoriteType : uint8_t
 {
-	SMALL = 1,
-	MEDIUM = 2,
-	BIG = 3
+    SMALL = 1,
+    MEDIUM = 2,
+    BIG = 3
 };
 
 /*
@@ -18,14 +18,16 @@ enum class MeteoriteType : uint8_t
  *
  * @author Felix Hommel
  * @date Nov 27, 2024
-*/
+ */
 class Meteorite : public Enemy
 {
-	public:
-		/** Constructor / Destructor */
-		Meteorite(const Texture2D& texture, MeteoriteType type, const glm::vec2& pos, const WindowInfo* windowInfo);
-		Meteorite(const Texture2D& texture, MeteoriteType type, const glm::vec2& pos, float sizeX, const WindowInfo* windowInfo);
-        ~Meteorite() override = default;
+public:
+    /** Constructor / Destructor */
+    Meteorite(const Texture2D& texture, MeteoriteType type, const glm::vec2& pos, const WindowInfo* windowInfo);
+    Meteorite(
+        const Texture2D& texture, MeteoriteType type, const glm::vec2& pos, float sizeX, const WindowInfo* windowInfo
+    );
+    ~Meteorite() override = default;
 };
 
-#endif //!GAMEOBJECTS_ENEMIES_METEORITE_HPP
+#endif //! GAMEOBJECTS_ENEMIES_METEORITE_HPP

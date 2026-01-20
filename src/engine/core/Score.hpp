@@ -3,11 +3,11 @@
 
 /*
  * @brief Strucutre to define what a Score consits of
-*/
+ */
 struct Score
 {
     unsigned int score;
     unsigned int wave;
 };
 
-#endif //!CORE_SCORE_HPP
+#endif //! CORE_SCORE_HPP

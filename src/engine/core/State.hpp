@@ -11,10 +11,10 @@
  */
 enum class StateName : uint8_t
 {
-	Menu,
-	Selection,
-	Playing,
-	End
+    Menu,
+    Selection,
+    Playing,
+    End
 };
 
 /*
@@ -35,39 +35,36 @@ struct Mouse
  *
  * @author Felix Hommel
  * @date Nov 17, 2024
-*/
+ */
 class State
 {
-	public:
-		/** Constructor / Destructor */
-		State(const Texture2D& background, const WindowInfo* windowInfo, const Mouse* mouse, StateName name)
-			: m_background(background)
-			, m_windowInfo(windowInfo)
-			, m_mouse(mouse)
-			, m_state(name)
-		{}
-		virtual ~State() = default;
+public:
+    /** Constructor / Destructor */
+    State(const Texture2D& background, const WindowInfo* windowInfo, const Mouse* mouse, StateName name)
+        : m_background(background), m_windowInfo(windowInfo), m_mouse(mouse), m_state(name)
+    {}
+    virtual ~State() = default;
 
-		/** Delete move constructor / assignment operator and leave the copy constructor / assignmetn operator at default */
-		State(const State&) = default;
-		State(State&&) = delete;
-		State& operator=(const State&) = default;
-		State& operator=(State&&) = delete;
+    /** Delete move constructor / assignment operator and leave the copy constructor / assignmetn operator at default */
+    State(const State&) = default;
+    State(State&&) = delete;
+    State& operator=(const State&) = default;
+    State& operator=(State&&) = delete;
 
-		/** Public member functiopns */
-		virtual void update(float dt) = 0;
-		virtual void render(SpriteRenderer& renderer, TextRenderer& textRenderer) = 0;
+    /** Public member functiopns */
+    virtual void update(float dt) = 0;
+    virtual void render(SpriteRenderer& renderer, TextRenderer& textRenderer) = 0;
 
-		[[nodiscard]] StateName getState() { return m_state; }
+    [[nodiscard]] StateName getState() { return m_state; }
 
-	protected:
-		/* Protected members */
-		Texture2D m_background;
+protected:
+    /* Protected members */
+    Texture2D m_background;
 
-		const WindowInfo* m_windowInfo;
-		const Mouse* m_mouse;
+    const WindowInfo* m_windowInfo;
+    const Mouse* m_mouse;
 
-		StateName m_state;
+    StateName m_state;
 };
 
-#endif //!CORE_STATE_HPP
+#endif //! CORE_STATE_HPP

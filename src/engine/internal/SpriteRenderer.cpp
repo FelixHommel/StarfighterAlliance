@@ -14,44 +14,39 @@
  */
 SpriteRenderer::SpriteRenderer(const Shader& shader) : m_shader(shader), m_quadVAO(0)
 {
-	unsigned int VBO {};
-	std::array<float, 6 * 4> vertices {
-        // pos      // tex
-		0.0f, 1.0f, 0.0f, 1.0f,
-        1.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 0.0f, 0.0f,
+    unsigned int VBO{};
+    std::array<float, 6 * 4> vertices{ // pos      // tex
+                                       0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
 
-		0.0f, 1.0f, 0.0f, 1.0f,
-        1.0f, 1.0f, 1.0f, 1.0f,
-        1.0f, 0.0f, 1.0f, 0.0f
+                                       0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f
     };
 
-	glGenVertexArrays(1, &m_quadVAO);
-	glGenBuffers(1, &VBO);
+    glGenVertexArrays(1, &m_quadVAO);
+    glGenBuffers(1, &VBO);
 
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
 
-	glBindVertexArray(m_quadVAO);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), nullptr);
-	glEnableVertexAttribArray(0);
+    glBindVertexArray(m_quadVAO);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), nullptr);
+    glEnableVertexAttribArray(0);
 
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
 
-	glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &VBO);
 }
 
 SpriteRenderer::~SpriteRenderer()
 {
-	glDeleteVertexArrays(1, &m_quadVAO);
+    glDeleteVertexArrays(1, &m_quadVAO);
 }
 
 /*
  * @brief Draw a textured quad to the screen
  *
  * @details The order of actions within the funtion is important, especially the translation, rotation and scale order.
- *          1. translate -- bring the quad to the correct position         
+ *          1. translate -- bring the quad to the correct position
  *          2. rotate -- rotate the quad to the correct angle
  *          3. scale -- scale the quad to the correct size
  *          Note that the actual cooridantes of all the quads are the same. The position on the screen
@@ -63,28 +58,30 @@ SpriteRenderer::~SpriteRenderer()
  * @param rotate, the rotation of the quad. DEFAULT: 0.f
  * @param color, the color of the quad. If a color and texture is supplied the two will be blended to produce the final look. DEFAULT: glm::vec3(1.f)
  */
-void SpriteRenderer::draw(const Texture2D& texture, const glm::vec2& position, const glm::vec2& size, float rotate, const glm::vec3& color)
+void SpriteRenderer::draw(
+    const Texture2D& texture, const glm::vec2& position, const glm::vec2& size, float rotate, const glm::vec3& color
+)
 {
-	m_shader.use();
-	glm::mat4 model = glm::mat4(1.0f);
+    m_shader.use();
+    glm::mat4 model = glm::mat4(1.0f);
 
-	model = glm::translate(model, glm::vec3(position, 0.0f));
+    model = glm::translate(model, glm::vec3(position, 0.0f));
 
-	/** with the translation the rotation will happen around the center point of the sprite instead of top elft corner */
-	model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f));
-	model = glm::rotate(model, glm::radians(rotate), glm::vec3(0.0f, 0.0f, 1.0f));
-	model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f));
+    /** with the translation the rotation will happen around the center point of the sprite instead of top elft corner */
+    model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f));
+    model = glm::rotate(model, glm::radians(rotate), glm::vec3(0.0f, 0.0f, 1.0f));
+    model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f));
 
-	model = glm::scale(model, glm::vec3(size, 1.0f));
+    model = glm::scale(model, glm::vec3(size, 1.0f));
 
-	m_shader.setMatrix4("model", model);
-	m_shader.setVector3f("spriteColor", color);
+    m_shader.setMatrix4("model", model);
+    m_shader.setVector3f("spriteColor", color);
 
-	glActiveTexture(GL_TEXTURE0);
-	texture.bind();
+    glActiveTexture(GL_TEXTURE0);
+    texture.bind();
 
-	glBindVertexArray(m_quadVAO);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
+    glBindVertexArray(m_quadVAO);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
 
-	glBindVertexArray(0);
+    glBindVertexArray(0);
 }

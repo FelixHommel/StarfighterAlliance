@@ -12,10 +12,10 @@
  * @param vertexSource, the source code of the vertex shader
  * @param fragmentSource, the source code of the fragment shader
  * @param geometrySource, the sourcec code of the geometry shader. Can be nullptr
-*/
+ */
 Shader::Shader(const char* vertexSource, const char* fragmentSource, const char* geometrySource)
 {
-    unsigned int sVertex{ 0 }; 
+    unsigned int sVertex{ 0 };
     unsigned int sFragment{ 0 };
     unsigned int gShader{ 0 };
 
@@ -29,7 +29,7 @@ Shader::Shader(const char* vertexSource, const char* fragmentSource, const char*
     glCompileShader(sFragment);
     checkCompileErrors(sFragment, "FRAGMENT");
 
-    if (geometrySource != nullptr)
+    if(geometrySource != nullptr)
     {
         gShader = glCreateShader(GL_GEOMETRY_SHADER);
         glShaderSource(gShader, 1, &geometrySource, nullptr);
@@ -40,20 +40,20 @@ Shader::Shader(const char* vertexSource, const char* fragmentSource, const char*
     m_id = glCreateProgram();
     glAttachShader(m_id, sVertex);
     glAttachShader(m_id, sFragment);
-    if (geometrySource != nullptr)
+    if(geometrySource != nullptr)
         glAttachShader(m_id, gShader);
     glLinkProgram(m_id);
     checkCompileErrors(m_id, "PROGRAM");
 
     glDeleteShader(sVertex);
     glDeleteShader(sFragment);
-    if (geometrySource != nullptr)
+    if(geometrySource != nullptr)
         glDeleteShader(gShader);
 }
 
 /*
  * @brief Set this shader as active shader
-*/
+ */
 Shader& Shader::use()
 {
     glUseProgram(m_id);
@@ -66,10 +66,10 @@ Shader& Shader::use()
  * @param vertexSource, the source code of the vertex shader
  * @param fragmentSource, the source code of the fragment shader
  * @param geometrySource, the sourcec code of the geometry shader. Can be nullptr
-*/
+ */
 void Shader::compile(const char* vertexSource, const char* fragmentSource, const char* geometrySource)
 {
-    unsigned int sVertex{ 0 }; 
+    unsigned int sVertex{ 0 };
     unsigned int sFragment{ 0 };
     unsigned int gShader{ 0 };
 
@@ -83,7 +83,7 @@ void Shader::compile(const char* vertexSource, const char* fragmentSource, const
     glCompileShader(sFragment);
     checkCompileErrors(sFragment, "FRAGMENT");
 
-    if (geometrySource != nullptr)
+    if(geometrySource != nullptr)
     {
         gShader = glCreateShader(GL_GEOMETRY_SHADER);
         glShaderSource(gShader, 1, &geometrySource, nullptr);
@@ -94,14 +94,14 @@ void Shader::compile(const char* vertexSource, const char* fragmentSource, const
     m_id = glCreateProgram();
     glAttachShader(m_id, sVertex);
     glAttachShader(m_id, sFragment);
-    if (geometrySource != nullptr)
+    if(geometrySource != nullptr)
         glAttachShader(m_id, gShader);
     glLinkProgram(m_id);
     checkCompileErrors(m_id, "PROGRAM");
 
     glDeleteShader(sVertex);
     glDeleteShader(sFragment);
-    if (geometrySource != nullptr)
+    if(geometrySource != nullptr)
         glDeleteShader(gShader);
 }
 
@@ -110,55 +110,55 @@ void Shader::compile(const char* vertexSource, const char* fragmentSource, const
  */
 void Shader::setFloat(const char* name, float value, bool useShader)
 {
-    if (useShader)
+    if(useShader)
         use();
     glUniform1f(glGetUniformLocation(m_id, name), value);
 }
 void Shader::setInteger(const char* name, int value, bool useShader)
 {
-    if (useShader)
+    if(useShader)
         use();
     glUniform1i(glGetUniformLocation(m_id, name), value);
 }
 void Shader::setVector2f(const char* name, float x, float y, bool useShader)
 {
-    if (useShader)
+    if(useShader)
         use();
     glUniform2f(glGetUniformLocation(m_id, name), x, y);
 }
 void Shader::setVector2f(const char* name, const glm::vec2& value, bool useShader)
 {
-    if (useShader)
+    if(useShader)
         use();
     glUniform2f(glGetUniformLocation(m_id, name), value.x, value.y);
 }
 void Shader::setVector3f(const char* name, float x, float y, float z, bool useShader)
 {
-    if (useShader)
+    if(useShader)
         use();
     glUniform3f(glGetUniformLocation(m_id, name), x, y, z);
 }
 void Shader::setVector3f(const char* name, const glm::vec3& value, bool useShader)
 {
-    if (useShader)
+    if(useShader)
         use();
     glUniform3f(glGetUniformLocation(m_id, name), value.x, value.y, value.z);
 }
 void Shader::setVector4f(const char* name, float x, float y, float z, float w, bool useShader)
 {
-    if (useShader)
+    if(useShader)
         use();
     glUniform4f(glGetUniformLocation(m_id, name), x, y, z, w);
 }
 void Shader::setVector4f(const char* name, const glm::vec4& value, bool useShader)
 {
-    if (useShader)
+    if(useShader)
         use();
     glUniform4f(glGetUniformLocation(m_id, name), value.x, value.y, value.z, value.w);
 }
 void Shader::setMatrix4(const char* name, const glm::mat4& matrix, bool useShader)
 {
-    if (useShader)
+    if(useShader)
         use();
     glUniformMatrix4fv(glGetUniformLocation(m_id, name), 1, 0, glm::value_ptr(matrix));
 }
@@ -168,30 +168,30 @@ void Shader::setMatrix4(const char* name, const glm::mat4& matrix, bool useShade
  *
  * @param object, the OpenGL object to be checked (can be Shader or Program)
  * @param type, type of the Object. Can be "PROGRAM", "VERTEX", "FRAGMENT", "GEOMETRY"
-*/
+ */
 void Shader::checkCompileErrors(unsigned int object, std::string type)
 {
     int success{ 0 };
     const int logSize{ 1024 };
     std::array<char, logSize> infoLog{};
-    if (type != "PROGRAM")
+    if(type != "PROGRAM")
     {
         glGetShaderiv(object, GL_COMPILE_STATUS, &success);
-        if (success == 0)
+        if(success == 0)
         {
             glGetShaderInfoLog(object, infoLog.size(), nullptr, infoLog.data());
             std::cout << "| ERROR::SHADER: Compile-time error: Type: " << type << "\n"
-                << infoLog.data() << "\n-------------------------------------------------------\n";
+                      << infoLog.data() << "\n-------------------------------------------------------\n";
         }
     }
     else
     {
         glGetProgramiv(object, GL_LINK_STATUS, &success);
-        if (success == 0)
+        if(success == 0)
         {
             glGetProgramInfoLog(object, infoLog.size(), nullptr, infoLog.data());
             std::cout << "| ERROR::Shader: Link-time error: Type: " << type << "\n"
-                << infoLog.data() << "\n-------------------------------------------------------\n";
+                      << infoLog.data() << "\n-------------------------------------------------------\n";
         }
     }
 }

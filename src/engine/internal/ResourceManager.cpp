@@ -1,7 +1,7 @@
 #include "ResourceManager.hpp"
 
-#include "glad/gl.h"
 #include "external/stb_image.h"
+#include "glad/gl.h"
 
 #include <fstream>
 #include <iostream>
@@ -20,11 +20,13 @@ std::map<std::string, Shader> ResourceManager::m_shaders;
  * @param name, name of the Shader
  *
  * @return Shader
-*/
-Shader ResourceManager::loadShader(const char* vertexShaderFilepath, const char* fShaderFile, const char* gShaderFile, const std::string& name)
+ */
+Shader ResourceManager::loadShader(
+    const char* vertexShaderFilepath, const char* fShaderFile, const char* gShaderFile, const std::string& name
+)
 {
-	m_shaders[name] = loadShaderFromFile(vertexShaderFilepath, fShaderFile, gShaderFile);
-	return m_shaders[name];
+    m_shaders[name] = loadShaderFromFile(vertexShaderFilepath, fShaderFile, gShaderFile);
+    return m_shaders[name];
 }
 
 /*
@@ -33,10 +35,10 @@ Shader ResourceManager::loadShader(const char* vertexShaderFilepath, const char*
  * @param name, name of the Shader to get
  *
  * @return Shader
-*/
+ */
 Shader& ResourceManager::getShader(const std::string& name)
 {
-	return m_shaders[name];
+    return m_shaders[name];
 }
 
 /*
@@ -46,11 +48,11 @@ Shader& ResourceManager::getShader(const std::string& name)
  * @param name, name of the Texture
  *
  * @return Texture2D
-*/
+ */
 Texture2D ResourceManager::loadTexture(const char* filepath, const std::string& name)
 {
-	m_textures[name] = loadTextureFromFile(filepath);
-	return m_textures[name];
+    m_textures[name] = loadTextureFromFile(filepath);
+    return m_textures[name];
 }
 
 /*
@@ -58,33 +60,35 @@ Texture2D ResourceManager::loadTexture(const char* filepath, const std::string& 
  *
  * @param name, name of the Texture to get
  *
- * @return Texture2D 
-*/
+ * @return Texture2D
+ */
 Texture2D& ResourceManager::getTexture(const std::string& name)
 {
-	return m_textures[name];
+    return m_textures[name];
 }
 
 /*
  * @brief delete all Texture and Shader objects currently stored
-*/
+ */
 void ResourceManager::clear()
 {
-	for(const auto& it: m_shaders)
-		glDeleteProgram(it.second.getID());
+    for(const auto& it : m_shaders)
+        glDeleteProgram(it.second.getID());
 
-	for(const auto& it: m_textures)
-		glDeleteTextures(1, it.second.getID());
+    for(const auto& it : m_textures)
+        glDeleteTextures(1, it.second.getID());
 }
 
 /*
  * @brief Read the Shadercode from file
-*/
-Shader ResourceManager::loadShaderFromFile(const char* vertexShaderFilepath, const char* fShaderFile, const char* gShaderFile)
+ */
+Shader ResourceManager::loadShaderFromFile(
+    const char* vertexShaderFilepath, const char* fShaderFile, const char* gShaderFile
+)
 {
-	std::string vertexCode{};
-	std::string fragmentCode{};
-	std::string geometryCode{};
+    std::string vertexCode{};
+    std::string fragmentCode{};
+    std::string geometryCode{};
 
     try
     {
@@ -116,31 +120,31 @@ Shader ResourceManager::loadShaderFromFile(const char* vertexShaderFilepath, con
         std::cerr << "ERROR::SHADER: Failed to read shader files" << std::endl;
     }
 
-	const char* vShaderCode = vertexCode.c_str();
-	const char* fShaderCode = fragmentCode.c_str();
-	const char* gShaderCode = geometryCode.c_str();
+    const char* vShaderCode = vertexCode.c_str();
+    const char* fShaderCode = fragmentCode.c_str();
+    const char* gShaderCode = geometryCode.c_str();
 
-	return {vShaderCode, fShaderCode, ((gShaderFile != nullptr) ? gShaderCode : nullptr)};
+    return { vShaderCode, fShaderCode, ((gShaderFile != nullptr) ? gShaderCode : nullptr) };
 }
 
 /*
  * @brief Load the texture from file
-*/
+ */
 Texture2D ResourceManager::loadTextureFromFile(const char* filepath)
 {
-	Texture2D texture;
+    Texture2D texture;
 
-	int width {0};
-	int height {0};
-	int nrChannels {0};
-	unsigned char* data = stbi_load(filepath, &width, &height, &nrChannels, 0);
+    int width{ 0 };
+    int height{ 0 };
+    int nrChannels{ 0 };
+    unsigned char* data = stbi_load(filepath, &width, &height, &nrChannels, 0);
 
-	if(nrChannels == 4)
-		texture.setRGBA();
+    if(nrChannels == 4)
+        texture.setRGBA();
 
-	texture.generate(width, height, data);
+    texture.generate(width, height, data);
 
-	stbi_image_free(data);
+    stbi_image_free(data);
 
-	return texture;
+    return texture;
 }

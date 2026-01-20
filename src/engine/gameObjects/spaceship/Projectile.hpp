@@ -14,25 +14,25 @@
  *
  * @author Felix Hommel
  * @date Dec 7, 2024
-*/
+ */
 class Projectile : public GameObject
 {
-	public:
-        /** Constructor / Destructor */
-		Projectile(const Texture2D& texture, int damage, const glm::vec2& position, const WindowInfo* windowInfo);
-		~Projectile() override = default;
+public:
+    /** Constructor / Destructor */
+    Projectile(const Texture2D& texture, int damage, const glm::vec2& position, const WindowInfo* windowInfo);
+    ~Projectile() override = default;
 
-        /** Public member functions */
-		void update(float dt) override;
+    /** Public member functions */
+    void update(float dt) override;
 
-        [[nodiscard]] int getDamage() const { return m_damage; }
+    [[nodiscard]] int getDamage() const { return m_damage; }
 
-        /** Constant valuse */
-        static constexpr float movementSpeed{ 800.f };
+    /** Constant valuse */
+    static constexpr float movementSpeed{ 800.f };
 
-	private:
-        /** Member varaibles */
-		int m_damage;
+private:
+    /** Member varaibles */
+    int m_damage;
 };
 
-#endif //!GAME_OBJECTS_SPACESHIP_PROJECTILE_HPP
+#endif //! GAME_OBJECTS_SPACESHIP_PROJECTILE_HPP

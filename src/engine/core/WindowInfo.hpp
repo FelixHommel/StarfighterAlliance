@@ -19,4 +19,4 @@ struct WindowInfo
     std::shared_ptr<GLFWwindow> window;
 };
 
-#endif //!CORE_WINDOW_INFO_HPP
+#endif //! CORE_WINDOW_INFO_HPP
