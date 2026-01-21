@@ -1,0 +1,45 @@
+#ifndef SFA_SRC_ENGINE_UTILITY_RESOURCE_MANAGEMENT_RESOURCE_CONTEXT_HPP
+#define SFA_SRC_ENGINE_UTILITY_RESOURCE_MANAGEMENT_RESOURCE_CONTEXT_HPP
+
+#include "utility/Shader.hpp"
+#include "utility/Texture.hpp"
+#include "utility/resourceManagement/ResourceCache.hpp"
+
+#include <filesystem>
+#include <optional>
+#include <string>
+
+namespace sfa
+{
+
+class ResourceContext
+{
+public:
+    ResourceContext() = default;
+    ~ResourceContext();
+
+    ResourceContext(const ResourceContext&) = delete;
+    ResourceContext(ResourceContext&&) = delete;
+    ResourceContext& operator=(const ResourceContext&) = delete;
+    ResourceContext& operator=(ResourceContext&&) = delete;
+
+    void loadShaderFromFile(const std::string& name, const std::filesystem::path& vert, const std::filesystem::path& frag, std::optional<std::filesystem::path> geom = std::nullopt);
+    std::shared_ptr<Shader> getShader(const std::string& key) { return m_shaderCache.get(key); }
+
+    void loadTextureFromFile(std::string name, const std::filesystem::path& filepath);
+    std::shared_ptr<Texture2D> getTexture(const std::string& key) { return m_textureCache.get(key); }
+
+    void clear();
+
+private:
+    ResourceCache<Shader> m_shaderCache;
+    ResourceCache<Texture2D> m_textureCache;
+
+    static Shader loadShader(const std::filesystem::path& vert, const std::filesystem::path& frag, const std::filesystem::path& geom);
+    static Texture2D loadTexture(const std::filesystem::path& filepath);
+};
+
+} // namespace sfa
+
+#endif // !SFA_SRC_ENGINE_UTILITY_RESOURCE_MANAGEMENT_RESOURCE_CONTEXT_HPP
+

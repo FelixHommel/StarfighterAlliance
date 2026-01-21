@@ -15,6 +15,7 @@ add_library(${NAME}
     ./utility/SpriteRenderer.cpp
     ./utility/TextRenderer.cpp
     ./utility/Texture.cpp
+    ./utility/resourceManagement/ResourceContext.cpp
     ./gameObjects/EnemyWave.cpp
     ./gameObjects/EnemyWaveGenerator.cpp
     ./gameObjects/GameObject.hpp
@@ -49,6 +50,8 @@ target_sources(${NAME}
             ./utility/SpriteRenderer.hpp
             ./utility/TextRenderer.hpp
             ./utility/Texture.hpp
+            ./utility/resourceManagement/ResourceCache.hpp
+            ./utility/resourceManagement/ResourceContext.hpp
             ./gameObjects/EnemyWave.hpp
             ./gameObjects/EnemyWaveGenerator.hpp
             ./gameObjects/GameObject.hpp
@@ -73,7 +76,7 @@ target_link_libraries(${NAME}
         nlohmann_json::nlohmann_json
         glm::glm
         glfw
-        spdlog::spdlog
+        # spdlog::spdlog
         valijson
         fmt::fmt
 )
