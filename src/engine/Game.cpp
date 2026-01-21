@@ -4,40 +4,27 @@
 #include "core/GameState.hpp"
 #include "core/MenuState.hpp"
 #include "core/SpaceshipSelectionState.hpp"
-#include "glm/ext/matrix_clip_space.hpp"
-#include "internal/ResourceManager.hpp"
+#include "utility/ResourceManager.hpp"
 
-Game::Game(const WindowInfo* windowInfo, const Mouse* mouse)
-    : m_windowInfo(windowInfo)
-    , m_mouse(mouse)
-    , m_renderer(nullptr)
-    , m_quit(false)
-    , m_spaceshipType(SpaceshipType::x_wing)
-    , m_spaceshipColor(ColorType::red)
-    , m_colorRetrieved(false)
-    , m_currentScore()
+#include "glm/glm.hpp"
+#include <glm/ext/matrix_clip_space.hpp>
+
+namespace sfa
+{
+
+Game::Game(const WindowInfo* pWindowInfo, const Mouse* pMouse)
+    : m_windowInfo(pWindowInfo)
+    , m_mouse(pMouse)
 {
     loadResources();
 
-    m_renderer = std::make_shared<SpriteRenderer>(ResourceManager::getShader("sprite"));
-
-    m_textRenderer = std::make_shared<TextRenderer>(m_windowInfo->width, m_windowInfo->height);
+    m_renderer = std::make_unique<SpriteRenderer>(ResourceManager::getShader("sprite"));
+    m_textRenderer = std::make_unique<TextRenderer>(m_windowInfo->width, m_windowInfo->height);
     m_textRenderer->load("resources/fonts/prstartk.ttf");
 
-    m_states.push(std::make_shared<MenuState>(ResourceManager::getTexture("background"), windowInfo, mouse));
+    m_states.push(std::make_shared<MenuState>(ResourceManager::getTexture("background"), pWindowInfo, pMouse));
 }
 
-Game::~Game()
-{
-    while(m_states.size() != 0)
-        m_states.pop();
-}
-
-/*
- * @brief Update the State and react to eventual events that happened
- *
- * @details First run the update() function of the top most state, and then check for new events that happened and react accordingly to them.
- */
 void Game::update(float dt)
 {
     m_states.top()->update(dt);
@@ -156,3 +143,6 @@ void Game::loadResources()
     ResourceManager::loadTexture("resources/textures/meteorite/meteorite001.png", "Meteorite");
     ResourceManager::loadTexture("resources/textures/alien/alien001.png", "alien");
 }
+
+} // namespace sfa
+

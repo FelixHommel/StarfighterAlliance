@@ -2,9 +2,12 @@
 #define CORE_STATE_HPP
 
 #include "WindowInfo.hpp"
-#include "internal/SpriteRenderer.hpp"
-#include "internal/TextRenderer.hpp"
-#include "internal/Texture.hpp"
+#include "utility/SpriteRenderer.hpp"
+#include "utility/TextRenderer.hpp"
+#include "utility/Texture.hpp"
+
+namespace sfa
+{
 
 /*
  * @brief Enumeration of all possible game states
@@ -67,4 +70,7 @@ protected:
     StateName m_state;
 };
 
+} // namespace sfa
+
 #endif //! CORE_STATE_HPP
+

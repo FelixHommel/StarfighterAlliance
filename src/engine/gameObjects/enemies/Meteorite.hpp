@@ -3,6 +3,9 @@
 
 #include "Enemy.hpp"
 
+namespace sfa
+{
+
 enum class MeteoriteType : uint8_t
 {
     SMALL = 1,
@@ -30,4 +33,7 @@ public:
     ~Meteorite() override = default;
 };
 
+} // namespace sfa
+
 #endif //! GAMEOBJECTS_ENEMIES_METEORITE_HPP
+

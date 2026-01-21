@@ -5,11 +5,14 @@
 #include "gameObjects/EnemyWaveGenerator.hpp"
 #include "gameObjects/MovementComponent.hpp"
 #include "gameObjects/ShootingComponent.hpp"
-#include "internal/JSONReader.hpp"
+#include "utility/JSONReader.hpp"
 
 #include "SQLiteCpp/SQLiteCpp.h"
 
 #include "gmock/gmock.h"
+
+using namespace sfa;
+
 #include "gtest/gtest.h"
 
 /** JSON TEST */

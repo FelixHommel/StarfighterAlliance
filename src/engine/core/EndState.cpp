@@ -1,6 +1,6 @@
 #include "EndState.hpp"
 
-#include "internal/ResourceManager.hpp"
+#include "utility/ResourceManager.hpp"
 
 #include "SQLiteCpp/Database.h"
 #include "SQLiteCpp/Statement.h"
@@ -8,6 +8,9 @@
 
 #include <iostream>
 #include <sstream>
+
+namespace sfa
+{
 
 EndState::EndState(
     const Texture2D& background, const WindowInfo* windowInfo, const Mouse* mouse, const Score& currentScore
@@ -140,3 +143,6 @@ void EndState::renderScoreboard(TextRenderer& textRenderer)
         );
     }
 }
+
+} // namespace sfa
+

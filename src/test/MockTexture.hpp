@@ -1,6 +1,6 @@
 #include "gmock/gmock.h"
 
-#include "internal/Texture.hpp"
+#include "utility/Texture.hpp"
 
 /*
  * @file MockTexture.hpp

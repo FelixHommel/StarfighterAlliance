@@ -2,10 +2,13 @@
 #define GAME_OBJECTS_SHOOTING_COMPONENT_HPP
 
 #include "core/WindowInfo.hpp"
-#include "internal/Texture.hpp"
+#include "utility/Texture.hpp"
 #include "spaceship/Projectile.hpp"
 
 #include <vector>
+
+namespace sfa
+{
 
 /*
  * @file ShootingComponent.hpp
@@ -47,4 +50,7 @@ private:
     std::vector<Projectile> m_projectiles;
 };
 
+} // namespace sfa
+
 #endif //! GAME_OBJECTS_SHOOTING_COMPONENT_HPP
+

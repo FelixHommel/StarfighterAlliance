@@ -2,8 +2,11 @@
 #define GAME_OBJECTS_GAME_OBJECT_HPP
 
 #include "core/WindowInfo.hpp"
-#include "internal/SpriteRenderer.hpp"
-#include "internal/Texture.hpp"
+#include "utility/SpriteRenderer.hpp"
+#include "utility/Texture.hpp"
+
+namespace sfa
+{
 
 /*
  * @file GameObject.hpp
@@ -81,4 +84,7 @@ protected:
     void setPositionY(float pos) { m_position.y = pos; }
 };
 
+} // namespace sfa
+
 #endif //! GAME_OBJECTS_GAME_OBJECT_HPP
+

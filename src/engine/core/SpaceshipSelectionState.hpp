@@ -3,10 +3,13 @@
 
 #include "State.hpp"
 #include "gameObjects/spaceship/Spaceship.hpp"
-#include "internal/Button.hpp"
+#include "utility/Button.hpp"
 
 #include <array>
 #include <memory>
+
+namespace sfa
+{
 
 /*
  * @brief Struct to hold all data required to display a spaceship to the player
@@ -68,4 +71,7 @@ private:
     void loadSpaceshipData();
 };
 
+} // namespace sfa
+
 #endif //! CORE_SPACESHIP_SELECTION_STATE_HPP
+

@@ -6,6 +6,9 @@
 #include <queue>
 #include <vector>
 
+namespace sfa
+{
+
 /*
  * @file EnemyWaveGenerator.hpp
  * @brief This class manages all taht relates to EnemyWaves
@@ -53,4 +56,7 @@ private:
     void killWave(size_t index);
 };
 
+} // namespace sfa
+
 #endif //! GAME_OBJECTS_ENEMY_WAVE_GENERATOR_HPP
+

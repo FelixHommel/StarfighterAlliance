@@ -3,6 +3,9 @@
 
 #include "gameObjects/GameObject.hpp"
 
+namespace sfa
+{
+
 /*
  * @file Projectile.hpp
  * @brief This class represents a single projectile that can be fired by the Player
@@ -35,4 +38,7 @@ private:
     int m_damage;
 };
 
+} // namesapce sfa
+
 #endif //! GAME_OBJECTS_SPACESHIP_PROJECTILE_HPP
+

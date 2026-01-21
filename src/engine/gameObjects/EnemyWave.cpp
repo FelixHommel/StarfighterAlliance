@@ -4,6 +4,9 @@
 
 #include <chrono>
 
+namespace sfa
+{
+
 EnemyWave::EnemyWave(const WindowInfo* windowInfo, const Texture2D& textureMeteorite, const Texture2D& textureAlien)
     : m_windowInfo(windowInfo)
     , m_textureMeteorite(textureMeteorite)
@@ -142,3 +145,6 @@ void EnemyWave::checkForBigEnoughHole(bool& flag)
         }
     }
 }
+
+} // namespace sfa
+

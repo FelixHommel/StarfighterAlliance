@@ -1,8 +1,11 @@
 #include "GameState.hpp"
 
-#include "internal/ResourceManager.hpp"
+#include "utility/ResourceManager.hpp"
 
 #include "GLFW/glfw3.h"
+
+namespace sfa
+{
 
 GameState::GameState(
     const Texture2D& background, const WindowInfo* windowInfo, const Mouse* mouse, SpaceshipType type, ColorType color
@@ -233,3 +236,6 @@ void GameState::checkCollision()
         }
     }
 }
+
+} // namespace sfa
+

@@ -3,9 +3,12 @@
 
 #include "Score.hpp"
 #include "State.hpp"
-#include "internal/Button.hpp"
+#include "utility/Button.hpp"
 
 #include <array>
+
+namespace sfa
+{
 
 /*
  * @file EndState.hpp
@@ -80,4 +83,7 @@ private:
     void renderScoreboard(TextRenderer& textRenderer);
 };
 
+} // namespace sfa
+
 #endif //! CORE_END_STATE_HPP
+

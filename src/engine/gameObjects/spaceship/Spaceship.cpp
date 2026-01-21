@@ -2,8 +2,11 @@
 
 #include "GLFW/glfw3.h"
 
-#include "internal/JSONReader.hpp"
-#include "internal/ResourceManager.hpp"
+#include "utility/JSONReader.hpp"
+#include "utility/ResourceManager.hpp"
+
+namespace sfa
+{
 
 Spaceship::Spaceship(SpaceshipType type, ColorType color, const WindowInfo* windowInfo)
     : GameObject(windowInfo)
@@ -125,3 +128,6 @@ std::string Spaceship::spaceshipTypeToString(SpaceshipType type)
         return "millenium_falcon";
     }
 }
+
+} // namespace sfa
+

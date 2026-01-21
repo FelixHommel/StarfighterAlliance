@@ -5,6 +5,8 @@
 
 int main()
 {
+    using namespace sfa;
+
     try
     {
         Application app{};

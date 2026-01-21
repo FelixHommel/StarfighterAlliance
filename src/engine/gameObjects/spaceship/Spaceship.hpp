@@ -6,6 +6,9 @@
 #include "gameObjects/MovementComponent.hpp"
 #include "gameObjects/ShootingComponent.hpp"
 
+namespace sfa
+{
+
 /*
  * @brief Enumeration of all available types of spaceships
  */
@@ -64,4 +67,7 @@ private:
     void loadTexture(ColorType color);
 };
 
+} // namespace sfa
+
 #endif //! GAME_OBJECTS_SPACESHIP_SPACESHIP_HPP
+

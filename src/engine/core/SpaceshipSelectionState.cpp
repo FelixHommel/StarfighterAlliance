@@ -1,7 +1,10 @@
 #include "SpaceshipSelectionState.hpp"
 
-#include "internal/JSONReader.hpp"
-#include "internal/ResourceManager.hpp"
+#include "utility/JSONReader.hpp"
+#include "utility/ResourceManager.hpp"
+
+namespace sfa
+{
 
 SpaceshipSelectionState::SpaceshipSelectionState(
     const Texture2D& background, const WindowInfo* windowInfo, const Mouse* mouse
@@ -126,3 +129,6 @@ void SpaceshipSelectionState::loadSpaceshipData()
         );
     }
 }
+
+} // namespace sfa
+

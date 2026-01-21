@@ -3,7 +3,10 @@
 
 #include "Color.hpp"
 #include "State.hpp"
-#include "internal/Button.hpp"
+#include "utility/Button.hpp"
+
+namespace sfa
+{
 
 /*
  * @file MenuState.hpp
@@ -52,4 +55,7 @@ private:
     bool m_colorRecieved;
 };
 
+} // namespace sfa
+
 #endif //! CORE_MENU_STATE_HPP
+

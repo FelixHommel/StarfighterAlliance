@@ -3,6 +3,9 @@
 
 #include "Enemy.hpp"
 
+namespace sfa
+{
+
 /*
  * @file Alien.hpp
  * @brief This class represents a single enemy
@@ -20,4 +23,7 @@ public:
     ~Alien() override = default;
 };
 
+} // namespace sfa
+
 #endif //! GAME_OBJECTS_ENEMIES_ALIEN_HPP
+

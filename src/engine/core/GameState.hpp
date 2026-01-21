@@ -9,6 +9,9 @@
 
 #include <memory>
 
+namespace sfa
+{
+
 /*
  * @file GameState.hpp
  * @brief This class represents the Game screen
@@ -70,4 +73,7 @@ private:
     void checkCollision();
 };
 
+} // namesapce sfa
+
 #endif //! CORE_GAME_STATE_HPP
+

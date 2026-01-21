@@ -3,6 +3,9 @@
 
 #include "gameObjects/GameObject.hpp"
 
+namespace sfa
+{
+
 class Enemy : public GameObject
 {
 public:
@@ -25,4 +28,7 @@ protected:
     bool m_isAlive;
 };
 
+} // namespace sfa
+
 #endif //! GAME_OBJECTS_ENEMY_HPP
+

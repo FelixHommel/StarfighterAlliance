@@ -1,62 +1,64 @@
-#ifndef GAME_HPP
-#define GAME_HPP
+#ifndef SFA_SRC_ENGINE_GAME_HPP
+#define SFA_SRC_ENGINE_GAME_HPP
 
+#include "core/Color.hpp"
 #include "core/Score.hpp"
 #include "core/State.hpp"
 #include "gameObjects/spaceship/Spaceship.hpp"
-#include "internal/SpriteRenderer.hpp"
-#include "internal/TextRenderer.hpp"
+#include "utility/SpriteRenderer.hpp"
+#include "utility/TextRenderer.hpp"
 
 #include <memory>
 #include <stack>
 
-/*
- * @file Game.hpp
- * @brief Handles the main functionality of the game
- *
- * @details The Game class manages the correct behavior of the game states and loads all the required
- *          resources that are needed
- *
- * @author Felix Hommel
- * @date Nov 16, 2024
- */
+namespace sfa
+{
+
+/// \brief Handles the main functionality of the game
+///
+/// The Game class manages the correct behavior of the game states and loads all the required resources that are needed.
+///
+/// \author Felix Hommel
+/// \date Nov 16, 2024
 class Game
 {
 public:
-    /** Constructor / Destructor */
-    Game(const WindowInfo* windowInfo, const Mouse* mouse);
-    ~Game();
+    Game(const WindowInfo* pWindowInfo, const Mouse* pMouse);
+    ~Game() = default;
 
-    /** Delete move constructor / assignment and leave the copy constructor / assignment to default */
-    Game(const Game&) = default;
-    Game& operator=(const Game&) = default;
+    Game(const Game&) = delete;
+    Game& operator=(const Game&) = delete;
     Game(Game&&) = delete;
     Game& operator=(Game&&) = delete;
 
-    /** Public member functions */
+    [[nodiscard]] bool getQuit() const { return m_quit; }
+
+    /// \brief Update the State and react to eventual events that happened
+    ///
+    /// First run the update() function of the top most state, and then check for new events that happened and react
+    /// accordingly to them.
     void update(float dt);
     void render();
 
-    [[nodiscard]] bool getQuit() const { return m_quit; }
-
 private:
-    /** Member variables */
     const WindowInfo* m_windowInfo;
     const Mouse* m_mouse;
 
-    std::shared_ptr<SpriteRenderer> m_renderer;
-    std::shared_ptr<TextRenderer> m_textRenderer;
-
+    std::unique_ptr<SpriteRenderer> m_renderer;
+    std::unique_ptr<TextRenderer> m_textRenderer;
     std::stack<std::shared_ptr<State>> m_states;
-    bool m_quit;
 
-    SpaceshipType m_spaceshipType;
-    ColorType m_spaceshipColor;
-    bool m_colorRetrieved;
-    Score m_currentScore;
+    bool m_quit{ false };
 
-    /** Private member functions */
+    SpaceshipType m_spaceshipType{ SpaceshipType::x_wing };
+    ColorType m_spaceshipColor{ ColorType::red };
+    bool m_colorRetrieved{ false }; // NOTE: probably not needed anymore
+    Score m_currentScore{};
+
     void loadResources();
 };
 
-#endif //! GAME_HPP
+} // namespace sfa
+
+#endif //! SFA_SRC_ENGINE_GAME_HPP
+

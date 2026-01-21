@@ -1,5 +1,8 @@
 #include "EnemyWaveGenerator.hpp"
 
+namespace sfa
+{
+
 EnemyWaveGenerator::EnemyWaveGenerator(
     const Texture2D& textureMeteorite, const Texture2D& textureAlien, const WindowInfo* windowInfo
 )
@@ -74,3 +77,6 @@ void EnemyWaveGenerator::killWave(size_t index)
     m_pointQueue.push(static_cast<unsigned int>(points));
     m_activeWaves.erase(m_activeWaves.begin() + static_cast<long>(index));
 }
+
+} // namespace sfa
+

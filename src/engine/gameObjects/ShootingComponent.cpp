@@ -1,5 +1,8 @@
 #include "ShootingComponent.hpp"
 
+namespace sfa
+{
+
 ShootingComponent::ShootingComponent(
     const Texture2D& texture, const glm::vec2* spaceshipPos, int damage, const WindowInfo* windowInfo
 )
@@ -32,3 +35,6 @@ void ShootingComponent::shoot(bool& didShoot)
     else
         didShoot = false;
 }
+
+} // namespace sfa
+

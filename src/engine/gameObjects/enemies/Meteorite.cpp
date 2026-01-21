@@ -1,5 +1,8 @@
 #include "Meteorite.hpp"
 
+namespace sfa
+{
+
 /*
  * Constructor without sizeX, will make a square meteorite
  */
@@ -30,3 +33,6 @@ Meteorite::Meteorite(
 {
     m_size = { static_cast<float>(m_windowInfo->height) * sizeX, static_cast<float>(m_windowInfo->height) * 0.1f };
 }
+
+} // namespace sfa
+

@@ -8,13 +8,13 @@ add_library(${NAME}
     ./core/GameState.cpp
     ./core/MenuState.cpp
     ./core/SpaceshipSelectionState.cpp
-    ./internal/Button.cpp
-    ./internal/ParticleGenerator.cpp
-    ./internal/ResourceManager.cpp
-    ./internal/Shader.cpp
-    ./internal/SpriteRenderer.cpp
-    ./internal/TextRenderer.cpp
-    ./internal/Texture.cpp
+    ./utility/Button.cpp
+    ./utility/ParticleGenerator.cpp
+    ./utility/ResourceManager.cpp
+    ./utility/Shader.cpp
+    ./utility/SpriteRenderer.cpp
+    ./utility/TextRenderer.cpp
+    ./utility/Texture.cpp
     ./gameObjects/EnemyWave.cpp
     ./gameObjects/EnemyWaveGenerator.cpp
     ./gameObjects/GameObject.hpp
@@ -41,14 +41,14 @@ target_sources(${NAME}
             ./core/SpaceshipSelectionState.hpp
             ./core/State.hpp
             ./core/WindowInfo.hpp
-            ./internal/Button.hpp
-            ./internal/JSONReader.hpp
-            ./internal/ParticleGenerator.hpp
-            ./internal/ResourceManager.hpp
-            ./internal/Shader.hpp
-            ./internal/SpriteRenderer.hpp
-            ./internal/TextRenderer.hpp
-            ./internal/Texture.hpp
+            ./utility/Button.hpp
+            ./utility/JSONReader.hpp
+            ./utility/ParticleGenerator.hpp
+            ./utility/ResourceManager.hpp
+            ./utility/Shader.hpp
+            ./utility/SpriteRenderer.hpp
+            ./utility/TextRenderer.hpp
+            ./utility/Texture.hpp
             ./gameObjects/EnemyWave.hpp
             ./gameObjects/EnemyWaveGenerator.hpp
             ./gameObjects/GameObject.hpp
@@ -61,15 +61,6 @@ target_sources(${NAME}
             ./gameObjects/spaceship/Spaceship.hpp
             ./external/stb_image.h
 )
-
-set(glad2cmake_target glad2cmake)
-if(TARGET glad2cmake::glad2cmake)
-    set(glad2cmake_target glad2cmake::glad2cmake)
-elseif(TARGET glad2cmake::glad)
-    set(glad2cmake_target glad2cmake::glad)
-elseif(TARGET glad)
-    set(glad2cmake_target glad)
-endif()
 
 target_compile_features(${NAME} PRIVATE cxx_std_23)
 target_link_libraries(${NAME}

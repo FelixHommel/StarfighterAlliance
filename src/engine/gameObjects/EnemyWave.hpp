@@ -7,6 +7,9 @@
 #include <random>
 #include <vector>
 
+namespace sfa
+{
+
 /*
  * @file EnemyWave.hpp
  * @brief This class is responsible for all things that affect the wave as a whole.
@@ -69,4 +72,7 @@ private:
     static std::pair<float, float> getWidthRange(MeteoriteType type);
 };
 
+} // namespace sfa
+
 #endif //! GAME_OBJECTS_ENEMY_WAVE_HPP
+

@@ -1,8 +1,11 @@
 #include "MenuState.hpp"
 
 #include "Color.hpp"
-#include "internal/JSONReader.hpp"
-#include "internal/ResourceManager.hpp"
+#include "utility/JSONReader.hpp"
+#include "utility/ResourceManager.hpp"
+
+namespace sfa
+{
 
 MenuState::MenuState(const Texture2D& background, const WindowInfo* windowInfo, const Mouse* mouse)
     : State(background, windowInfo, mouse, StateName::Menu)
@@ -58,3 +61,6 @@ void MenuState::render(SpriteRenderer& renderer, TextRenderer& textRenderer)
     textRenderer.draw("Starfighter", m_windowInfo->width * 0.5f, m_windowInfo->height * 0.2f, 3.f);
     textRenderer.draw("Alliance", m_windowInfo->width * 0.5f, m_windowInfo->height * 0.3f, 3.f);
 }
+
+} // namespace sfa
+
