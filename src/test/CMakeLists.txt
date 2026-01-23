@@ -3,15 +3,15 @@ set(NAME "StarfighterAllianceTests")
 include(${PROJECT_SOURCE_DIR}/cmake/StaticAnalyzers.cmake)
 
 add_executable(${NAME}
-    ./main.cpp
-    ./my_test.cpp
+    ./testMain.cpp
+    ./utility/JSONReaderTest.cpp
 )
 
 target_sources(${NAME}
     PRIVATE
         FILE_SET HEADERS
         FILES
-            ./MockTexture.hpp
+        mocks/MockTexture.hpp
 )
 
 target_compile_features(${NAME} PRIVATE cxx_std_23)

@@ -3,10 +3,12 @@ project(
     StarfighterAlliance
     DESCRIPTION "Space invaders like game"
     LANGUAGES CXX
+    VERSION 2.0.0
 )
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+add_compile_definitions(SFA_ROOT="${CMAKE_SOURCE_DIR}/")
 
 include(cmake/vcpkg-dependencies.cmake)
 include(cmake/DefaultProjectSettings.cmake)
