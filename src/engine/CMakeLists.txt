@@ -2,12 +2,6 @@ set(NAME "StarfighterAllianceEngine")
 include(${PROJECT_SOURCE_DIR}/cmake/StaticAnalyzers.cmake)
 
 add_library(${NAME}
-    ./Application.cpp
-    ./Game.cpp
-    ./core/EndState.cpp
-    ./core/GameState.cpp
-    ./core/MenuState.cpp
-    ./core/SpaceshipSelectionState.cpp
     ./utility/Button.cpp
     ./utility/ParticleGenerator.cpp
     ./utility/ResourceManager.cpp
@@ -18,15 +12,6 @@ add_library(${NAME}
     ./utility/resourceManagement/ResourceContext.cpp
     ./utility/ui/Layout.cpp
     ./utility/ui/VerticalLayout.cpp
-    ./gameObjects/EnemyWave.cpp
-    ./gameObjects/EnemyWaveGenerator.cpp
-    ./gameObjects/GameObject.hpp
-    ./gameObjects/MovementComponent.cpp
-    ./gameObjects/ShootingComponent.cpp
-    ./gameObjects/enemies/Alien.cpp
-    ./gameObjects/enemies/Meteorite.cpp
-    ./gameObjects/spaceship/Projectile.cpp
-    ./gameObjects/spaceship/Spaceship.cpp
     ./external/stb_image_impl.cpp
 )
 
@@ -34,16 +19,6 @@ target_sources(${NAME}
     PRIVATE
         FILE_SET HEADERS
         FILES
-            ./Application.hpp
-            ./Game.hpp
-            ./core/Color.hpp
-            ./core/EndState.hpp
-            ./core/GameState.hpp
-            ./core/MenuState.hpp
-            ./core/Score.hpp
-            ./core/SpaceshipSelectionState.hpp
-            ./core/State.hpp
-            ./core/WindowInfo.hpp
             ./utility/Button.hpp
             ./utility/JSONReader.hpp
             ./utility/ParticleGenerator.hpp
@@ -59,16 +34,6 @@ target_sources(${NAME}
             ./utility/ui/LayoutElement.hpp
             ./utility/ui/Size.hpp
             ./utility/ui/VerticalLayout.hpp
-            ./gameObjects/EnemyWave.hpp
-            ./gameObjects/EnemyWaveGenerator.hpp
-            ./gameObjects/GameObject.hpp
-            ./gameObjects/MovementComponent.hpp
-            ./gameObjects/ShootingComponent.hpp
-            ./gameObjects/enemies/Alien.hpp
-            ./gameObjects/enemies/Enemy.hpp
-            ./gameObjects/enemies/Meteorite.hpp
-            ./gameObjects/spaceship/Projectile.hpp
-            ./gameObjects/spaceship/Spaceship.hpp
             ./external/stb_image.h
 )
 
@@ -83,7 +48,7 @@ target_link_libraries(${NAME}
         nlohmann_json::nlohmann_json
         glm::glm
         glfw
-        # spdlog::spdlog
+        spdlog::spdlog
         valijson
         fmt::fmt
 )
