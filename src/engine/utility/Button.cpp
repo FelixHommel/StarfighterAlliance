@@ -3,6 +3,9 @@
 #include "glad/gl.h"
 #include "glm/ext/matrix_transform.hpp"
 
+namespace sfa
+{
+
 Button::Button(
     const glm::vec2& pos,
     const glm::vec2& size,
@@ -93,3 +96,15 @@ void Button::draw(TextRenderer* renderer)
     if(renderer != nullptr)
         renderer->draw(m_label, m_position.x + 10.f, (m_position.y + m_size.y / 2.f) - 5.f);
 }
+
+void Button::update(float dt)
+{
+}
+
+void Button::render(TextRenderer* textRenderer)
+{
+    draw(textRenderer);
+}
+
+} // namespace sfa
+

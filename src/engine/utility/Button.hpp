@@ -3,23 +3,23 @@
 
 #include "Shader.hpp"
 #include "TextRenderer.hpp"
+#include "utility/ui/LayoutElement.hpp"
 
 #include <functional>
 
-/*
- * @file Button.hpp
- * @brief A abstraction class for Buttons
- *
- * @details This calss abstracts Buttons to a point where only the position and size needs to be defined
- *          and then the Button can be rendered via the member draw() function
- *
- * @author Felix Hommel
- * @date Nov 16, 2024
- */
-class Button
+namespace sfa
+{
+
+/// \brief Buttons are a UI element to get user input.
+///
+/// This class abstracts Buttons to a point where only the position and size needs to be defined and then the Button
+/// can be rendered via the member draw() function.
+///
+/// \author Felix Hommel
+/// \date 11/16/2024
+class Button : public LayoutElement
 {
 public:
-    /** Constructor / Destructor */
     Button(
         const glm::vec2& pos,
         const glm::vec2& size,
@@ -30,22 +30,28 @@ public:
         const Shader& shader,
         float pressCooldownMax = 0.25f
     );
-    ~Button();
+    ~Button() override;
 
-    /** Delete move constructor / assignment operator and leave the copy constructor / assignmetn operator at default */
-    Button(const Button&) = default;
-    Button(Button&&) = default;
-    Button& operator=(const Button&) = default;
-    Button& operator=(Button&&) = default;
+    Button(const Button&) = delete;
+    Button(Button&&) = delete;
+    Button& operator=(const Button&) = delete;
+    Button& operator=(Button&&) = delete;
 
-    /** Public member functions */
+    [[nodiscard]] glm::vec2 position() const override { return m_position; }
+    [[nodiscard]] glm::vec2 size() const override { return m_size; }
+
+    void setPosition(const glm::vec2& pos) override { m_position = pos; }
+    void setSize(const glm::vec2& size) override { m_size = size; }
+
     void update(float mouseX, float mouseY, bool mousePressed, float dt = 0.f);
     void draw(TextRenderer* renderer = nullptr);
+
+    void update(float dt) override;
+    void render(TextRenderer* textRenderer) override;
 
     void setOnClick(std::function<void()> callback) { m_onClick = callback; }
 
 private:
-    /** Member variables */
     Shader m_shader;
 
     unsigned int m_vao;
@@ -62,5 +68,7 @@ private:
     float m_pressCooldownMax;
     float m_pressCooldown;
 };
+
+} // namespace sfa
 
 #endif //! INTERNAL_BUTTON_HPP

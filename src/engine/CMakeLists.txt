@@ -16,6 +16,8 @@ add_library(${NAME}
     ./utility/TextRenderer.cpp
     ./utility/Texture.cpp
     ./utility/resourceManagement/ResourceContext.cpp
+    ./utility/ui/Layout.cpp
+    ./utility/ui/VerticalLayout.cpp
     ./gameObjects/EnemyWave.cpp
     ./gameObjects/EnemyWaveGenerator.cpp
     ./gameObjects/GameObject.hpp
@@ -52,6 +54,11 @@ target_sources(${NAME}
             ./utility/Texture.hpp
             ./utility/resourceManagement/ResourceCache.hpp
             ./utility/resourceManagement/ResourceContext.hpp
+            ./utility/ui/Anchor.hpp
+            ./utility/ui/Layout.hpp
+            ./utility/ui/LayoutElement.hpp
+            ./utility/ui/Size.hpp
+            ./utility/ui/VerticalLayout.hpp
             ./gameObjects/EnemyWave.hpp
             ./gameObjects/EnemyWaveGenerator.hpp
             ./gameObjects/GameObject.hpp
