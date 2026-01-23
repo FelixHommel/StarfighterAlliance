@@ -155,7 +155,7 @@ CheckOptions:
   - { key: readability-identifier-naming.MemberCase, value: camelBack }
   - { key: readability-identifier-naming.ProtectedMemberPrefix, value: m_ }
   - { key: readability-identifier-naming.PrivateMemberPrefix, value: m_ }
-  - { key: misc-include-cleaner.IgnoreHeaders, value: "glm/.*" }
+  - { key: misc-include-cleaner.IgnoreHeaders, value: "glm/.*;ft2build.h;FT_FREETYPE_H" }
   - { key: readability-magic-numbers.IgnoredIntegerValues, value: "0;1;2;-1" }
   - { key: readability-magic-numbers.IgnoredFloatingPointValues, value: "0.0;0.25;0.5;1.0;2.0" }
 UseColor: true

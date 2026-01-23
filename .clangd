@@ -2,5 +2,6 @@ Diagnostics:
   Includes:
     IgnoreHeader:
       - "glm/.*"
+      - "ft2build.h"
 Documentation:
   CommentFormat: Doxygen
