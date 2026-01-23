@@ -1,12 +1,13 @@
-#ifndef SFA_SRC_ENGINE_UTILITY_RESOURCE_MANAGEMENT_RESOURCE_CACHE_HPP
-#define SFA_SRC_ENGINE_UTILITY_RESOURCE_MANAGEMENT_RESOURCE_CACHE_HPP
+#ifndef SFA_SRC_ENGINE_CORE_RESOURCE_MANAGEMENT_RESOURCE_CACHE_HPP
+#define SFA_SRC_ENGINE_CORE_RESOURCE_MANAGEMENT_RESOURCE_CACHE_HPP
 
-// #include "spdlog/spdlog.h"
+#include "spdlog/spdlog.h"
 
 #include <memory>
 #include <stdexcept>
 #include <string>
 #include <unordered_map>
+#include <utility>
 
 namespace sfa
 {
@@ -17,7 +18,7 @@ namespace sfa
 /// constructable.
 ///
 /// \author Felix Hommel
-/// \date Jan 21, 2026
+/// \date 1/21/2026
 template<typename T>
 class ResourceCache
 {
@@ -38,8 +39,8 @@ public:
     /// \param resource the resource that is stored
     void store(std::string key, std::shared_ptr<T> resource)
     {
-        // if(m_resources.contains(key))
-        //     spdlog::warn("Overwritten a resource with key: {}", key);
+        if(m_resources.contains(key))
+            spdlog::warn("Overwritten a resource with key: {}", key);
             
         m_resources.insert_or_assign(std::move(key), std::move(resource));
     }
@@ -66,11 +67,10 @@ public:
     void clear() noexcept { m_resources.clear(); }
 
 private:
-    // NOTE: Consider making resources shared_ptr
     std::unordered_map<std::string, std::shared_ptr<T>> m_resources;
 };
 
 } // namespace sfa
 
-#endif // !SFA_SRC_ENGINE_UTILITY_RESOURCE_MANAGEMENT_RESOURCE_CACHE_HPP
+#endif // !SFA_SRC_ENGINE_CORE_RESOURCE_MANAGEMENT_RESOURCE_CACHE_HPP
 

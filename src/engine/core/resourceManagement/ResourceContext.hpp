@@ -1,11 +1,12 @@
-#ifndef SFA_SRC_ENGINE_UTILITY_RESOURCE_MANAGEMENT_RESOURCE_CONTEXT_HPP
-#define SFA_SRC_ENGINE_UTILITY_RESOURCE_MANAGEMENT_RESOURCE_CONTEXT_HPP
+#ifndef SFA_SRC_ENGINE_CORE_RESOURCE_MANAGEMENT_RESOURCE_CONTEXT_HPP
+#define SFA_SRC_ENGINE_CORE_RESOURCE_MANAGEMENT_RESOURCE_CONTEXT_HPP
 
-#include "utility/Shader.hpp"
-#include "utility/Texture.hpp"
-#include "utility/resourceManagement/ResourceCache.hpp"
+#include "core/Shader.hpp"
+#include "core/Texture.hpp"
+#include "core/resourceManagement/ResourceCache.hpp"
 
 #include <filesystem>
+#include <memory>
 #include <optional>
 #include <string>
 
@@ -16,7 +17,7 @@ class ResourceContext
 {
 public:
     ResourceContext() = default;
-    ~ResourceContext();
+    ~ResourceContext() = default;
 
     ResourceContext(const ResourceContext&) = delete;
     ResourceContext(ResourceContext&&) = delete;
@@ -35,11 +36,11 @@ private:
     ResourceCache<Shader> m_shaderCache;
     ResourceCache<Texture2D> m_textureCache;
 
-    static Shader loadShader(const std::filesystem::path& vert, const std::filesystem::path& frag, const std::filesystem::path& geom);
+    // static Shader loadShader(const std::filesystem::path& vert, const std::filesystem::path& frag, const std::filesystem::path& geom);
     static Texture2D loadTexture(const std::filesystem::path& filepath);
 };
 
 } // namespace sfa
 
-#endif // !SFA_SRC_ENGINE_UTILITY_RESOURCE_MANAGEMENT_RESOURCE_CONTEXT_HPP
+#endif // !SFA_SRC_ENGINE_CORE_RESOURCE_MANAGEMENT_RESOURCE_CONTEXT_HPP
 

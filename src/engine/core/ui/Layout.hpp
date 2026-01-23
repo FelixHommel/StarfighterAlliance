@@ -3,7 +3,7 @@
 
 #include "Anchor.hpp"
 #include "LayoutElement.hpp"
-#include "utility/TextRenderer.hpp"
+#include "core/TextRenderer.hpp"
 
 #include <memory>
 #include <vector>

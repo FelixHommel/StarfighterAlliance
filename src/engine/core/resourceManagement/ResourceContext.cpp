@@ -1,19 +1,23 @@
 #include "ResourceContext.hpp"
 
+#include "core/Shader.hpp"
+#include "core/Texture.hpp"
+
 #include "external/stb_image.h"
 #include <spdlog/spdlog.h>
 
+#include <cstddef>
 #include <exception>
+#include <filesystem>
 #include <fstream>
+#include <memory>
+#include <optional>
+#include <span>
+#include <sstream>
 #include <string>
 
 namespace sfa
 {
-
-ResourceContext::~ResourceContext()
-{
-
-}
 
 void ResourceContext::loadShaderFromFile(const std::string& name, const std::filesystem::path& vert, const std::filesystem::path& frag, std::optional<std::filesystem::path> geom)
 {
@@ -77,9 +81,9 @@ void ResourceContext::clear()
     m_textureCache.clear();
 }
     
-Shader ResourceContext::loadShader(const std::filesystem::path& vert, const std::filesystem::path& frag, const std::filesystem::path& geom)
-{
-}
+// Shader ResourceContext::loadShader(const std::filesystem::path& vert, const std::filesystem::path& frag, const std::filesystem::path& geom)
+// {
+// }
 
 Texture2D ResourceContext::loadTexture(const std::filesystem::path& filepath)
 {
@@ -93,7 +97,8 @@ Texture2D ResourceContext::loadTexture(const std::filesystem::path& filepath)
     const auto size{ static_cast<std::size_t>( width * height) * 4 };
     std::span<const std::byte> pixels{ reinterpret_cast<const std::byte*>(data), size };
 
-    if(nrChannels == 4)
+    static constexpr auto RGBA_CHANNELS{ 4 };
+    if(nrChannels == RGBA_CHANNELS)
         texture.setRGBA();
 
     texture.generate(width, height, data);

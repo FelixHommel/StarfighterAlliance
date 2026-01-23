@@ -1,11 +1,17 @@
 #include "ResourceManager.hpp"
 
+#include "Shader.hpp"
+#include "Texture.hpp"
+
 #include "external/stb_image.h"
 #include "glad/gl.h"
 
+#include <exception>
 #include <fstream>
 #include <iostream>
+#include <map>
 #include <sstream>
+#include <string>
 
 /** Instantiate the map objects */
 std::map<std::string, Texture2D> ResourceManager::m_textures;
@@ -139,7 +145,8 @@ Texture2D ResourceManager::loadTextureFromFile(const char* filepath)
     int nrChannels{ 0 };
     unsigned char* data = stbi_load(filepath, &width, &height, &nrChannels, 0);
 
-    if(nrChannels == 4)
+    static constexpr auto RGBA_CHANNELS{ 4 };
+    if(nrChannels == RGBA_CHANNELS)
         texture.setRGBA();
 
     texture.generate(width, height, data);

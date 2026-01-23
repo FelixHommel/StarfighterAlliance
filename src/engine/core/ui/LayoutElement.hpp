@@ -2,7 +2,7 @@
 #define SFA_SRC_ENGINE_UTILITY_UI_LAYOUT_ELEMENT_HPP
 
 #include "glm/glm.hpp"
-#include "utility/TextRenderer.hpp"
+#include "core/TextRenderer.hpp"
 
 namespace sfa
 {

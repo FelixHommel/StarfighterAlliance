@@ -1,7 +1,7 @@
 #include "VerticalLayout.hpp"
 
-#include "utility/ui/Anchor.hpp"
-#include "utility/ui/Layout.hpp"
+#include "core/ui/Anchor.hpp"
+#include "core/ui/Layout.hpp"
 
 #include "glm/glm.hpp"
 #include <cstddef>

@@ -1,14 +1,19 @@
 #include "TextRenderer.hpp"
 
-#include "ResourceManager.hpp"
-
 #include "ft2build.h"
+// NOLINTNEXTLINE(misc-include-cleaner): FT_FREETYPE_H is a macro that is created by FreeType. That is it's inteded use.
 #include FT_FREETYPE_H
 
 #include "glad/gl.h"
 #include "glm/ext/matrix_clip_space.hpp"
 
+#include <array>
 #include <iostream>
+#include <string>
+#include <utility>
+
+namespace sfa
+{
 
 /*
  * @brief Prepare the VertexArray and VertexBuffer to load Data later
@@ -16,13 +21,10 @@
  * @param width, the width of the window where the text will be rendered
  * @param height, thw hwight of the window where the text will be rendered
  */
-TextRenderer::TextRenderer(unsigned int width, unsigned int height) : m_vao{ 0 }, m_vbo{ 0 }, m_textShader{}
+TextRenderer::TextRenderer(unsigned int width, unsigned int height)
 {
-    m_textShader
-        = ResourceManager::loadShader("resources/shaders/text.vert", "resources/shaders/text.frag", nullptr, "text");
-
     m_textShader.setMatrix4(
-        "projection", glm::ortho(0.0f, static_cast<float>(width), static_cast<float>(height), 0.0f), true
+        "projection", glm::ortho(0.f, static_cast<float>(width), static_cast<float>(height), 0.f), true
     );
     m_textShader.setInteger("text", 0);
 
@@ -32,9 +34,9 @@ TextRenderer::TextRenderer(unsigned int width, unsigned int height) : m_vao{ 0 }
     glBindVertexArray(m_vao);
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, nullptr, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * GLYPH_VERTICES * GLYPH_VERTEX_ATTRIBUTES, nullptr, GL_DYNAMIC_DRAW);
 
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), nullptr);
+    glVertexAttribPointer(0, GLYPH_VERTEX_ATTRIBUTES, GL_FLOAT, GL_FALSE, GLYPH_VERTEX_ATTRIBUTES * sizeof(float), nullptr);
     glEnableVertexAttribArray(0);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -69,7 +71,7 @@ void TextRenderer::load(std::string font, unsigned int fontSize)
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
     // Load Glyph for the first 128 ASCII Characters
-    for(GLubyte c = 0; c < 128; ++c)
+    for(GLubyte c = 0; c < LOADED_ASCII_CHARS; ++c)
     {
         if(FT_Load_Char(face, c, FT_LOAD_RENDER) != 0)
         {
@@ -97,10 +99,12 @@ void TextRenderer::load(std::string font, unsigned int fontSize)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-        Character character = { texture,
-                                glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-                                glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-                                static_cast<unsigned int>(face->glyph->advance.x) };
+        Character character{
+            .textureID = texture,
+            .size = glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+            .bearing = glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+            .advance = static_cast<unsigned int>(face->glyph->advance.x)
+        };
         m_characters.insert(std::pair<char, Character>(c, character));
     }
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -135,26 +139,28 @@ void TextRenderer::draw(std::string text, float x, float y, float scale, glm::ve
 
         float w = static_cast<float>(ch.size.x) * scale;
         float h = static_cast<float>(ch.size.y) * scale;
-        float vertices[6][4] = {
-            { xpos,     ypos + h, 0.0f, 1.0f },
-            { xpos + w, ypos,     1.0f, 0.0f },
-            { xpos,     ypos,     0.0f, 0.0f },
-
-            { xpos,     ypos + h, 0.0f, 1.0f },
-            { xpos + w, ypos + h, 1.0f, 1.0f },
-            { xpos + w, ypos,     1.0f, 0.0f }
+        std::array<float, GLYPH_VERTICES * GLYPH_VERTEX_ATTRIBUTES> vertices{
+            xpos,     ypos + h, 0.0f, 1.0f,
+            xpos + w, ypos,     1.0f, 0.0f,
+            xpos,     ypos,     0.0f, 0.0f,
+            xpos,     ypos + h, 0.0f, 1.0f,
+            xpos + w, ypos + h, 1.0f, 1.0f,
+            xpos + w, ypos,     1.0f, 0.0f
         };
         glBindTexture(GL_TEXTURE_2D, ch.textureID);
         glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices.data());
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        glDrawArrays(GL_TRIANGLES, 0, GLYPH_VERTICES);
 
         // Bitshift by 6 == 2^6, advance is 1/64 of a pixel
-        x += (ch.advance >> 6) * scale;
+        x += static_cast<float>(ch.advance >> ADVANCE_BITSHIFT) * scale;
     }
 
     glBindVertexArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
+
+} // namespace sfa
+

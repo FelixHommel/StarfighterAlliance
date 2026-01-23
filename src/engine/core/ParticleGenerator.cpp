@@ -1,6 +1,7 @@
 #include "ParticleGenerator.hpp"
 
 #include "Shader.hpp"
+#include "Texture.hpp"
 
 #include "glad/gl.h"
 
@@ -9,10 +10,6 @@
 ParticleGenerator::ParticleGenerator(const Shader& shader, const Texture2D& texture, unsigned int amount)
     : m_shader(shader), m_texture(texture), m_amount(amount), m_lastUsedParticle(0), m_vao(0)
 {
-    std::array<float, 6 * 4> particle_quad = { 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-
-                                               0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f };
-
     unsigned int VBO{};
 
     glGenVertexArrays(1, &m_vao);
@@ -23,7 +20,14 @@ ParticleGenerator::ParticleGenerator(const Shader& shader, const Texture2D& text
     glBufferData(GL_ARRAY_BUFFER, particle_quad.size() * sizeof(float), particle_quad.data(), GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), nullptr);
+    glVertexAttribPointer(
+        0,
+        PARTICLE_QUAD_VERTICES_ATTRIBUTES,
+        GL_FLOAT,
+        GL_FALSE,
+        PARTICLE_QUAD_VERTICES_ATTRIBUTES * sizeof(float),
+        nullptr
+    );
     glBindVertexArray(0);
 
     for(unsigned int i = 0; i < m_amount; ++i)
@@ -70,7 +74,7 @@ void ParticleGenerator::draw()
             m_shader.setVector4f("color", particle.color);
             m_texture.bind();
             glBindVertexArray(m_vao);
-            glDrawArrays(GL_TRIANGLES, 0, 6);
+            glDrawArrays(GL_TRIANGLES, 0, PARTICLE_QUAD_VERTICES);
             glBindVertexArray(0);
         }
     }

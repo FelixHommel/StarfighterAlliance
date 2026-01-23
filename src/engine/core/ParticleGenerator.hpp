@@ -4,6 +4,8 @@
 #include "Shader.hpp"
 #include "Texture.hpp"
 
+#include <array>
+#include <cstddef>
 #include <vector>
 
 struct Particle
@@ -29,6 +31,17 @@ public:
     void draw();
 
 private:
+    static constexpr std::size_t PARTICLE_QUAD_VERTICES{ 6 };
+    static constexpr std::size_t PARTICLE_QUAD_VERTICES_ATTRIBUTES{ 4 };
+    static constexpr std::array<float, PARTICLE_QUAD_VERTICES * PARTICLE_QUAD_VERTICES_ATTRIBUTES> particle_quad = {
+        0.0f, 1.0f, 0.0f, 1.0f,
+        1.0f, 0.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f, 1.0f,
+        1.0f, 1.0f, 1.0f, 1.0f,
+        1.0f, 0.0f, 1.0f, 0.0f
+    };
+
     Shader m_shader;
     Texture2D m_texture;
 

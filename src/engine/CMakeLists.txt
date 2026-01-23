@@ -2,16 +2,16 @@ set(NAME "StarfighterAllianceEngine")
 include(${PROJECT_SOURCE_DIR}/cmake/StaticAnalyzers.cmake)
 
 add_library(${NAME}
-    ./utility/Button.cpp
-    ./utility/ParticleGenerator.cpp
-    ./utility/ResourceManager.cpp
-    ./utility/Shader.cpp
-    ./utility/SpriteRenderer.cpp
-    ./utility/TextRenderer.cpp
-    ./utility/Texture.cpp
-    ./utility/resourceManagement/ResourceContext.cpp
-    ./utility/ui/Layout.cpp
-    ./utility/ui/VerticalLayout.cpp
+    ./core/Button.cpp
+    ./core/ParticleGenerator.cpp
+    ./core/ResourceManager.cpp
+    ./core/Shader.cpp
+    ./core/SpriteRenderer.cpp
+    ./core/TextRenderer.cpp
+    ./core/Texture.cpp
+    ./core/resourceManagement/ResourceContext.cpp
+    ./core/ui/Layout.cpp
+    ./core/ui/VerticalLayout.cpp
     ./external/stb_image_impl.cpp
 )
 
@@ -19,21 +19,21 @@ target_sources(${NAME}
     PRIVATE
         FILE_SET HEADERS
         FILES
-            ./utility/Button.hpp
-            ./utility/JSONReader.hpp
-            ./utility/ParticleGenerator.hpp
-            ./utility/ResourceManager.hpp
-            ./utility/Shader.hpp
-            ./utility/SpriteRenderer.hpp
-            ./utility/TextRenderer.hpp
-            ./utility/Texture.hpp
-            ./utility/resourceManagement/ResourceCache.hpp
-            ./utility/resourceManagement/ResourceContext.hpp
-            ./utility/ui/Anchor.hpp
-            ./utility/ui/Layout.hpp
-            ./utility/ui/LayoutElement.hpp
-            ./utility/ui/Size.hpp
-            ./utility/ui/VerticalLayout.hpp
+            ./core/Button.hpp
+            ./core/JSONReader.hpp
+            ./core/ParticleGenerator.hpp
+            ./core/ResourceManager.hpp
+            ./core/Shader.hpp
+            ./core/SpriteRenderer.hpp
+            ./core/TextRenderer.hpp
+            ./core/Texture.hpp
+            ./core/resourceManagement/ResourceCache.hpp
+            ./core/resourceManagement/ResourceContext.hpp
+            ./core/ui/Anchor.hpp
+            ./core/ui/Layout.hpp
+            ./core/ui/LayoutElement.hpp
+            ./core/ui/Size.hpp
+            ./core/ui/VerticalLayout.hpp
             ./external/stb_image.h
 )
 

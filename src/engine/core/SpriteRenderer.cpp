@@ -1,11 +1,15 @@
 #include "SpriteRenderer.hpp"
 
 #include "Shader.hpp"
+#include "Texture.hpp"
 
 #include "glad/gl.h"
 #include "glm/ext/matrix_transform.hpp"
 
 #include <array>
+
+namespace sfa
+{
 
 /*
  * @brief Setup a quad in a vertex array
@@ -14,21 +18,15 @@
  */
 SpriteRenderer::SpriteRenderer(const Shader& shader) : m_shader(shader), m_quadVAO(0)
 {
-    unsigned int VBO{};
-    std::array<float, 6 * 4> vertices{ // pos      // tex
-                                       0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-
-                                       0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f
-    };
-
     glGenVertexArrays(1, &m_quadVAO);
+    unsigned int VBO{};
     glGenBuffers(1, &VBO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
 
     glBindVertexArray(m_quadVAO);
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), nullptr);
+    glVertexAttribPointer(0, SPRITE_VERTEX_ATTRIBUTES, GL_FLOAT, GL_FALSE, SPRITE_VERTEX_ATTRIBUTES * sizeof(float), nullptr);
     glEnableVertexAttribArray(0);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -63,7 +61,7 @@ void SpriteRenderer::draw(
 )
 {
     m_shader.use();
-    glm::mat4 model = glm::mat4(1.0f);
+    glm::mat4 model{ glm::mat4(1.0f) };
 
     model = glm::translate(model, glm::vec3(position, 0.0f));
 
@@ -81,7 +79,10 @@ void SpriteRenderer::draw(
     texture.bind();
 
     glBindVertexArray(m_quadVAO);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glDrawArrays(GL_TRIANGLES, 0, SPRITE_VERTICES);
 
     glBindVertexArray(0);
 }
+
+} // namespace sfa
+

@@ -1,7 +1,13 @@
 #include "Button.hpp"
 
+#include "Shader.hpp"
+#include "core/TextRenderer.hpp"
+
 #include "glad/gl.h"
 #include "glm/ext/matrix_transform.hpp"
+
+#include <array>
+#include <string>
 
 namespace sfa
 {
@@ -28,21 +34,22 @@ Button::Button(
     , m_pressCooldownMax(pressCooldownMax)
     , m_pressCooldown(0)
 {
-    unsigned int VBO{};
-    std::array<float, 6 * 4> vertices{ // pos      // tex
-                                       0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-
-                                       0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f
-    };
-
     glGenVertexArrays(1, &m_vao);
+    unsigned int VBO{ 0 };
     glGenBuffers(1, &VBO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
 
     glBindVertexArray(m_vao);
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), nullptr);
+    glVertexAttribPointer(
+        0,
+        BUTTON_VERTEX_ATTRIBUTES,
+        GL_FLOAT,
+        GL_FALSE,
+        BUTTON_VERTEX_ATTRIBUTES * sizeof(float),
+        nullptr
+    );
     glEnableVertexAttribArray(0);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -80,7 +87,7 @@ void Button::update(float mouseX, float mouseY, bool mousePressed, float dt)
 void Button::draw(TextRenderer* renderer)
 {
     m_shader.use();
-    glm::mat4 model = glm::mat4(1.0f);
+    auto model{ glm::mat4(1.0f) };
 
     model = glm::translate(model, glm::vec3(m_position, 0.0f));
     model = glm::scale(model, glm::vec3(m_size, 1.0f));
@@ -89,12 +96,14 @@ void Button::draw(TextRenderer* renderer)
     m_shader.setVector3f("color", m_renderColor);
 
     glBindVertexArray(m_vao);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glDrawArrays(GL_TRIANGLES, 0, BUTTON_VERTICES);
 
     glBindVertexArray(0);
 
+    static constexpr float BUTTON_LABEL_X_OFFSET{ 10.f };
+    static constexpr float BUTTON_LABEL_Y_OFFSET{ 5.f };
     if(renderer != nullptr)
-        renderer->draw(m_label, m_position.x + 10.f, (m_position.y + m_size.y / 2.f) - 5.f);
+        renderer->draw(m_label, m_position.x + BUTTON_LABEL_X_OFFSET, (m_position.y + m_size.y / 2.f) - BUTTON_LABEL_Y_OFFSET);
 }
 
 void Button::update(float dt)

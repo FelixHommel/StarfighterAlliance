@@ -1,7 +1,9 @@
 #include "Layout.hpp"
 
+#include "LayoutElement.hpp"
+#include "core/TextRenderer.hpp"
+
 #include "glm/glm.hpp"
-#include "utility/TextRenderer.hpp"
 
 #include <iostream>
 #include <memory>

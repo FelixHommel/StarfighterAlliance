@@ -1,11 +1,14 @@
-#ifndef INTERNAL_BUTTON_HPP
-#define INTERNAL_BUTTON_HPP
+#ifndef SFA_SRC_ENGINE_CORE_BUTTON_HPP
+#define SFA_SRC_ENGINE_CORE_BUTTON_HPP
 
 #include "Shader.hpp"
 #include "TextRenderer.hpp"
-#include "utility/ui/LayoutElement.hpp"
+#include "core/ui/LayoutElement.hpp"
 
+#include <array>
+#include <cstddef>
 #include <functional>
+#include <string>
 
 namespace sfa
 {
@@ -17,7 +20,7 @@ namespace sfa
 ///
 /// \author Felix Hommel
 /// \date 11/16/2024
-class Button : public LayoutElement
+class Button final : public LayoutElement
 {
 public:
     Button(
@@ -52,6 +55,17 @@ public:
     void setOnClick(std::function<void()> callback) { m_onClick = callback; }
 
 private:
+    static constexpr std::size_t BUTTON_VERTICES{ 6 };
+    static constexpr std::size_t BUTTON_VERTEX_ATTRIBUTES{ 4 };
+    static constexpr std::array<float, BUTTON_VERTICES * BUTTON_VERTEX_ATTRIBUTES> vertices{
+        0.0f, 1.0f, 0.0f, 1.0f,
+        1.0f, 0.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f, 1.0f,
+        1.0f, 1.0f, 1.0f, 1.0f,
+        1.0f, 0.0f, 1.0f, 0.0f
+    };
+
     Shader m_shader;
 
     unsigned int m_vao;
@@ -71,4 +85,4 @@ private:
 
 } // namespace sfa
 
-#endif //! INTERNAL_BUTTON_HPP
+#endif //! SFA_SRC_ENGINE_CORE_BUTTON_HPP
