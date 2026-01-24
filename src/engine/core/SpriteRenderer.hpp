@@ -6,6 +6,7 @@
 
 #include <array>
 #include <cstddef>
+#include <memory>
 
 namespace sfa
 {
@@ -21,20 +22,38 @@ namespace sfa
 class SpriteRenderer
 {
 public:
-    SpriteRenderer(const Shader& shader);
+    /// \brief Create a new \ref SpriteRenderer
+    ///
+    /// \param shader the \ref Shader that will be used to render this quad
+    SpriteRenderer(std::shared_ptr<Shader> shader);
     ~SpriteRenderer();
 
-    SpriteRenderer(const SpriteRenderer&) = default;
+    SpriteRenderer(const SpriteRenderer&) = delete;
     SpriteRenderer(SpriteRenderer&&) = delete;
-    SpriteRenderer& operator=(const SpriteRenderer&) = default;
+    SpriteRenderer& operator=(const SpriteRenderer&) = delete;
     SpriteRenderer& operator=(SpriteRenderer&&) = delete;
 
+    /// \brief Draw a textured quad to the screen
+    ///
+    /// The order of actions within the function is important, especially the translation, rotation, and scale order.
+    ///     1. translate - bring the quad to the correct position
+    ///     2. rotate - rotate the quad to the correct angle
+    ///     3. scale - scale the quad to the correct size
+    ///
+    /// Note that the actual coordinates of all the quads are the same. The position on the screen is computed with matrix
+    /// transformations, which achieves the same visual results.
+    ///
+    /// \param texture the texture of the quad
+    /// \param position the position of the quad on screen
+    /// \param size(optional) the size of the quad on screen
+    /// \param rotate(optional) the rotation of the quad
+    /// \param color(optional) the color of the quad. If a color and texture is supplied the two will be blended to produce the final look
     void draw(
         const Texture2D& texture,
         const glm::vec2& position,
-        const glm::vec2& size = DEFAULT_DRAW_SIZE,
-        float rotate = 0.f,
-        const glm::vec3& color = glm::vec3(1.f)
+        const glm::vec2& scale = DEFAULT_DRAW_SCALE,
+        float rotate = DEFAULT_ROTATION,
+        const glm::vec3& color = DEFAULT_COLOR
     );
 
 private:
@@ -48,10 +67,12 @@ private:
         1.0f, 1.0f, 1.0f, 1.0f,
         1.0f, 0.0f, 1.0f, 0.0f
     };
-    static constexpr auto DEFAULT_DRAW_SIZE{ glm::vec2(10.f) };
+    static constexpr auto DEFAULT_DRAW_SCALE{ glm::vec2(10.f) };
+    static constexpr auto DEFAULT_ROTATION{ 0.f };
+    static constexpr auto DEFAULT_COLOR{ glm::vec3(1.f) };
 
-    Shader m_shader;
-    unsigned int m_quadVAO;
+    std::shared_ptr<Shader> m_shader;
+    unsigned int m_quadVAO{ 0 };
 };
 
 } // namespace sfa

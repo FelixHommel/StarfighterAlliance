@@ -7,7 +7,9 @@
 #include "glm/ext/matrix_transform.hpp"
 
 #include <array>
+#include <memory>
 #include <string>
+#include <utility>
 
 namespace sfa
 {
@@ -19,11 +21,10 @@ Button::Button(
     const glm::vec3& hoveredColor,
     const glm::vec3& pressedColor,
     const std::string& label,
-    const Shader& shader,
+    std::shared_ptr<Shader> shader,
     float pressCooldownMax
 )
-    : m_shader(shader)
-    , m_vao(0)
+    : m_shader(std::move(shader))
     , m_position(pos)
     , m_size(size)
     , m_defaultColor(defaultColor)
@@ -32,14 +33,13 @@ Button::Button(
     , m_renderColor(defaultColor)
     , m_label(label)
     , m_pressCooldownMax(pressCooldownMax)
-    , m_pressCooldown(0)
 {
     glGenVertexArrays(1, &m_vao);
-    unsigned int VBO{ 0 };
-    glGenBuffers(1, &VBO);
+    unsigned int vbo{ 0 };
+    glGenBuffers(1, &vbo);
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, VERTICES.size() * sizeof(float), VERTICES.data(), GL_STATIC_DRAW);
 
     glBindVertexArray(m_vao);
     glVertexAttribPointer(
@@ -55,7 +55,7 @@ Button::Button(
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-    glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &vbo);
 }
 
 Button::~Button()
@@ -86,14 +86,14 @@ void Button::update(float mouseX, float mouseY, bool mousePressed, float dt)
 
 void Button::draw(TextRenderer* renderer)
 {
-    m_shader.use();
-    auto model{ glm::mat4(1.0f) };
+    m_shader->use();
+    auto model{ glm::mat4(1.f) };
 
-    model = glm::translate(model, glm::vec3(m_position, 0.0f));
-    model = glm::scale(model, glm::vec3(m_size, 1.0f));
+    model = glm::translate(model, glm::vec3(m_position, 0.f));
+    model = glm::scale(model, glm::vec3(m_size, 1.f));
 
-    m_shader.setMatrix4("model", model);
-    m_shader.setVector3f("color", m_renderColor);
+    m_shader->setMatrix4("model", model);
+    m_shader->setVector3f("color", m_renderColor);
 
     glBindVertexArray(m_vao);
     glDrawArrays(GL_TRIANGLES, 0, BUTTON_VERTICES);

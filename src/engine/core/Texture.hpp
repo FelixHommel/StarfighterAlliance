@@ -1,44 +1,62 @@
-#ifndef INTERNAL_TEXTURE_HPP
-#define INTERNAL_TEXTURE_HPP
+#ifndef SFA_SRC_ENGINE_CORE_TEXTURE_HPP
+#define SFA_SRC_ENGINE_CORE_TEXTURE_HPP
 
-/*
- * @file Texture.hpp
- * @brief Abstracts OpenGL Textures
- *
- * @details Holds all the information of a Texture and registers it within OpenGL
- *
- * @author Felix Hommel
- * @date Nov 17, 2024
- */
+#include "glad/gl.h"
+
+#include <cstddef>
+#include <vector>
+
+namespace sfa
+{
+
+/// \brief Abstracts OpenGL Textures.
+///
+/// Holds all the information of a Texture and registers it within OpenGL.
+///
+/// \author Felix Hommel
+/// \date 11/17/2024
 class Texture2D
 {
 public:
-    /** !! Constructor !! */
-    /** ATTENTION: do not use the flag expect for unit testing */
-    Texture2D(bool flag = false);
-    /** Class cannot have a destructor, will be called accidentally --> no texture rendering */
+    /// \brief Create a new \ref Texture2D and set it up with OpenGL.
+    ///
+    /// \param width the width of the texture
+    /// \param height the height of the texture
+    /// \param pixels the image data
+    Texture2D(int width, int height, const std::vector<std::byte>& pixels);
+    ~Texture2D();
 
-    /** Public member functions */
-    void generate(int width, int height, unsigned char* data);
+    Texture2D(Texture2D&& other) noexcept;
+    Texture2D& operator=(Texture2D&& other) noexcept;
+
+    Texture2D(const Texture2D&) = delete("Textures should not be copy constructed because texture IDs should be unique");
+    Texture2D& operator=(const Texture2D&) = delete("Textures should not be copy assigned because texture IDs should be unique");
+
+    /// \brief Bind the texture to the OpenGL state.
     void bind() const;
 
-    [[nodiscard]] const unsigned int* getID() const { return &m_id; }
-    [[nodiscard]] int getWidth() const { return m_width; }
-    [[nodiscard]] int getHeight() const { return m_height; }
+    [[nodiscard]] unsigned int getID() const noexcept { return m_id; }
+    [[nodiscard]] int width() const noexcept { return m_width; }
+    [[nodiscard]] int height() const noexcept { return m_height; }
 
+    /// \brief Configure the texture as an RGBA texture.
     void setRGBA();
 
 private:
-    /** Member variables */
-    unsigned int m_id;
-    int m_width;
-    int m_height;
-    int m_internalFormat;
-    int m_imageFormat;
-    int m_wrapS;
-    int m_wrapT;
-    int m_filterMin;
-    int m_filterMax;
+    unsigned int m_id{ 0 };
+    int m_width{ 0 };
+    int m_height{ 0 };
+    int m_internalFormat{ GL_RGB };
+    int m_imageFormat{ GL_RGB };
+    int m_wrapS{ GL_REPEAT };
+    int m_wrapT{ GL_REPEAT };
+    int m_filterMin{ GL_REPEAT };
+    int m_filterMax{ GL_REPEAT };
+
+    void releaseTexture() const;
 };
 
-#endif //! INTERNAL_TEXTURE_HPP
+} // namespace sfa
+
+#endif //! SFA_SRC_ENGINE_CORE_TEXTURE_HPP
+

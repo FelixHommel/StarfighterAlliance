@@ -1,5 +1,7 @@
 #include "TextRenderer.hpp"
 
+#include "Shader.hpp"
+
 #include "ft2build.h"
 // NOLINTNEXTLINE(misc-include-cleaner): FT_FREETYPE_H is a macro that is created by FreeType. That is it's inteded use.
 #include FT_FREETYPE_H
@@ -9,24 +11,20 @@
 
 #include <array>
 #include <iostream>
+#include <memory>
 #include <string>
 #include <utility>
 
 namespace sfa
 {
 
-/*
- * @brief Prepare the VertexArray and VertexBuffer to load Data later
- *
- * @param width, the width of the window where the text will be rendered
- * @param height, thw hwight of the window where the text will be rendered
- */
-TextRenderer::TextRenderer(unsigned int width, unsigned int height)
+TextRenderer::TextRenderer(std::shared_ptr<Shader> shader, unsigned int width, unsigned int height)
+    : m_shader(std::move(shader))
 {
-    m_textShader.setMatrix4(
+    m_shader->setMatrix4(
         "projection", glm::ortho(0.f, static_cast<float>(width), static_cast<float>(height), 0.f), true
     );
-    m_textShader.setInteger("text", 0);
+    m_shader->setInteger("text", 0);
 
     glGenVertexArrays(1, &m_vao);
     glGenBuffers(1, &m_vbo);
@@ -49,12 +47,6 @@ TextRenderer::~TextRenderer()
     glDeleteVertexArrays(1, &m_vao);
 }
 
-/*
- * @brief Load a font from a file
- *
- * @param font, path to the font. Should idealy be a .fft fiel
- * @param fontSize, the size the font will be
- */
 void TextRenderer::load(std::string font, unsigned int fontSize)
 {
     m_characters.clear();
@@ -70,8 +62,8 @@ void TextRenderer::load(std::string font, unsigned int fontSize)
     FT_Set_Pixel_Sizes(face, 0, fontSize);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-    // Load Glyph for the first 128 ASCII Characters
-    for(GLubyte c = 0; c < LOADED_ASCII_CHARS; ++c)
+    // NOTE: Load Glyph for the first 128 ASCII Characters
+    for(GLubyte c{ 0 }; c < LOADED_ASCII_CHARS; ++c)
     {
         if(FT_Load_Char(face, c, FT_LOAD_RENDER) != 0)
         {
@@ -113,32 +105,22 @@ void TextRenderer::load(std::string font, unsigned int fontSize)
     FT_Done_FreeType(ft);
 }
 
-/*
- * @brief Draw text to the screen
- *
- * @param text, the text that will be drawn
- * @param x, the x position of the top left corner of the text
- * @param y, the y position of the top left corner of the text
- * @param scale, apply extra scale to the text. DEFAULT: 1
- * @param color, the color of the text. DEFAULT: glm::vec3(1.f)
- */
 void TextRenderer::draw(std::string text, float x, float y, float scale, glm::vec3 color)
 {
-    m_textShader.use();
-    m_textShader.setVector3f("textColor", color);
+    m_shader->use();
+    m_shader->setVector3f("textColor", color);
     glActiveTexture(GL_TEXTURE0);
     glBindVertexArray(m_vao);
 
-    std::string::const_iterator c;
-    for(c = text.begin(); c != text.end(); c++)
+    for(auto c{ text.begin() }; c != text.end(); c++)
     {
-        Character ch = m_characters[*c];
+        const Character ch{ m_characters[*c] };
 
-        float xpos = x + (static_cast<float>(ch.bearing.x) * scale);
-        float ypos = y + (static_cast<float>(m_characters['H'].bearing.y - ch.bearing.y) * scale);
+        const float xpos{ x + (static_cast<float>(ch.bearing.x) * scale) };
+        const float ypos{ y + (static_cast<float>(m_characters['H'].bearing.y - ch.bearing.y) * scale) };
 
-        float w = static_cast<float>(ch.size.x) * scale;
-        float h = static_cast<float>(ch.size.y) * scale;
+        const float w{ static_cast<float>(ch.size.x) * scale };
+        const float h{ static_cast<float>(ch.size.y) * scale };
         std::array<float, GLYPH_VERTICES * GLYPH_VERTEX_ATTRIBUTES> vertices{
             xpos,     ypos + h, 0.0f, 1.0f,
             xpos + w, ypos,     1.0f, 0.0f,
@@ -154,7 +136,7 @@ void TextRenderer::draw(std::string text, float x, float y, float scale, glm::ve
 
         glDrawArrays(GL_TRIANGLES, 0, GLYPH_VERTICES);
 
-        // Bitshift by 6 == 2^6, advance is 1/64 of a pixel
+        // NOTE: Bitshift by 6 == 2^6, advance is 1/64 of a pixel
         x += static_cast<float>(ch.advance >> ADVANCE_BITSHIFT) * scale;
     }
 

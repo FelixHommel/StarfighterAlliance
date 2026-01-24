@@ -2,12 +2,12 @@
 #define SFA_SRC_ENGINE_CORE_TEXT_RENDERER_HPP
 
 #include "Shader.hpp"
-#include "ResourceManager.hpp"
 
 #include "glm/ext/vector_int2.hpp"
 
 #include <cstddef>
 #include <map>
+#include <memory>
 #include <string>
 
 namespace sfa
@@ -35,7 +35,11 @@ struct Character
 class TextRenderer
 {
 public:
-    TextRenderer(unsigned int width, unsigned int height);
+    /// \brief Prepare the VertexArray and VertexBuffer to load Data later
+    ///
+    /// \param width, the width of the window where the text will be rendered
+    /// \param height, thw hwight of the window where the text will be rendered
+    TextRenderer(std::shared_ptr<Shader> shader, unsigned int width, unsigned int height);
     ~TextRenderer();
 
     TextRenderer(const TextRenderer&) = delete;
@@ -43,19 +47,34 @@ public:
     TextRenderer& operator=(const TextRenderer&) = delete;
     TextRenderer& operator=(TextRenderer&&) = delete;
 
+    /// \brief Load a font from a file.
+    ///
+    /// \param font path to the font. Should be an .fft file
+    /// \param fontSize(optional) the size the font will be
     void load(std::string font, unsigned int fontSize = DEFAULT_FONT_SIZE);
-    void draw(std::string text, float x, float y, float scale = 1.f, glm::vec3 color = glm::vec3(1.f));
+
+    /// \brief Draw text to the screen.
+    ///
+    /// \param text the text that will be drawn
+    /// \param x the x position of the top left corner of the text
+    /// \param y the y position of the top left corner of the text
+    /// \param scale(optional) apply extra scale to the text
+    /// \param color(optional) the color of the text
+    void draw(std::string text, float x, float y, float scale = DEFAULT_SCALE, glm::vec3 color = DEFAULT_COLOR);
 
 private:
     static constexpr std::size_t LOADED_ASCII_CHARS{ 128 };
-    static constexpr auto DEFAULT_FONT_SIZE{ 24 };
     static constexpr std::size_t GLYPH_VERTICES{ 6 };
     static constexpr std::size_t GLYPH_VERTEX_ATTRIBUTES{ 4 };
     static constexpr auto ADVANCE_BITSHIFT{ 6 };
 
+    static constexpr auto DEFAULT_FONT_SIZE{ 24 };
+    static constexpr auto DEFAULT_SCALE{ 1.f };
+    static constexpr auto DEFAULT_COLOR{ glm::vec3(1.f) };
+
+    std::shared_ptr<Shader> m_shader;
     unsigned int m_vao{ 0 };
     unsigned int m_vbo{ 0 };
-    Shader m_textShader{ ResourceManager::loadShader("resources/shaders/text.vert", "resources/shaders/text.frag", nullptr, "text") };
 
     std::map<char, Character> m_characters;
 };

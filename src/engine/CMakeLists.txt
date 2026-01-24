@@ -4,7 +4,6 @@ include(${PROJECT_SOURCE_DIR}/cmake/StaticAnalyzers.cmake)
 add_library(${NAME}
     ./core/Button.cpp
     ./core/ParticleGenerator.cpp
-    ./core/ResourceManager.cpp
     ./core/Shader.cpp
     ./core/SpriteRenderer.cpp
     ./core/TextRenderer.cpp
@@ -22,7 +21,6 @@ target_sources(${NAME}
             ./core/Button.hpp
             ./core/JSONReader.hpp
             ./core/ParticleGenerator.hpp
-            ./core/ResourceManager.hpp
             ./core/Shader.hpp
             ./core/SpriteRenderer.hpp
             ./core/TextRenderer.hpp
@@ -37,7 +35,7 @@ target_sources(${NAME}
             ./external/stb_image.h
 )
 
-target_compile_features(${NAME} PRIVATE cxx_std_23)
+target_compile_features(${NAME} PRIVATE cxx_std_26)
 target_link_libraries(${NAME}
     PRIVATE
         project_warnings

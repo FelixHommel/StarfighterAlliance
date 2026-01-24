@@ -15,7 +15,7 @@ endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-option(DEBUG "Enable debug statements and asserts" OFF)
-if(DEBUG OR CMAKE_BUILD_TYPE STREQUAL "Debug")
-    add_compile_definitions(STA_DEBUG)
+option(SFA_DEBUG "Enable debug statements and asserts" OFF)
+if(SFA_DEBUG OR CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_compile_definitions(SFA_DEBUG)
 endif()

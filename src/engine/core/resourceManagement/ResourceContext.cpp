@@ -87,7 +87,6 @@ void ResourceContext::clear()
 
 Texture2D ResourceContext::loadTexture(const std::filesystem::path& filepath)
 {
-    Texture2D texture;
 
     int width{ 0 };
     int height{ 0 };
@@ -97,11 +96,10 @@ Texture2D ResourceContext::loadTexture(const std::filesystem::path& filepath)
     const auto size{ static_cast<std::size_t>( width * height) * 4 };
     std::span<const std::byte> pixels{ reinterpret_cast<const std::byte*>(data), size };
 
+    Texture tex(width, height, data);
     static constexpr auto RGBA_CHANNELS{ 4 };
     if(nrChannels == RGBA_CHANNELS)
         texture.setRGBA();
-
-    texture.generate(width, height, data);
 
     stbi_image_free(data);
 

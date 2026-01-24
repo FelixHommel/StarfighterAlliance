@@ -8,6 +8,7 @@
 #include <array>
 #include <cstddef>
 #include <functional>
+#include <memory>
 #include <string>
 
 namespace sfa
@@ -30,7 +31,7 @@ public:
         const glm::vec3& hoveredColor,
         const glm::vec3& pressedColor,
         const std::string& label,
-        const Shader& shader,
+        std::shared_ptr<Shader> shader,
         float pressCooldownMax = 0.25f
     );
     ~Button() override;
@@ -57,7 +58,7 @@ public:
 private:
     static constexpr std::size_t BUTTON_VERTICES{ 6 };
     static constexpr std::size_t BUTTON_VERTEX_ATTRIBUTES{ 4 };
-    static constexpr std::array<float, BUTTON_VERTICES * BUTTON_VERTEX_ATTRIBUTES> vertices{
+    static constexpr std::array<float, BUTTON_VERTICES * BUTTON_VERTEX_ATTRIBUTES> VERTICES{
         0.0f, 1.0f, 0.0f, 1.0f,
         1.0f, 0.0f, 1.0f, 0.0f,
         0.0f, 0.0f, 0.0f, 0.0f,
@@ -66,9 +67,8 @@ private:
         1.0f, 0.0f, 1.0f, 0.0f
     };
 
-    Shader m_shader;
-
-    unsigned int m_vao;
+    std::shared_ptr<Shader> m_shader;
+    unsigned int m_vao{ 0 };
 
     glm::vec2 m_position;
     glm::vec2 m_size;
@@ -80,7 +80,7 @@ private:
 
     std::function<void()> m_onClick;
     float m_pressCooldownMax;
-    float m_pressCooldown;
+    float m_pressCooldown{ 0 };
 };
 
 } // namespace sfa

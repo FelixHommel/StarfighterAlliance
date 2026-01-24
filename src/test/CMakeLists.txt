@@ -4,17 +4,19 @@ include(${PROJECT_SOURCE_DIR}/cmake/StaticAnalyzers.cmake)
 
 add_executable(${NAME}
     ./testMain.cpp
-    ./utility/JSONReaderTest.cpp
+    ./core/JSONReaderTest.cpp
+    ./core/ShaderTest.cpp
 )
 
 target_sources(${NAME}
     PRIVATE
         FILE_SET HEADERS
         FILES
-        mocks/MockTexture.hpp
+            ./fixtures/OpenGLTestFicture.hpp
+            ./mocks/MockTexture.hpp
 )
 
-target_compile_features(${NAME} PRIVATE cxx_std_23)
+target_compile_features(${NAME} PRIVATE cxx_std_26)
 target_link_libraries(${NAME}
     PRIVATE
         project_warnings
