@@ -47,16 +47,21 @@ protected:
     std::unique_ptr<OpenGLTestFixture> m_glContext;
 };
 
-/// \brief Test the \ref Shader constructor.
+/// \brief Test the \ref Shader RAII behavior.
 ///
-/// The constructor should create a valid OpenGL shader program.
-TEST_F(ShaderTest, ShaderConstructor)
+/// The constructor should create a valid OpenGL shader program and the destructor should delete the program.
+TEST_F(ShaderTest, ShaderRAII)
 {
-    Shader original(VERTEX_SHADER_SRC, FRAGMENT_SHADER_SRC);
-    const unsigned int originalID{ original.getID() };
+    unsigned int originalID{};
+    {
+        const Shader original(VERTEX_SHADER_SRC, FRAGMENT_SHADER_SRC);
+        originalID = original.getID();
 
-    EXPECT_NE(originalID, 0);
-    EXPECT_TRUE(static_cast<bool>(glIsProgram(originalID)));
+        EXPECT_NE(originalID, 0);
+        EXPECT_TRUE(static_cast<bool>(glIsProgram(originalID)));
+    }
+
+    EXPECT_FALSE(static_cast<bool>(glIsProgram(originalID)));
 }
 
 /// \brief Test the \ref Shader move constructor.
