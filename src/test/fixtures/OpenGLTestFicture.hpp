@@ -2,6 +2,7 @@
 #define SFA_SRC_TEST_FIXTURES_OPENGL_TEST_FIXTURE_HPP
 
 #include "glad/gl.h"
+#include <spdlog/spdlog.h>
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
 
@@ -29,6 +30,7 @@ public:
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, GL_CONTEXT_MIN);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+        glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 
         m_window = glfwCreateWindow(1, 1, "Test", nullptr, nullptr);
         if(m_window == nullptr)
@@ -40,6 +42,15 @@ public:
 
         if(gladLoadGL(glfwGetProcAddress) == 0)
             throw std::runtime_error("Failed to load OpenGL");
+
+        glEnable(GL_DEBUG_OUTPUT);
+        glDebugMessageCallback(
+            [](GLenum /*source*/, GLenum type, GLuint /*id*/, GLenum severity, GLsizei /*length*/, const GLchar* message, const void* /*user*/) {
+            if(severity == GL_DEBUG_SEVERITY_HIGH)
+                spdlog::error("OpenGL error({}): {}", type, message);
+            },
+            nullptr
+        );
     }
     ~OpenGLTestFixture()
     {
