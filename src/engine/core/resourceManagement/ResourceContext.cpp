@@ -87,23 +87,19 @@ void ResourceContext::clear()
 
 Texture2D ResourceContext::loadTexture(const std::filesystem::path& filepath)
 {
-
-    int width{ 0 };
-    int height{ 0 };
-    int nrChannels{ 0 };
+    int width{};
+    int height{};
+    int nrChannels{};
     stbi_uc* data{ stbi_load(filepath.c_str(), &width, &height, &nrChannels, 0) };
 
-    const auto size{ static_cast<std::size_t>( width * height) * 4 };
+    const auto size{ static_cast<std::size_t>(width * height) * 4 };
     std::span<const std::byte> pixels{ reinterpret_cast<const std::byte*>(data), size };
 
-    Texture tex(width, height, data);
-    static constexpr auto RGBA_CHANNELS{ 4 };
-    if(nrChannels == RGBA_CHANNELS)
-        texture.setRGBA();
+    Texture2D tex(width, height, nrChannels, pixels);
 
     stbi_image_free(data);
 
-    return texture;
+    return tex;
 }
 
 } // namespace sfa

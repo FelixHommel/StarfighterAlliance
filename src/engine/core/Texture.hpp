@@ -4,7 +4,7 @@
 #include "glad/gl.h"
 
 #include <cstddef>
-#include <vector>
+#include <span>
 
 namespace sfa
 {
@@ -22,8 +22,9 @@ public:
     ///
     /// \param width the width of the texture
     /// \param height the height of the texture
+    /// \param channels the amount of channels that the texture has
     /// \param pixels the image data
-    Texture2D(int width, int height, const std::vector<std::byte>& pixels);
+    Texture2D(int width, int height, int channels, std::span<const std::byte> pixels);
     ~Texture2D();
 
     Texture2D(Texture2D&& other) noexcept;
@@ -43,6 +44,8 @@ public:
     void setRGBA();
 
 private:
+    static constexpr auto RGBA_CHANNELS{ 4 };
+
     unsigned int m_id{ 0 };
     int m_width{ 0 };
     int m_height{ 0 };

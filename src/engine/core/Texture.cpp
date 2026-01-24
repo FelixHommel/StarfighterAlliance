@@ -3,16 +3,19 @@
 #include "glad/gl.h"
 
 #include <cstddef>
+#include <span>
 #include <utility>
-#include <vector>
 
 namespace sfa
 {
 
-Texture2D::Texture2D(int width, int height, const std::vector<std::byte>& pixels)
+Texture2D::Texture2D(int width, int height, int channels, std::span<const std::byte> pixels)
     : m_width{ width }
     , m_height{ height }
 {
+    if(channels == RGBA_CHANNELS)
+        setRGBA();
+
     glGenTextures(1, &m_id);
 
     glBindTexture(GL_TEXTURE_2D, m_id);

@@ -13,7 +13,6 @@ target_sources(${NAME}
         FILE_SET HEADERS
         FILES
             ./fixtures/OpenGLTestFicture.hpp
-            ./mocks/MockTexture.hpp
 )
 
 target_compile_features(${NAME} PRIVATE cxx_std_26)

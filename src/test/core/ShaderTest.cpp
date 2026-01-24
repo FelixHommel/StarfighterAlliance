@@ -86,8 +86,8 @@ TEST_F(ShaderTest, ShaderMoveAssignment)
     shader2 = std::move(shader1);
 
     EXPECT_FALSE(static_cast<bool>(glIsProgram(originalShader2ID)));
-    EXPECT_TRUE(static_cast<bool>(glIsProgram(shader2.getID())));
     EXPECT_EQ(originalShader1ID, shader2.getID());
+    EXPECT_TRUE(static_cast<bool>(glIsProgram(shader2.getID())));
 }
 
 /// \brief Test the \ref Shader use method.
