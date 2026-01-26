@@ -53,8 +53,8 @@ private:
     int m_imageFormat{ GL_RGB };
     int m_wrapS{ GL_REPEAT };
     int m_wrapT{ GL_REPEAT };
-    int m_filterMin{ GL_REPEAT };
-    int m_filterMax{ GL_REPEAT };
+    int m_filterMin{ GL_LINEAR };
+    int m_filterMax{ GL_LINEAR };
 
     void releaseTexture() const;
 };

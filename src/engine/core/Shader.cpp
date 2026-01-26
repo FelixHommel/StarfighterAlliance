@@ -46,7 +46,6 @@ Shader& Shader::operator=(Shader&& other) noexcept
     if(this == &other)
         return *this;
     
-    // NOTE: If the shader is the destination of a move, the previous resource needs to be freed before it is replaced
     releaseShaderProgram();
 
     m_id = std::exchange(other.m_id, 0);
