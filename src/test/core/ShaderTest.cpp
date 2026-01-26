@@ -71,7 +71,7 @@ TEST_F(ShaderTest, ShaderMoveConstructor)
 {
     Shader original(VERTEX_SHADER_SRC, FRAGMENT_SHADER_SRC);
     const unsigned int originalID{ original.getID() };
-    Shader moved(std::move(original));
+    Shader moved{ std::move(original) };
 
     EXPECT_EQ(moved.getID(), originalID);
     EXPECT_TRUE(static_cast<bool>(glIsProgram(moved.getID())));

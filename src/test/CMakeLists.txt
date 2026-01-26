@@ -6,6 +6,7 @@ add_executable(${NAME}
     ./testMain.cpp
     ./core/JSONReaderTest.cpp
     ./core/ShaderTest.cpp
+    ./core/TextureTest.cpp
 )
 
 target_sources(${NAME}
