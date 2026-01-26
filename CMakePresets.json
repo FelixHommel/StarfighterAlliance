@@ -80,6 +80,9 @@
             "name": "test-all",
             "displayName": "Test all",
             "configurePreset": "debug",
+            "environment": {
+                "LSAN_OPTIONS": "suppressions=asan.supp"
+            },
             "output": {
                 "outputOnFailure": true
             },

@@ -1,0 +1,2 @@
+leak:libglfw.so
+leak:_glfwInitGLX
