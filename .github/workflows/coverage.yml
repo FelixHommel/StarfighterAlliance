@@ -16,7 +16,7 @@ jobs:
       run: sudo apt install -y lcov libboost-all-dev libssl-dev zlib1g-dev
 
     - name: Execute script to generate report
-      run: ./scripts/code_coverage_analysis.sh
+      run: ./scripts/code_coverage.sh
 
     - name: Publish badge JSON
       run: |
