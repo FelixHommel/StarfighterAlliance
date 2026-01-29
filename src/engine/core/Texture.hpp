@@ -30,8 +30,8 @@ public:
     Texture2D(Texture2D&& other) noexcept;
     Texture2D& operator=(Texture2D&& other) noexcept;
 
-    Texture2D(const Texture2D&) = delete("Textures should not be copy constructed because texture IDs should be unique");
-    Texture2D& operator=(const Texture2D&) = delete("Textures should not be copy assigned because texture IDs should be unique");
+    Texture2D(const Texture2D&) = delete;
+    Texture2D& operator=(const Texture2D&) = delete;
 
     /// \brief Bind the texture to the OpenGL state.
     void bind() const;

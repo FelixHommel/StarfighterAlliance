@@ -30,8 +30,8 @@ public:
     Shader(Shader&& other) noexcept;
     Shader& operator=(Shader&& other) noexcept;
 
-    Shader(const Shader&) = delete("Shaders should not be copy constructed because shader IDs should be unique");
-    Shader& operator=(const Shader&) = delete("Shaders should not be copy assigned because shader IDs should be unique");
+    Shader(const Shader&) = delete;
+    Shader& operator=(const Shader&) = delete;
 
     void use() const;
     [[nodiscard]] unsigned int getID() const noexcept { return m_id; }
