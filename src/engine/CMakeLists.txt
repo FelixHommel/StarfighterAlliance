@@ -11,7 +11,6 @@ add_library(${NAME}
     ./core/resourceManagement/ResourceContext.cpp
     ./core/ui/Layout.cpp
     ./core/ui/VerticalLayout.cpp
-    ./external/stb_image_impl.cpp
 )
 
 target_sources(${NAME}
@@ -32,7 +31,6 @@ target_sources(${NAME}
             ./core/ui/LayoutElement.hpp
             ./core/ui/Size.hpp
             ./core/ui/VerticalLayout.hpp
-            ./external/stb_image.h
 )
 
 target_compile_features(${NAME} PRIVATE cxx_std_26)
