@@ -3,9 +3,9 @@
 
 #include "core/Shader.hpp"
 #include "core/TextRenderer.hpp"
-#include "ecs/ComponentManager.hpp"
+#include "ecs/ComponentRegistry.hpp"
 
-#include "glm/glm.hpp"
+#include <glm/glm.hpp>
 
 #include <memory>
 
@@ -31,9 +31,9 @@ public:
     ///
     /// Capable entities are all entities that have a \ref TransformComponent and \ref TextComponent.
     ///
-    /// \param components \ref ComponentManager that maintains all the components
+    /// \param components \ref ComponentRegistry that maintains all the components
     /// \param projection projection matrix
-    void render(const ComponentManager& components, const glm::mat4& projection);
+    void render(const ComponentRegistry& components, const glm::mat4& projection);
 
 private:
     std::unique_ptr<TextRenderer> m_renderer;

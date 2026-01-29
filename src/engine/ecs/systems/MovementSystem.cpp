@@ -1,6 +1,6 @@
 #include "MovementSystem.hpp"
 
-#include "ecs/ComponentManager.hpp"
+#include "ecs/ComponentRegistry.hpp"
 #include "ecs/components/TransformComponent.hpp"
 #include "ecs/components/VelocityComponent.hpp"
 
@@ -9,19 +9,19 @@
 namespace sfa
 {
 
-void MovementSystem::update(ComponentManager& components, float dt)
+void MovementSystem::update(ComponentRegistry& components, float dt)
 {
-    auto* transforms{ components.getComponentArray<TransformComponent>() };
-    auto* velocities{ components.getComponentArray<VelocityComponent>() };
+    auto& transforms{ components.getComponentArray<TransformComponent>() };
+    auto& velocities{ components.getComponentArray<VelocityComponent>() };
 
-    for(std::size_t i{ 0 }; i < transforms->size(); ++i)
+    for(std::size_t i{ 0 }; i < transforms.size(); ++i)
     {
-        auto entity{ transforms->entityAtIndex(i) };
+        auto entity{ transforms.entityAtIndex(i) };
 
-        if(velocities->contains(entity))
+        if(velocities.contains(entity))
         {
-            auto& transform{ transforms->get(entity) };
-            auto& velocity{ velocities->get(entity) };
+            auto& transform{ transforms.get(entity) };
+            auto& velocity{ velocities.get(entity) };
 
             transform.position += velocity.linear * dt;
             transform.rotation += velocity.angular * dt;

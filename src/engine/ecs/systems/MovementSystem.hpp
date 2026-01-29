@@ -1,12 +1,12 @@
 #ifndef SFA_SRC_ENGINE_ECS_SYSTEMS_MOVEMENT_SYSTEM_HPP
 #define SFA_SRC_ENGINE_ECS_SYSTEMS_MOVEMENT_SYSTEM_HPP
 
-#include "ecs/ComponentManager.hpp"
+#include "ecs/ComponentRegistry.hpp"
 
 namespace sfa
 {
 
-/// \brief The MovementSystem is responsible to handle movement for all entities that can move.
+/// \brief The \ref MovementSystem is responsible to handle movement for all entities that can move.
 ///
 /// In order for an entity to be able to move, it needs to have a \ref TransformComponent as well as a \ref VelocityComponent.
 ///
@@ -27,9 +27,9 @@ public:
     ///
     /// An entity is capable if the entity has a \ref TransformComponent and a \ref VelocityComponent.
     ///
-    /// \param components reference to \ref ComponentManager, which maintains the components
+    /// \param components reference to \ref ComponentRegistry, which maintains the components
     /// \param dt delta time
-    static void update(ComponentManager& components, float dt);
+    static void update(ComponentRegistry& components, float dt);
 };
 
 } // namespace sfa

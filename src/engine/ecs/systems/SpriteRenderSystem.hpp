@@ -3,7 +3,7 @@
 
 #include "core/SpriteRenderer.hpp"
 #include "core/Shader.hpp"
-#include "ecs/ComponentManager.hpp"
+#include "ecs/ComponentRegistry.hpp"
 
 #include "glm/glm.hpp"
 
@@ -33,9 +33,9 @@ public:
     ///
     /// An entity is capable if it has a \ref SpriteComponent.
     ///
-    /// \param components const-ref to a \ref ComponentManager that maintains the components
+    /// \param components const-ref to a \ref ComponentRegistry that maintains the components
     /// \param projection the projection matrix
-    void render(const ComponentManager& components, const glm::mat4& projection);
+    void render(const ComponentRegistry& components, const glm::mat4& projection);
 
 private:
     std::unique_ptr<SpriteRenderer> m_renderer;
