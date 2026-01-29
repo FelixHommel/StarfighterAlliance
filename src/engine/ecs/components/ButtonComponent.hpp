@@ -19,6 +19,7 @@ struct ButtonComponent : public IComponent
     glm::vec3 standardColor;
     float hoverFactor;
     float pressFactor;
+    glm::vec3 activeColor;
 
     std::function<void()> onClick;
     float pressCooldownMax;
