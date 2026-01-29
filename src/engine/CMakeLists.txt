@@ -2,15 +2,12 @@ set(NAME "StarfighterAllianceEngine")
 include(${PROJECT_SOURCE_DIR}/cmake/StaticAnalyzers.cmake)
 
 add_library(${NAME}
-    ./core/Button.cpp
     ./core/ParticleGenerator.cpp
     ./core/Shader.cpp
     ./core/SpriteRenderer.cpp
     ./core/TextRenderer.cpp
     ./core/Texture.cpp
     ./core/resourceManagement/ResourceContext.cpp
-    ./core/ui/Layout.cpp
-    ./core/ui/VerticalLayout.cpp
     ./ecs/EntityManager.cpp
     ./ecs/systems/MovementSystem.cpp
     ./ecs/systems/SpriteRenderSystem.cpp
@@ -21,7 +18,6 @@ target_sources(${NAME}
     PRIVATE
         FILE_SET HEADERS
         FILES
-            ./core/Button.hpp
             ./core/ParticleGenerator.hpp
             ./core/Shader.hpp
             ./core/SpriteRenderer.hpp
@@ -29,11 +25,6 @@ target_sources(${NAME}
             ./core/Texture.hpp
             ./core/resourceManagement/ResourceCache.hpp
             ./core/resourceManagement/ResourceContext.hpp
-            ./core/ui/Anchor.hpp
-            ./core/ui/Layout.hpp
-            ./core/ui/LayoutElement.hpp
-            ./core/ui/Size.hpp
-            ./core/ui/VerticalLayout.hpp
             ./ecs/ComponentArray.hpp
             ./ecs/ComponentRegistry.hpp
             ./ecs/ECSUtility.hpp
