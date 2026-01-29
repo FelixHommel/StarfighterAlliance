@@ -18,6 +18,13 @@ jobs:
     - name: Execute script to generate report
       run: ./scripts/code_coverage.sh
 
+    - name: Upload converage to Codacy
+      run: |
+        ls ./build/code-coverage
+        bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r ./build/code-coverage/coverage-data/coverage.filtered.info
+      env:
+        CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
+
     - name: Publish badge JSON
       run: |
         git config user.name github-actions
@@ -29,8 +36,3 @@ jobs:
         git commit -m "Update coverage badge" || echo "No changes"
         git push origin badges --force
 
-    - name: Upload converage to Codacy
-      run: |
-        bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r ./build/code-coverage/coverage-data/coverage.filtered.info
-      env:
-        CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
