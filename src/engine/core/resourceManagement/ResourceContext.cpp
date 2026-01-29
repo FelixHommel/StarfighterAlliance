@@ -3,15 +3,14 @@
 #include "core/Shader.hpp"
 #include "core/Texture.hpp"
 
-#include "external/stb_image.h"
 #include <spdlog/spdlog.h>
+#include <stb_image.h>
 
 #include <cstddef>
 #include <exception>
 #include <filesystem>
 #include <fstream>
 #include <memory>
-#include <optional>
 #include <span>
 #include <sstream>
 #include <string>
@@ -19,7 +18,7 @@
 namespace sfa
 {
 
-void ResourceContext::loadShaderFromFile(const std::string& name, const std::filesystem::path& vert, const std::filesystem::path& frag, std::optional<std::filesystem::path> geom)
+void ResourceContext::loadShaderFromFile(const std::string& name, const std::filesystem::path& vert, const std::filesystem::path& frag, const std::filesystem::path& geom)
 {
     std::string vertexShaderCode;
     std::string fragmentShaderCode;
@@ -29,6 +28,7 @@ void ResourceContext::loadShaderFromFile(const std::string& name, const std::fil
     {
         std::ifstream vertexShaderFile{ vert };
         std::ifstream fargmentShaderFile{ frag };
+        std::ifstream geometryShaderFile{ geom };
 
         std::stringstream shaderCode;
         shaderCode << vertexShaderFile.rdbuf();
@@ -38,34 +38,27 @@ void ResourceContext::loadShaderFromFile(const std::string& name, const std::fil
         shaderCode << fargmentShaderFile.rdbuf();
         fragmentShaderCode = shaderCode.str();
 
-        if(geom.has_value())
-        {
-            std::ifstream geometryShaderFile{ geom.value() };
-
-            shaderCode.clear();
-            shaderCode << geometryShaderFile.rdbuf();
-            geometryShaderCode = shaderCode.str();
-        }
+        shaderCode.clear();
+        shaderCode << geometryShaderFile.rdbuf();
+        geometryShaderCode = shaderCode.str();
     }
-    catch(std::exception& e)
+    catch(const std::exception& e)
     {
         spdlog::error(
             "Failed to read source files for {} shader at:\n\t- {}\n\t- {}\n\t- {}",
             name,
             vert.string(),
             frag.string(),
-            geom.value_or("No geometry shader").string()
+            geom.string()
         );
     }
 
-    // TODO: The way shaders and textures are not RAII is very weird. They need to be RAIIified, i.e.,  clean after
-    // themselves with the destructor. Otherwise, it is not possible to clean after them in this class.
     m_shaderCache.store(
         name,
         std::make_shared<Shader>(
             vertexShaderCode.c_str(),
             fragmentShaderCode.c_str(),
-            (geom.has_value() ? geometryShaderCode.c_str() : nullptr)
+            geometryShaderCode.c_str()
         )
     );
 }

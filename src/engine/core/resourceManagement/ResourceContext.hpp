@@ -7,12 +7,15 @@
 
 #include <filesystem>
 #include <memory>
-#include <optional>
 #include <string>
 
 namespace sfa
 {
 
+/// \brief The \ref ResourceContext class is responsible for loading and managing resources.
+///
+/// \author Felix Hommel
+/// \date 1/23/2026
 class ResourceContext
 {
 public:
@@ -24,7 +27,8 @@ public:
     ResourceContext& operator=(const ResourceContext&) = delete;
     ResourceContext& operator=(ResourceContext&&) = delete;
 
-    void loadShaderFromFile(const std::string& name, const std::filesystem::path& vert, const std::filesystem::path& frag, std::optional<std::filesystem::path> geom = std::nullopt);
+    void loadShaderFromFile(const std::string& name, const std::filesystem::path& vert, const std::filesystem::path& frag);
+    void loadShaderFromFile(const std::string& name, const std::filesystem::path& vert, const std::filesystem::path& frag, const std::filesystem::path& geom);
     std::shared_ptr<Shader> getShader(const std::string& key) { return m_shaderCache.get(key); }
 
     void loadTextureFromFile(std::string name, const std::filesystem::path& filepath);
@@ -36,6 +40,7 @@ private:
     ResourceCache<Shader> m_shaderCache;
     ResourceCache<Texture2D> m_textureCache;
 
+    // static Shader loadShader(const std::filesystem::path& vert, const std::filesystem::path& frag);
     // static Shader loadShader(const std::filesystem::path& vert, const std::filesystem::path& frag, const std::filesystem::path& geom);
     static Texture2D loadTexture(const std::filesystem::path& filepath);
 };

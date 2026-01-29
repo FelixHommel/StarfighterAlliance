@@ -45,7 +45,7 @@ public:
         m_resources.insert_or_assign(std::move(key), std::move(resource));
     }
 
-    /// \brief Access resource via const-ref.
+    /// \brief Access a resource.
     ///
     /// \param key which resource to access
     ///
