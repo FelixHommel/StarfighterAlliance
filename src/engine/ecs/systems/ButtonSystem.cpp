@@ -1,5 +1,6 @@
 #include "ButtonSystem.hpp"
 
+#include "ecs/ComponentRegistry.hpp"
 #include "ecs/components/ButtonComponent.hpp"
 #include "ecs/components/SpriteComponent.hpp"
 #include "ecs/components/TransformComponent.hpp"
