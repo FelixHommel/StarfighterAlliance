@@ -11,6 +11,10 @@ add_library(${NAME}
     ./core/resourceManagement/ResourceContext.cpp
     ./core/ui/Layout.cpp
     ./core/ui/VerticalLayout.cpp
+    ./ecs/EntityManager.cpp
+    ./ecs/systems/MovementSystem.cpp
+    ./ecs/systems/SpriteRenderSystem.cpp
+    ./ecs/systems/TextRenderSystem.cpp
 )
 
 target_sources(${NAME}
@@ -30,9 +34,27 @@ target_sources(${NAME}
             ./core/ui/LayoutElement.hpp
             ./core/ui/Size.hpp
             ./core/ui/VerticalLayout.hpp
+            ./ecs/ComponentArray.hpp
+            ./ecs/ComponentRegistry.hpp
+            ./ecs/ECSUtility.hpp
+            ./ecs/EntityManager.hpp
+            ./ecs/IComponentArray.hpp
+            ./ecs/components/BoxColliderComponent.hpp
+            ./ecs/components/CircleColliderComponent.hpp
+            ./ecs/components/DamageComponent.hpp
+            ./ecs/components/HealthComponent.hpp
+            ./ecs/components/IComponent.hpp
+            ./ecs/components/RigidBodyComponent.hpp
+            ./ecs/components/SpriteComponent.hpp
+            ./ecs/components/TextComponent.hpp
+            ./ecs/components/TransformComponent.hpp
+            ./ecs/components/VelocityComponent.hpp
+            ./ecs/systems/MovementSystem.hpp
+            ./ecs/systems/SpriteRenderSystem.hpp
+            ./ecs/systems/TextRenderSystem.hpp
 )
 
-target_compile_features(${NAME} PRIVATE cxx_std_26)
+target_compile_features(${NAME} PRIVATE cxx_std_23)
 target_link_libraries(${NAME}
     PRIVATE
         project_warnings
@@ -50,4 +72,6 @@ target_link_libraries(${NAME}
 target_include_directories(${NAME}
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
+    PRIVATE
+        ${Stb_INCLUDE_DIR}
 )

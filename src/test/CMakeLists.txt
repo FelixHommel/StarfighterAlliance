@@ -6,6 +6,9 @@ add_executable(${NAME}
     ./testMain.cpp
     ./core/ShaderTest.cpp
     ./core/TextureTest.cpp
+    ./ecs/ComponentArrayTest.cpp
+    ./ecs/EntityManagerTest.cpp
+    ./ecs/ComponentManagerTest.cpp
 )
 
 target_sources(${NAME}
