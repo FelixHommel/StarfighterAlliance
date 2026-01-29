@@ -39,11 +39,14 @@ target_sources(${NAME}
             ./ecs/ECSUtility.hpp
             ./ecs/EntityManager.hpp
             ./ecs/IComponentArray.hpp
+            ./ecs/components/AnchorComponent.hpp
             ./ecs/components/BoxColliderComponent.hpp
+            ./ecs/components/ButtonComponent.hpp
             ./ecs/components/CircleColliderComponent.hpp
             ./ecs/components/DamageComponent.hpp
             ./ecs/components/HealthComponent.hpp
             ./ecs/components/IComponent.hpp
+            ./ecs/components/LayoutComponent.hpp
             ./ecs/components/RigidBodyComponent.hpp
             ./ecs/components/SpriteComponent.hpp
             ./ecs/components/TextComponent.hpp
