@@ -270,14 +270,13 @@ TEST_F(ComponentRegistryTest, ConstGetComponentArray)
     EXPECT_EQ(refManager.getComponentArray<TestComponent>().size(), 1);
 }
 
-/// \brief Test trying to get const ref access to a \ref ComponentArray of a component that was not registered previosuly.
+/// \brief Test trying to get const ref access to a \ref ComponentArray of a component that was not registered previously.
 ///
 /// When trying to get the \ref ComponentArray of a component that was not registered previously, the getComponentArray()
 /// method should fail an assertion when build in debug mode.
 TEST_F(ComponentRegistryTest, ConstGetComponentArrayForNotRegisteredComponent)
 {
     ComponentRegistry manager;
-    manager.addComponent<TestComponent>(ENTITY_1, {});
     const auto& refManager{ manager };
 
     EXPECT_DEATH({ refManager.getComponentArray<TestComponent>(); }, "Component is not registered");
@@ -303,6 +302,7 @@ TEST_F(ComponentRegistryTest, RemoveAllComponentsOfEntity)
 TEST_F(ComponentRegistryTest, RemoveAllComponentsOfEntityThatHasNoComponents)
 {
     ComponentRegistry manager;
+    manager.registerComponent<TestComponent>();
 
     manager.entityDestroyed(ENTITY_1);
 

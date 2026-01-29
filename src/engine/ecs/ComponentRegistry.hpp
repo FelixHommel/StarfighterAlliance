@@ -53,14 +53,14 @@ public:
     /// \tparam T Type of the component
     ///
     /// \param entity target entity
-    /// \param component the component that is added to the entity
+    /// \para component the component that is added to the entity
     template<Component T>
     void addComponent(EntityID entity, T component)
     {
         if(!isComponentRegistered<T>())
             registerComponent<T>();
 
-        getComponentArray<T>()->insert(entity, std::move(component));
+        getComponentArray<T>().insert(entity, std::move(component));
     }
 
     /// \brief Remove a component from an enttiy.
@@ -76,7 +76,7 @@ public:
         assert(contains<T>(entity) && "The entity does not have the component");
 #endif // !SFA_DEBUG
 
-        getComponentArray<T>()->remove(entity);
+        getComponentArray<T>().remove(entity);
     }
 
     /// \brief Get the component of an entity.
@@ -94,7 +94,7 @@ public:
         assert(contains<T>(entity) && "The entity does not have the component");
 #endif // !SFA_DEBUG
 
-        return getComponentArray<T>()->get(entity);
+        return getComponentArray<T>().get(entity);
     }
 
     /// \brief Get the component of an entity.
@@ -112,7 +112,7 @@ public:
         assert(contains<T>(entity) && "The entity does not have the component");
 #endif // !SFA_DEBUG
 
-        return getComponentArray<T>()->get(entity);
+        return getComponentArray<T>().get(entity);
     }
 
     /// \brief Check if an entity has the component.
@@ -129,7 +129,7 @@ public:
         assert(isComponentRegistered<T>() && "Component is not registered");
 #endif // !SFA_DEBUG
 
-        return getComponentArray<T>()->contains(entity);
+        return getComponentArray<T>().contains(entity);
     }
 
     /// \brief Get the entire \ref ComponentArray of a component
@@ -144,7 +144,7 @@ public:
         assert(isComponentRegistered<T>() && "Component is not registered");
 #endif // !SFA_DEBUG
 
-        return static_cast<ComponentArray<T>*>(m_components[getComponentTypeID<T>()].get());
+        return static_cast<ComponentArray<T>&>(*m_components[getComponentTypeID<T>()]);
     }
 
     /// \brief Get the entire \ref ComponentArray of a component
@@ -156,10 +156,10 @@ public:
     const ComponentArray<T>& getComponentArray() const
     {
 #if defined(SFA_DEBUG)
-        assert(isComponentRegistered<T>() && "Component not registered");
+        assert(isComponentRegistered<T>() && "Component is not registered");
 #endif // !SFA_DEBUG
 
-        return static_cast<const ComponentArray<T>*>(m_components.at(getComponentTypeID<T>()).get());
+        return static_cast<const ComponentArray<T>&>(*m_components.at(getComponentTypeID<T>()));
     }
 
     /// \brief Remove all components from an entity.

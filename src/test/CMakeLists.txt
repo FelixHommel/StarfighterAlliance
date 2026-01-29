@@ -8,7 +8,7 @@ add_executable(${NAME}
     ./core/TextureTest.cpp
     ./ecs/ComponentArrayTest.cpp
     ./ecs/EntityManagerTest.cpp
-    ./ecs/ComponentManagerTest.cpp
+    ./ecs/ComponentRegistryTest.cpp
 )
 
 target_sources(${NAME}
