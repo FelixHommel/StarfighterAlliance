@@ -18,7 +18,6 @@ target_sources(${NAME}
         FILE_SET HEADERS
         FILES
             ./core/Button.hpp
-            ./core/JSONReader.hpp
             ./core/ParticleGenerator.hpp
             ./core/Shader.hpp
             ./core/SpriteRenderer.hpp
