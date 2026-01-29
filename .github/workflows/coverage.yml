@@ -20,7 +20,7 @@ jobs:
 
     - name: Upload converage to Codacy
       run: |
-        ls ./build/code-coverage
+        ls ./build/code-coverage/coverage-data/
         bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r ./build/code-coverage/coverage-data/coverage.filtered.info
       env:
         CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
