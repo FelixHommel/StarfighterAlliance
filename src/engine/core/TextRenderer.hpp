@@ -35,16 +35,12 @@ struct Character
 class TextRenderer
 {
 public:
-    /// \brief Prepare the VertexArray and VertexBuffer to load Data later
-    ///
-    /// \param width, the width of the window where the text will be rendered
-    /// \param height, thw hwight of the window where the text will be rendered
-    TextRenderer(std::shared_ptr<Shader> shader, unsigned int width, unsigned int height);
+    TextRenderer(std::shared_ptr<Shader> shader);
     ~TextRenderer();
 
     TextRenderer(const TextRenderer&) = delete;
-    TextRenderer(TextRenderer&&) = delete;
     TextRenderer& operator=(const TextRenderer&) = delete;
+    TextRenderer(TextRenderer&&) = delete;
     TextRenderer& operator=(TextRenderer&&) = delete;
 
     /// \brief Load a font from a file.
@@ -53,14 +49,18 @@ public:
     /// \param fontSize(optional) the size the font will be
     void load(std::string font, unsigned int fontSize = DEFAULT_FONT_SIZE);
 
-    /// \brief Draw text to the screen.
+    /// \brief Begin the drawing of the next frame.
     ///
-    /// \param text the text that will be drawn
-    /// \param x the x position of the top left corner of the text
-    /// \param y the y position of the top left corner of the text
+    /// \param projection projection matrix
+    void beginFrame(const glm::mat4& projection);
+
+    /// \brief Render text to the screen.
+    ///
+    /// \param text the text that will be drawn.
+    /// \param pos the position of the text
     /// \param scale(optional) apply extra scale to the text
     /// \param color(optional) the color of the text
-    void draw(std::string text, float x, float y, float scale = DEFAULT_SCALE, glm::vec3 color = DEFAULT_COLOR);
+    void render(std::string text, const glm::vec2& pos, const glm::vec2& scale = DEFAULT_SCALE, glm::vec3 color = DEFAULT_COLOR);
 
 private:
     static constexpr std::size_t LOADED_ASCII_CHARS{ 128 };
@@ -69,7 +69,7 @@ private:
     static constexpr auto ADVANCE_BITSHIFT{ 6 };
 
     static constexpr auto DEFAULT_FONT_SIZE{ 24 };
-    static constexpr auto DEFAULT_SCALE{ 1.f };
+    static constexpr auto DEFAULT_SCALE{ glm::vec2(1.f) };
     static constexpr auto DEFAULT_COLOR{ glm::vec3(1.f) };
 
     std::shared_ptr<Shader> m_shader;

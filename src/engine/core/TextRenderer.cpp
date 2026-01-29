@@ -18,12 +18,9 @@
 namespace sfa
 {
 
-TextRenderer::TextRenderer(std::shared_ptr<Shader> shader, unsigned int width, unsigned int height)
+TextRenderer::TextRenderer(std::shared_ptr<Shader> shader)
     : m_shader(std::move(shader))
 {
-    m_shader->setMatrix4(
-        "projection", glm::ortho(0.f, static_cast<float>(width), static_cast<float>(height), 0.f), true
-    );
     m_shader->setInteger("text", 0);
 
     glGenVertexArrays(1, &m_vao);
@@ -45,6 +42,11 @@ TextRenderer::~TextRenderer()
 {
     glDeleteBuffers(1, &m_vbo);
     glDeleteVertexArrays(1, &m_vao);
+}
+
+void TextRenderer::beginFrame(const glm::mat4& projection)
+{
+    m_shader->setMatrix4("projection", projection, true);
 }
 
 void TextRenderer::load(std::string font, unsigned int fontSize)
@@ -105,22 +107,22 @@ void TextRenderer::load(std::string font, unsigned int fontSize)
     FT_Done_FreeType(ft);
 }
 
-void TextRenderer::draw(std::string text, float x, float y, float scale, glm::vec3 color)
+void TextRenderer::render(std::string text, const glm::vec2& pos, const glm::vec2& scale, glm::vec3 color)
 {
-    m_shader->use();
-    m_shader->setVector3f("textColor", color);
+    m_shader->setVector3f("textColor", color, true);
     glActiveTexture(GL_TEXTURE0);
     glBindVertexArray(m_vao);
 
+    float x{ pos.x };
     for(auto c{ text.begin() }; c != text.end(); c++)
     {
         const Character ch{ m_characters[*c] };
 
-        const float xpos{ x + (static_cast<float>(ch.bearing.x) * scale) };
-        const float ypos{ y + (static_cast<float>(m_characters['H'].bearing.y - ch.bearing.y) * scale) };
+        const float xpos{ x + (static_cast<float>(ch.bearing.x) * scale.x) };
+        const float ypos{ pos.y + (static_cast<float>(m_characters['H'].bearing.y - ch.bearing.y) * scale.y) };
 
-        const float w{ static_cast<float>(ch.size.x) * scale };
-        const float h{ static_cast<float>(ch.size.y) * scale };
+        const float w{ static_cast<float>(ch.size.x) * scale.x };
+        const float h{ static_cast<float>(ch.size.y) * scale.y };
         std::array<float, GLYPH_VERTICES * GLYPH_VERTEX_ATTRIBUTES> vertices{
             xpos,     ypos + h, 0.0f, 1.0f,
             xpos + w, ypos,     1.0f, 0.0f,
@@ -137,7 +139,7 @@ void TextRenderer::draw(std::string text, float x, float y, float scale, glm::ve
         glDrawArrays(GL_TRIANGLES, 0, GLYPH_VERTICES);
 
         // NOTE: Bitshift by 6 == 2^6, advance is 1/64 of a pixel
-        x += static_cast<float>(ch.advance >> ADVANCE_BITSHIFT) * scale;
+        x += static_cast<float>(ch.advance >> ADVANCE_BITSHIFT) * scale.x;
     }
 
     glBindVertexArray(0);

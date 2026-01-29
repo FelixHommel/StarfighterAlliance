@@ -5,6 +5,7 @@
 
 #include "glad/gl.h"
 #include "glm/ext/matrix_transform.hpp"
+#include "glm/glm.hpp"
 
 #include <array>
 #include <memory>
@@ -103,7 +104,7 @@ void Button::draw(TextRenderer* renderer)
     static constexpr float BUTTON_LABEL_X_OFFSET{ 10.f };
     static constexpr float BUTTON_LABEL_Y_OFFSET{ 5.f };
     if(renderer != nullptr)
-        renderer->draw(m_label, m_position.x + BUTTON_LABEL_X_OFFSET, (m_position.y + m_size.y / 2.f) - BUTTON_LABEL_Y_OFFSET);
+        renderer->render(m_label, glm::vec2(m_position.x + BUTTON_LABEL_X_OFFSET, (m_position.y + (m_size.y / 2.f))) - BUTTON_LABEL_Y_OFFSET);
 }
 
 void Button::update(float dt)

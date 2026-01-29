@@ -37,8 +37,13 @@ SpriteRenderer::~SpriteRenderer()
     glDeleteVertexArrays(1, &m_quadVAO);
 }
 
+void SpriteRenderer::beginFrame(const glm::mat4& projection)
+{
+    m_shader->setMatrix4("projection", projection, true);
+}
+
 void SpriteRenderer::draw(
-    const Texture2D& texture, const glm::vec2& position, const glm::vec2& scale, float rotate, const glm::vec3& color
+    std::shared_ptr<Texture2D> texture, const glm::vec2& position, const glm::vec2& scale, float rotate, const glm::vec3& color
 )
 {
     m_shader->use();
@@ -63,7 +68,7 @@ void SpriteRenderer::draw(
     m_shader->setVector3f("spriteColor", color);
 
     glActiveTexture(GL_TEXTURE0);
-    texture.bind();
+    texture->bind();
 
     glBindVertexArray(m_quadVAO);
     glDrawArrays(GL_TRIANGLES, 0, SPRITE_VERTICES);

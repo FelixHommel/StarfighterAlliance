@@ -4,6 +4,8 @@
 #include "Shader.hpp"
 #include "Texture.hpp"
 
+#include "glm/glm.hpp"
+
 #include <array>
 #include <cstddef>
 #include <memory>
@@ -33,6 +35,11 @@ public:
     SpriteRenderer& operator=(const SpriteRenderer&) = delete;
     SpriteRenderer& operator=(SpriteRenderer&&) = delete;
 
+    /// \brief Prepare the renderer for drawing the next frame.
+    ///
+    /// \param projection the projection matrix
+    void beginFrame(const glm::mat4& projection);
+
     /// \brief Draw a textured quad to the screen
     ///
     /// The order of actions within the function is important, especially the translation, rotation, and scale order.
@@ -49,7 +56,7 @@ public:
     /// \param rotate(optional) the rotation of the quad
     /// \param color(optional) the color of the quad. If a color and texture is supplied the two will be blended to produce the final look
     void draw(
-        const Texture2D& texture,
+        std::shared_ptr<Texture2D> texture,
         const glm::vec2& position,
         const glm::vec2& scale = DEFAULT_DRAW_SCALE,
         float rotate = DEFAULT_ROTATION,
