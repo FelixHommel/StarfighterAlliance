@@ -9,6 +9,8 @@ add_library(${NAME}
     ./core/Texture.cpp
     ./core/resourceManagement/ResourceContext.cpp
     ./ecs/EntityManager.cpp
+    ./ecs/systems/ButtonSystem.cpp
+    ./ecs/systems/LayoutSystem.cpp
     ./ecs/systems/MovementSystem.cpp
     ./ecs/systems/SpriteRenderSystem.cpp
     ./ecs/systems/TextRenderSystem.cpp
@@ -43,6 +45,8 @@ target_sources(${NAME}
             ./ecs/components/TextComponent.hpp
             ./ecs/components/TransformComponent.hpp
             ./ecs/components/VelocityComponent.hpp
+            ./ecs/systems/ButtonSystem.hpp
+            ./ecs/systems/LayoutSystem.hpp
             ./ecs/systems/MovementSystem.hpp
             ./ecs/systems/SpriteRenderSystem.hpp
             ./ecs/systems/TextRenderSystem.hpp
