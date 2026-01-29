@@ -6,6 +6,7 @@
 
 #include <array>
 #include <cassert>
+#include <stdexcept>
 #include <string_view>
 #include <utility>
 
@@ -187,6 +188,7 @@ std::string_view Shader::compilationTypeToString(CompilationType type)
         case CompilationType::Fragment: return "Fragment";
         case CompilationType::Geometry: return "Geometry";
         case CompilationType::Program: return "Program";
+        default: return "<Unknown>";
     }
 }
 
@@ -204,6 +206,9 @@ GLenum Shader::compilationTypeToGlenum(CompilationType type)
         case CompilationType::Geometry: return GL_GEOMETRY_SHADER;
         case CompilationType::Program: return GL_PROGRAM;
     }
+
+    // TODO: Add custom exception
+    throw std::runtime_error("Unknown  CompilationType");
 }
 
 } // namespace sfa
