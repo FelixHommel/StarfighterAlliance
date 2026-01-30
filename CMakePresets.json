@@ -80,9 +80,18 @@
             "name": "test-all",
             "displayName": "Test all",
             "configurePreset": "debug",
-            "environment": {
-                "LSAN_OPTIONS": "suppressions=asan.supp"
+            "output": {
+                "outputOnFailure": true
             },
+            "execution": {
+                "stopOnFailure": false,
+                "jobs": 8
+            }
+        },
+        {
+            "name": "test-coverage",
+            "displayName": "Test Coverage",
+            "configurePreset": "code-coverage",
             "output": {
                 "outputOnFailure": true
             },
