@@ -28,14 +28,6 @@ jobs:
       # with:
       #   runVcpkgInstall: true
 
-    - name: Debug vcpkg + CMake
-      run: |
-        echo "VCPKG_ROOT=$VCPKG_ROOT"
-        echo "VCPKG_OVERLAY_PORTS=$VCPKG_OVERLAY_PORTS"
-        cmake --version
-        find . -maxdepth 3 -type d -name "vcpkg-ports" -print
-        env
-
     - name: Verify glad2cmake is installed
       run: |
         find "$VCPKG_ROOT/installed" -path "*share/glad2cmake*Config.cmake" -print
