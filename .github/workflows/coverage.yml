@@ -9,16 +9,13 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    # env:
-    #   LSAN_OPTIONS: "suppressions=${{ github.workspace }}/asan.supp"
-    #   ASAN_OPTIONS: "suppressions=${{ github.workspace }}/asan.supp"
     steps:
     - uses: actions/checkout@v4
 
     - name: Install Dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y lcov libgl1-mesa-dev libglu1-mesa-dev xorg-dev
+        sudo apt-get install -y lcov libgl1-mesa-dev libglu1-mesa-dev xorg-dev xvfb
 
     - name: Install CMake and Ninja
       uses: lukka/get-cmake@latest
@@ -28,23 +25,16 @@ jobs:
 
     - name: Setup vcpkg
       uses: lukka/run-vcpkg@v11
-      # with:
-      #   runVcpkgInstall: true
 
     - name: Configure + Build
       uses: lukka/run-cmake@v10
       with:
         configurePreset: code-coverage
         buildPreset: code-coverage
-      #   testPreset: test-coverage
-      # env:
-      #   LSAN_OPTIONS: suppressions=${{ github.workspace }}/asan.supp
-      #   ASAN_OPTIONS: suppressions=${{ github.workspace }}/asan.supp
 
     - name: Run Tests
       run: |
-        ls ${{ github.workspace }}
-        ctest --preset test-coverage
+        xvfb-run -a ctest --preset test-coverage
 
     - name: Analyze test data
       run: ./scripts/analyze_coverage.sh
@@ -54,15 +44,3 @@ jobs:
         bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r ./build/code-coverage/coverage-data/coverage.filtered.info
       env:
         CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
-
-    - name: Publish Badge JSON
-      run: |
-        git config user.name github-actions
-        git config user.email github-actions@github.com
-        git fetch origin badges || git checkout --orphan badges
-        git checkout badges
-        cp -f ./build/code-coverage/coverage-report/coverage-badge.json ./.github/badges/coverage-badge.json
-        git add ./.github/badges/coverage-badge.json
-        git commit -m "Update coverage badge" || echo "No changes"
-        git push origin badges --force
-
