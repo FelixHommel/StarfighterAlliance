@@ -3,9 +3,10 @@
 
 #include "Shader.hpp"
 
-#include "glm/ext/vector_int2.hpp"
+#include <glm/glm.hpp>
 
 #include <cstddef>
+#include <filesystem>
 #include <map>
 #include <memory>
 #include <string>
@@ -35,7 +36,7 @@ struct Character
 class TextRenderer
 {
 public:
-    TextRenderer(std::shared_ptr<Shader> shader);
+    explicit TextRenderer(std::shared_ptr<Shader> shader);
     ~TextRenderer();
 
     TextRenderer(const TextRenderer&) = delete;
@@ -45,9 +46,9 @@ public:
 
     /// \brief Load a font from a file.
     ///
-    /// \param font path to the font. Should be an .fft file
+    /// \param filepath path to the font. Should be an .fft file
     /// \param fontSize(optional) the size the font will be
-    void load(std::string font, unsigned int fontSize = DEFAULT_FONT_SIZE);
+    void load(const std::filesystem::path& filepath, unsigned int fontSize = DEFAULT_FONT_SIZE);
 
     /// \brief Begin the drawing of the next frame.
     ///
@@ -60,7 +61,7 @@ public:
     /// \param pos the position of the text
     /// \param scale(optional) apply extra scale to the text
     /// \param color(optional) the color of the text
-    void render(std::string text, const glm::vec2& pos, const glm::vec2& scale = DEFAULT_SCALE, glm::vec3 color = DEFAULT_COLOR);
+    void render(const std::string& text, const glm::vec2& pos, const glm::vec2& scale = DEFAULT_SCALE, glm::vec3 color = DEFAULT_COLOR);
 
 private:
     static constexpr std::size_t LOADED_ASCII_CHARS{ 128 };

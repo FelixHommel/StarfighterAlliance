@@ -21,7 +21,7 @@ namespace sfa
 class SpriteRenderSystem
 {
 public:
-    SpriteRenderSystem(std::shared_ptr<Shader> shader);
+    explicit SpriteRenderSystem(std::shared_ptr<Shader> shader);
     ~SpriteRenderSystem() = default;
 
     SpriteRenderSystem(const SpriteRenderSystem&) = delete;

@@ -1,7 +1,7 @@
 #ifndef SFA_SRC_ENGINE_CORE_TEXTURE_HPP
 #define SFA_SRC_ENGINE_CORE_TEXTURE_HPP
 
-#include "glad/gl.h"
+#include <glad/gl.h>
 
 #include <cstddef>
 #include <span>

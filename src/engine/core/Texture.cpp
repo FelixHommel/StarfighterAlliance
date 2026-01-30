@@ -1,6 +1,6 @@
 #include "Texture.hpp"
 
-#include "glad/gl.h"
+#include <glad/gl.h>
 
 #include <cstddef>
 #include <span>
@@ -51,6 +51,10 @@ Texture2D::Texture2D(Texture2D&& other) noexcept
     , m_height(std::exchange(other.m_height, 0))
     , m_internalFormat(std::exchange(other.m_internalFormat, GL_RGB))
     , m_imageFormat(std::exchange(other.m_imageFormat, GL_RGB))
+    , m_wrapS(std::exchange(other.m_wrapS, GL_REPEAT))
+    , m_wrapT(std::exchange(other.m_wrapT, GL_REPEAT))
+    , m_filterMin(std::exchange(other.m_filterMin, GL_LINEAR))
+    , m_filterMax(std::exchange(other.m_filterMax, GL_LINEAR))
 {}
 
 Texture2D& Texture2D::operator=(Texture2D&& other) noexcept
@@ -65,6 +69,10 @@ Texture2D& Texture2D::operator=(Texture2D&& other) noexcept
     m_height = std::exchange(other.m_height, 0);
     m_internalFormat = std::exchange(other.m_internalFormat, GL_RGB);
     m_imageFormat = std::exchange(other.m_imageFormat, GL_RGB);
+    m_wrapS = std::exchange(other.m_wrapS, GL_REPEAT);
+    m_wrapT = std::exchange(other.m_wrapT, GL_REPEAT);
+    m_filterMin = std::exchange(other.m_filterMin, GL_LINEAR);
+    m_filterMax = std::exchange(other.m_filterMax, GL_LINEAR);
 
     return *this;
 }
