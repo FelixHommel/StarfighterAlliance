@@ -38,8 +38,8 @@ jobs:
 
     - name: Verify glad2cmake is installed
       run: |
+        find "$VCPKG_ROOT/installed" -path "*share/glad2cmake*Config.cmake" -print
         vcpkg list | grep -i glad2cmake || true
-        find "$VCPKG_ROOT/installed" -path "*share/glad2cmake*" -maxdepth 6 -print || true
 
     - name: Configure + Build
       uses: lukka/run-cmake@v10
