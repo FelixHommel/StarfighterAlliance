@@ -9,6 +9,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      LSAN_OPTIONS: "suppressions=${{ github.workspace }}/asan.supp"
+      ASAN_OPTIONS: "suppressions=${{ github.workspace }}/asan.supp"
     steps:
     - uses: actions/checkout@v4
 
@@ -40,16 +43,13 @@ jobs:
 
     - name: Run Tests
       run: |
-        echo ${{ github.workspace }}
+        ls ${{ github.workspace }}
         ctest --preset test-coverage
-      env:
-        LSAN_OPTIONS: suppressions=${{ github.workspace }}/asan.supp
-        ASAN_OPTIONS: suppressions=${{ github.workspace }}/asan.supp
 
     - name: Analyze test data
       run: ./scripts/analyze_coverage.sh
 
-    - name: Upload converage to Codacy
+    - name: Upload coverage to Codacy
       run: |
         bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r ./build/code-coverage/coverage-data/coverage.filtered.info
       env:
