@@ -15,28 +15,18 @@ jobs:
     - name: Install Dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y lcov ninja-build libgl1-mesa-dev libglu1-mesa-dev xorg-dev
+        sudo apt-get install -y lcov libgl1-mesa-dev libglu1-mesa-dev xorg-dev
+
+    - name: Install CMake and Ninja
+      uses: lukka/get-cmake@latest
+      with:
+        cmakeVersion: 3.31.2
+        ninjaVersion: 1.11.1
 
     - name: Setup vcpkg
       uses: lukka/run-vcpkg@v11
-
-    - name: Install vcpkg Dependencies
-      run: vcpkg install
-
-    - name: Configure + Build
-      uses: lukka/run-cmake@v10
-      with:
-        configurePreset: code-coverage
-        buildPreset: code-coverage
-
-    - name: Run Tests
-      run: ctest --preset test-coverage
-      env:
-        LSAN_OPTIONS: suppressions=${{ github.workspace }}/asan.supp
-        ASAN_OPTIONS: suppressions=${{ github.workspace }}/asan.supp
-
-    - name: Analyze test data
-      run: ./scripts/analyze_coverage.sh
+      # with:
+      #   runVcpkgInstall: true
 
     - name: Debug vcpkg + CMake
       run: |
@@ -44,6 +34,31 @@ jobs:
         echo "VCPKG_OVERLAY_PORTS=$VCPKG_OVERLAY_PORTS"
         cmake --version
         find . -maxdepth 3 -type d -name "vcpkg-ports" -print
+        env
+
+    - name: Verify glad2cmake is installed
+      run: |
+        vcpkg list | grep -i glad2cmake || true
+        find "$VCPKG_ROOT/installed" -path "*share/glad2cmake*" -maxdepth 6 -print || true
+
+    - name: Configure + Build
+      uses: lukka/run-cmake@v10
+      with:
+        configurePreset: code-coverage
+        buildPreset: code-coverage
+        testPreset: test-coverage
+      env:
+        LSAN_OPTIONS: suppressions=${{ github.workspace }}/asan.supp
+        ASAN_OPTIONS: suppressions=${{ github.workspace }}/asan.supp
+
+    # - name: Run Tests
+    #   run: ctest --preset test-coverage
+    #   env:
+    #     LSAN_OPTIONS: suppressions=${{ github.workspace }}/asan.supp
+    #     ASAN_OPTIONS: suppressions=${{ github.workspace }}/asan.supp
+
+    - name: Analyze test data
+      run: ./scripts/analyze_coverage.sh
 
     - name: Upload converage to Codacy
       run: |
