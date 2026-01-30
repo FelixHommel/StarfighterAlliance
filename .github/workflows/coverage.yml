@@ -9,9 +9,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      LSAN_OPTIONS: "suppressions=${{ github.workspace }}/asan.supp"
-      ASAN_OPTIONS: "suppressions=${{ github.workspace }}/asan.supp"
+    # env:
+    #   LSAN_OPTIONS: "suppressions=${{ github.workspace }}/asan.supp"
+    #   ASAN_OPTIONS: "suppressions=${{ github.workspace }}/asan.supp"
     steps:
     - uses: actions/checkout@v4
 
