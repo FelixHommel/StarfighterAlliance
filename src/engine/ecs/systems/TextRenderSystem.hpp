@@ -19,7 +19,7 @@ namespace sfa
 class TextRenderSystem
 {
 public:
-    TextRenderSystem(std::shared_ptr<Shader> shader);
+    explicit TextRenderSystem(std::shared_ptr<Shader> shader);
     ~TextRenderSystem() = default;
 
     TextRenderSystem(const TextRenderSystem&) = delete;
