@@ -54,7 +54,7 @@ TEST_F(EntityManagerTest, CreateEntityExceedsLimit)
 {
     EntityManager manager{};
 
-    for(std::size_t i{ 1 }; i <= EntityManager::maxEntities(); ++i)
+    for(std::size_t i{ 0 }; i < EntityManager::maxEntities(); ++i)
         auto x{ manager.createEntity() };
 
     EXPECT_DEATH({ auto x{ manager.createEntity() }; }, "Too many entities");

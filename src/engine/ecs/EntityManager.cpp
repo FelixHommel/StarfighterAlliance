@@ -9,7 +9,8 @@ namespace sfa
 
 EntityManager::EntityManager()
 {
-    for(EntityID entity{ 1 }; entity < MAX_ENTITIES; ++entity)
+    // NOTE: 0 represents the NULL_ENTITY -> strat valid ID range at 1
+    for(EntityID entity{ 1 }; entity <= MAX_ENTITIES; ++entity)
         m_availableEntities.push(entity);
 }
 
