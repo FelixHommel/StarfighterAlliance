@@ -23,7 +23,7 @@ jobs:
     - name: Install CMake and Ninja
       uses: lukka/get-cmake@latest
       with:
-        cmakeVersion: 3.31.2
+        cmakeVersion: 3.31.10
         ninjaVersion: 1.11.1
 
     - name: Setup vcpkg
