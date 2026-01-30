@@ -33,16 +33,18 @@ jobs:
       with:
         configurePreset: code-coverage
         buildPreset: code-coverage
-        testPreset: test-coverage
+      #   testPreset: test-coverage
+      # env:
+      #   LSAN_OPTIONS: suppressions=${{ github.workspace }}/asan.supp
+      #   ASAN_OPTIONS: suppressions=${{ github.workspace }}/asan.supp
+
+    - name: Run Tests
+      run: |
+        echo ${{ github.workspace }}
+        ctest --preset test-coverage
       env:
         LSAN_OPTIONS: suppressions=${{ github.workspace }}/asan.supp
         ASAN_OPTIONS: suppressions=${{ github.workspace }}/asan.supp
-
-    # - name: Run Tests
-    #   run: ctest --preset test-coverage
-    #   env:
-    #     LSAN_OPTIONS: suppressions=${{ github.workspace }}/asan.supp
-    #     ASAN_OPTIONS: suppressions=${{ github.workspace }}/asan.supp
 
     - name: Analyze test data
       run: ./scripts/analyze_coverage.sh
