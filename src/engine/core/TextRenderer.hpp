@@ -35,7 +35,7 @@ struct Character
 class TextRenderer
 {
 public:
-    TextRenderer(std::shared_ptr<Shader> shader);
+    explicit TextRenderer(std::shared_ptr<Shader> shader);
     ~TextRenderer();
 
     TextRenderer(const TextRenderer&) = delete;

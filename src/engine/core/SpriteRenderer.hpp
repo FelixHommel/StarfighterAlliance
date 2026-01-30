@@ -27,7 +27,7 @@ public:
     /// \brief Create a new \ref SpriteRenderer
     ///
     /// \param shader the \ref Shader that will be used to render this quad
-    SpriteRenderer(std::shared_ptr<Shader> shader);
+    explicit SpriteRenderer(std::shared_ptr<Shader> shader);
     ~SpriteRenderer();
 
     SpriteRenderer(const SpriteRenderer&) = delete;
