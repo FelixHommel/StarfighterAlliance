@@ -3,6 +3,7 @@
 #include "Shader.hpp"
 
 #include "ft2build.h"
+#include <filesystem>
 // NOLINTNEXTLINE(misc-include-cleaner): FT_FREETYPE_H is a macro that is created by FreeType. That is it's inteded use.
 #include FT_FREETYPE_H
 
@@ -49,7 +50,7 @@ void TextRenderer::beginFrame(const glm::mat4& projection)
     m_shader->setMatrix4("projection", projection, true);
 }
 
-void TextRenderer::load(std::string font, unsigned int fontSize)
+void TextRenderer::load(const std::filesystem::path& filepath, unsigned int fontSize)
 {
     m_characters.clear();
 
@@ -58,7 +59,7 @@ void TextRenderer::load(std::string font, unsigned int fontSize)
         std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
 
     FT_Face face{};
-    if(FT_New_Face(ft, font.c_str(), 0, &face) != 0)
+    if(FT_New_Face(ft, filepath.c_str(), 0, &face) != 0)
         std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
 
     FT_Set_Pixel_Sizes(face, 0, fontSize);
@@ -107,14 +108,14 @@ void TextRenderer::load(std::string font, unsigned int fontSize)
     FT_Done_FreeType(ft);
 }
 
-void TextRenderer::render(std::string text, const glm::vec2& pos, const glm::vec2& scale, glm::vec3 color)
+void TextRenderer::render(const std::string& text, const glm::vec2& pos, const glm::vec2& scale, glm::vec3 color)
 {
     m_shader->setVector3f("textColor", color, true);
     glActiveTexture(GL_TEXTURE0);
     glBindVertexArray(m_vao);
 
     float x{ pos.x };
-    for(auto c{ text.begin() }; c != text.end(); c++)
+    for(auto c{ text.cbegin() }; c != text.cend(); c++)
     {
         const Character ch{ m_characters[*c] };
 
