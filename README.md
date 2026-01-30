@@ -1,5 +1,7 @@
 # Starfighter Alliance
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/44b9ea49034746dda94d31e6084c4418)](https://app.codacy.com/gh/FelixHommel/StarfighterAlliance?utm_source=github.com&utm_medium=referral&utm_content=FelixHommel/StarfighterAlliance&utm_campaign=Badge_Grade)
+
 ![Build](https://github.com/FelixHommel/StarfighterAlliance/actions/workflows/cmake-multi-platform.yml/badge.svg)
 ![Coverage](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/FelixHommel/StarfighterAlliance/badges/.github/badges/coverage-badge.json)
 
