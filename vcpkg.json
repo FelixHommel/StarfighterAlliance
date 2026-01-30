@@ -9,7 +9,7 @@
     "nlohmann-json",
     "spdlog",
     "sqlitecpp",
-    "valijson",
-    "stb"
+    "stb",
+    "valijson"
   ]
 }

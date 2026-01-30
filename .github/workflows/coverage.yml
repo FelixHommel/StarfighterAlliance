@@ -13,7 +13,7 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Install dependencies
-      run: sudo apt install -y lcov ninja-build
+      run: sudo apt install -y lcov ninja-build libgl1-mesa-dev libglu1-mesa-dev xorg-dev
 
     - name: Setup vcpkg
       uses: lukka/run-vcpkg@v11
