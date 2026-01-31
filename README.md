@@ -67,5 +67,4 @@ will be shown to the player after a game ended.
 
 ## Acknowledgments / Credits
 
-- [LeranOpenGL.com](https://learnopengl.com/)
-- [How to use websocket++](https://medium.com/nerd-for-tech/your-first-c-websocket-client-4e7b36353d26)
+- [LearnOpenGL.com](https://learnopengl.com/)
