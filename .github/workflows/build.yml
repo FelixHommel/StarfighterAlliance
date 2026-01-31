@@ -89,24 +89,6 @@ jobs:
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
         -DSFA_ENABLE_ASSERTIONS=ON
 
-    - name: Dump vcpkg glad2cmake logs (Windows)
-      if: failure() && runner.os == 'Windows'
-      shell: pwsh
-      run: |
-        $root = "vcpkg/buildtrees/glad2cmake"
-        if (Test-Path $root) {
-          Get-ChildItem -Recurse $root -Filter "*out.log" | ForEach-Object {
-            "`n===== $($_.FullName) ====="
-            Get-Content $_.FullName -Tail 200
-          }
-          Get-ChildItem -Recurse $root -Filter "*CMakeConfigureLog.yaml.log" | ForEach-Object {
-            "`n===== $($_.FullName) ====="
-            Get-Content $_.FullName -Tail 200
-          }
-        } else {
-          "No glad2cmake buildtree logs found at $root"
-        }
-
     - name: Build
       run: cmake --build build/${{ runner.os }}/${{ matrix.config }}
 
