@@ -56,7 +56,7 @@ jobs:
     - name: Cache vcpkg binary packages
       uses: actions/cache@v5
       with:
-        paths: .vcpkg_cache
+        path: .vcpkg_cache
         key: vcpkg-bin-${{ runner.os }}-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json', 'vcpkg-lock.json') }}
         restore-keys: |
           vcpkg-bin-${{ runner.os }}
