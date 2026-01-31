@@ -25,10 +25,7 @@ public:
     ShaderTest& operator=(const ShaderTest&) = delete;
     ShaderTest& operator=(ShaderTest&&) = delete;
 
-    void SetUp() override
-    {
-        m_glContext = std::make_unique<OpenGLTestFixture>();
-    }
+    void SetUp() override { m_glContext = std::make_unique<OpenGLTestFixture>(); }
 
 protected:
     static constexpr auto VERTEX_SHADER_SRC = R"(

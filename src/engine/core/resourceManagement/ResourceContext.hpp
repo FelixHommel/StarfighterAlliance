@@ -27,8 +27,15 @@ public:
     ResourceContext& operator=(const ResourceContext&) = delete;
     ResourceContext& operator=(ResourceContext&&) = delete;
 
-    void loadShaderFromFile(const std::string& name, const std::filesystem::path& vert, const std::filesystem::path& frag);
-    void loadShaderFromFile(const std::string& name, const std::filesystem::path& vert, const std::filesystem::path& frag, const std::filesystem::path& geom);
+    void loadShaderFromFile(
+        const std::string& name, const std::filesystem::path& vert, const std::filesystem::path& frag
+    );
+    void loadShaderFromFile(
+        const std::string& name,
+        const std::filesystem::path& vert,
+        const std::filesystem::path& frag,
+        const std::filesystem::path& geom
+    );
     std::shared_ptr<Shader> getShader(const std::string& key) { return m_shaderCache.get(key); }
 
     void loadTextureFromFile(std::string name, const std::filesystem::path& filepath);

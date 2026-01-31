@@ -38,15 +38,13 @@ Shader::~Shader()
     releaseShaderProgram();
 }
 
-Shader::Shader(Shader&& other) noexcept
-    : m_id(std::exchange(other.m_id, 0))
-{}
+Shader::Shader(Shader&& other) noexcept : m_id(std::exchange(other.m_id, 0)) {}
 
 Shader& Shader::operator=(Shader&& other) noexcept
 {
     if(this == &other)
         return *this;
-    
+
     releaseShaderProgram();
 
     m_id = std::exchange(other.m_id, 0);
@@ -184,11 +182,16 @@ std::string_view Shader::compilationTypeToString(CompilationType type)
 {
     switch(type)
     {
-        case CompilationType::Vertex: return "Vertex";
-        case CompilationType::Fragment: return "Fragment";
-        case CompilationType::Geometry: return "Geometry";
-        case CompilationType::Program: return "Program";
-        default: return "<Unknown>";
+    case CompilationType::Vertex:
+        return "Vertex";
+    case CompilationType::Fragment:
+        return "Fragment";
+    case CompilationType::Geometry:
+        return "Geometry";
+    case CompilationType::Program:
+        return "Program";
+    default:
+        return "<Unknown>";
     }
 }
 
@@ -201,10 +204,14 @@ GLenum Shader::compilationTypeToGlenum(CompilationType type)
 {
     switch(type)
     {
-        case CompilationType::Vertex: return GL_VERTEX_SHADER;
-        case CompilationType::Fragment: return GL_FRAGMENT_SHADER;
-        case CompilationType::Geometry: return GL_GEOMETRY_SHADER;
-        case CompilationType::Program: return GL_PROGRAM;
+    case CompilationType::Vertex:
+        return GL_VERTEX_SHADER;
+    case CompilationType::Fragment:
+        return GL_FRAGMENT_SHADER;
+    case CompilationType::Geometry:
+        return GL_GEOMETRY_SHADER;
+    case CompilationType::Program:
+        return GL_PROGRAM;
     }
 
     // TODO: Add custom exception

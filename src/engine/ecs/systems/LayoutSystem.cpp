@@ -28,7 +28,9 @@ void LayoutSystem::update(ComponentRegistry& registry)
     }
 }
 
-void LayoutSystem::updateVerticalLayout(ComponentRegistry& registry, const LayoutComponent& layout, const TransformComponent& parentTransform)
+void LayoutSystem::updateVerticalLayout(
+    ComponentRegistry& registry, const LayoutComponent& layout, const TransformComponent& parentTransform
+)
 {
     const auto& sprites{ registry.getComponentArray<SpriteComponent>() };
     auto& transforms{ registry.getComponentArray<TransformComponent>() };
@@ -46,7 +48,9 @@ void LayoutSystem::updateVerticalLayout(ComponentRegistry& registry, const Layou
     }
 }
 
-void LayoutSystem::updateHorizontalLayout(ComponentRegistry& registry, const LayoutComponent& layout, const TransformComponent& parentTransform)
+void LayoutSystem::updateHorizontalLayout(
+    ComponentRegistry& registry, const LayoutComponent& layout, const TransformComponent& parentTransform
+)
 {
     const auto& sprites{ registry.getComponentArray<SpriteComponent>() };
     auto& transforms{ registry.getComponentArray<TransformComponent>() };

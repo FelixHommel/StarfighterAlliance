@@ -5,8 +5,7 @@ namespace sfa
 {
 
 class EntityFactory
-{
-};
+{};
 
 } // namespace sfa
 

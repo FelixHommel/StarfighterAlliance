@@ -32,7 +32,7 @@ void SpriteRenderSystem::render(const ComponentRegistry& components, const glm::
             renderables.emplace_back(entity);
     }
 
-    std::ranges::sort(renderables, [&](EntityID a, EntityID b){
+    std::ranges::sort(renderables, [&](EntityID a, EntityID b) {
         return sprites.get(a).renderLayer < sprites.get(b).renderLayer;
     });
 
@@ -42,7 +42,9 @@ void SpriteRenderSystem::render(const ComponentRegistry& components, const glm::
         const auto& transform{ transforms.get(entity) };
         const auto& sprite{ sprites.get(entity) };
 
-        m_renderer->draw(sprite.texture, transform.position, sprite.size * transform.scale, transform.rotation, sprite.color);
+        m_renderer->draw(
+            sprite.texture, transform.position, sprite.size * transform.scale, transform.rotation, sprite.color
+        );
     }
 }
 

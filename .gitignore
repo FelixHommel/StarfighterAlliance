@@ -3,6 +3,10 @@
 .vscode
 build
 *.db3
+
+# LSPs
+.clangd
+pyrightconfig.json
 .harper-dictionary.txt
 
 # Created by https://www.toptal.com/developers/gitignore/api/c++,cmake,linux,windows,vcpkg

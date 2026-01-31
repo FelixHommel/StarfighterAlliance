@@ -1,8 +1,8 @@
 #ifndef SFA_SRC_ENGINE_ECS_COMPONENT_ARRAY_HPP
 #define SFA_SRC_ENGINE_ECS_COMPONENT_ARRAY_HPP
 
-#include "IComponentArray.hpp"
 #include "ECSUtility.hpp"
+#include "IComponentArray.hpp"
 #include "components/IComponent.hpp"
 
 #include <array>
@@ -22,7 +22,7 @@ namespace sfa
 ///
 /// \author Felux Hommel
 /// \date 1/25/2026
-template <Component T>
+template<Component T>
 class ComponentArray : public IComponentArray
 {
 public:
@@ -107,10 +107,7 @@ public:
     /// \param entity the target entity
     ///
     /// \returns *true* if the entity has the component, *false* otherwise
-    bool contains(EntityID entity) const
-    {
-        return m_entityToIndex.contains(entity);
-    }
+    bool contains(EntityID entity) const { return m_entityToIndex.contains(entity); }
 
     /// \brief Get the entity ID of a component.
     ///
@@ -125,7 +122,7 @@ public:
 
         return m_indexToEntity.at(index);
     }
-    
+
     /// \brief Destroy the component of an entity if the component exists.
     ///
     /// \param entity the entity of which the component is getting destroyed
@@ -146,7 +143,7 @@ public:
     std::span<const T> span() const noexcept { return { m_components.data(), m_actualSize }; }
 
 private:
-    static constexpr std::size_t MAX_COMPONENTS{ 10'000 };
+    static constexpr std::size_t MAX_COMPONENTS{ 10000 };
 
     std::array<T, MAX_COMPONENTS> m_components;
     std::unordered_map<EntityID, std::size_t> m_entityToIndex;

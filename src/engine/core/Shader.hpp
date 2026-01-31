@@ -1,8 +1,8 @@
 #ifndef SFA_SRC_ENGINE_CORE_SHADER_HPP
 #define SFA_SRC_ENGINE_CORE_SHADER_HPP
 
-#include "glm/ext/matrix_float4x4.hpp"
 #include "glad/gl.h"
+#include "glm/ext/matrix_float4x4.hpp"
 
 #include <cstdint>
 #include <string_view>

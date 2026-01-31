@@ -41,7 +41,7 @@ public:
     {
         if(m_resources.contains(key))
             spdlog::warn("Overwritten a resource with key: {}", key);
-            
+
         m_resources.insert_or_assign(std::move(key), std::move(resource));
     }
 

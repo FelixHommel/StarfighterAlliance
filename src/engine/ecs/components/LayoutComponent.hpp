@@ -18,7 +18,12 @@ namespace sfa
 /// \date 1/29/2026
 struct LayoutComponent : public IComponent
 {
-    enum class Type : std::uint8_t { Vertical, Horizontal, Grid };
+    enum class Type : std::uint8_t
+    {
+        Vertical,
+        Horizontal,
+        Grid
+    };
 
     Type type;
     float spacing;
