@@ -71,6 +71,7 @@ jobs:
         -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
+        -DSFA_ENABLE_ASSERTIONS=ON
 
     - name: Configure CMake
       if: runner.os == 'Windows'
@@ -82,6 +83,7 @@ jobs:
         -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
+        -DSFA_ENABLE_ASSERTIONS=ON
 
     - name: Build
       run: cmake --build build/${{ runner.os }}/${{ matrix.config }}
