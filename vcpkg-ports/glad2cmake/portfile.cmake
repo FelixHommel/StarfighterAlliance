@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FelixHommel/Glad2-CMake
-    REF v1.1.5
+    REF v1.1.6
     SHA512 1b211a56e1ed27328862cf785057d5efc2bcd1f1f37d13d1064d290583e836578907c898765a9c8aca5044b546cad320465eafe066ba85086c5e5ecd18dded36
 )
 

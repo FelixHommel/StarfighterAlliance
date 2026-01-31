@@ -1,6 +1,6 @@
 {
     "name": "glad2cmake",
-    "version-string": "1.1.5",
+    "version-string": "1.1.6",
     "description": "Glad2 OpenGL loader packaged for CMake",
     "homepage": "https://github.com/FelixHommel/Glad2-CMake",
     "license": "MIT",
