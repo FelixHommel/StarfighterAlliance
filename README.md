@@ -26,25 +26,24 @@ will be shown to the player after a game ended.
 
 > Items are not in any particular order
 
-- [ ] Reenable tests (add\_directory)
+- [x] Re-enable tests (add_directory)
 
   - Fix tests
   - figure out gmock issue
   - classes for each test type
 
-- [ ] Fix All warnings
+- [x] Fix All warnings
 
   - Turn on Warnings as errors
 
-- [ ] Convert comments to Doxygen
-- [ ] Namespaces for everything
+- [x] Convert comments to Doxygen
+- [x] Namespaces for everything
 - [ ] Clean up architecture
 
   - JSONReader class complete overhaul
   - better/different solution for ResourceManager?
 
 - [ ] Resolve the color picking service issue (Server is offline)
-- [ ] Figure out what is wrong with the multi build workflow
 
 ## Building
 
