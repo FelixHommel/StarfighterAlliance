@@ -25,6 +25,7 @@ target_sources(${NAME}
             ./core/SpriteRenderer.hpp
             ./core/TextRenderer.hpp
             ./core/Texture.hpp
+            ./core/Utility.hpp
             ./core/resourceManagement/ResourceCache.hpp
             ./core/resourceManagement/ResourceContext.hpp
             ./ecs/ComponentArray.hpp

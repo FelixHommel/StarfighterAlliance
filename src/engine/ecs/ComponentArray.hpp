@@ -1,6 +1,7 @@
 #ifndef SFA_SRC_ENGINE_ECS_COMPONENT_ARRAY_HPP
 #define SFA_SRC_ENGINE_ECS_COMPONENT_ARRAY_HPP
 
+#include "core/Utility.hpp"
 #include "ECSUtility.hpp"
 #include "IComponentArray.hpp"
 #include "components/IComponent.hpp"
@@ -40,9 +41,7 @@ public:
     /// \param component the new component
     void insert(EntityID entity, T component)
     {
-#if defined(SFA_DEBUG)
-        assert(!m_entityToIndex.contains(entity) && "Component already exists");
-#endif // !SFA_DEBUG
+        SFA_ASSERT(!m_entityToIndex.contains(entity), "Component already exists");
 
         const std::size_t newIndex{ m_actualSize++ };
         m_entityToIndex[entity] = newIndex;
@@ -55,9 +54,7 @@ public:
     /// \param entity the target entity
     void remove(EntityID entity)
     {
-#if defined(SFA_DEBUG)
-        assert(m_entityToIndex.contains(entity) && "Component doesn't exist");
-#endif // !SFA_DEBUG
+        SFA_ASSERT(m_entityToIndex.contains(entity), "Component doesn't exist");
 
         // NOTE: Swap with last element to maintain density
         const std::size_t indexOfRemoved{ m_entityToIndex[entity] };
@@ -81,9 +78,7 @@ public:
     /// \returns reference to component of \p entity
     T& get(EntityID entity)
     {
-#if defined(SFA_DEBUG)
-        assert(m_entityToIndex.contains(entity) && "Component doesn't exist");
-#endif // !SFA_DEBUG
+        SFA_ASSERT(m_entityToIndex.contains(entity), "Component doesn't exist");
 
         return m_components[m_entityToIndex[entity]];
     }
@@ -95,9 +90,7 @@ public:
     /// \returns const-ref to component of \p entity
     const T& get(EntityID entity) const
     {
-#if defined(SFA_DEBUG)
-        assert(m_entityToIndex.contains(entity) && "Component doesn't exist");
-#endif // !SFA_DEBUG
+        SFA_ASSERT(m_entityToIndex.contains(entity), "Component doesn't exist");
 
         return m_components.at(m_entityToIndex.at(entity));
     }
@@ -116,9 +109,7 @@ public:
     /// \returns \ref EntityID that owns the component at \p index
     EntityID entityAtIndex(std::size_t index) const
     {
-#if defined(SFA_DEBUG)
-        assert(index <= m_actualSize && "Index is out of range");
-#endif // !SFA_DEBUG
+        SFA_ASSERT(index <= m_actualSize, "Index is out of range");
 
         return m_indexToEntity.at(index);
     }
