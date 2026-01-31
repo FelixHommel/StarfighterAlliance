@@ -15,7 +15,7 @@ target_sources(${NAME}
     PRIVATE
         FILE_SET HEADERS
         FILES
-            ./fixtures/OpenGLTestFicture.hpp
+            ./fixtures/OpenGLTestFixture.hpp
 )
 
 target_compile_features(${NAME} PRIVATE cxx_std_23)
