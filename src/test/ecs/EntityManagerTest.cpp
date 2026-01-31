@@ -23,6 +23,8 @@ public:
     EntityManagerTest& operator=(EntityManagerTest&&) = delete;
 };
 
+using EntityManagerDeathTest = EntityManagerTest;
+
 /// \brief Test the Construction of a \ref EntityManager.
 ///
 /// After the \re EntityManager is constructed, it should not have allocated any entities yet.
@@ -50,7 +52,7 @@ TEST_F(EntityManagerTest, CreateEntity)
 ///
 /// When the maximum of entities already is created, the createEntity() method should fail an assertion when build in
 /// debug mode.
-TEST_F(EntityManagerTest, CreateEntityExceedsLimit)
+TEST_F(EntityManagerDeathTest, CreateEntityExceedsLimit)
 {
     EntityManager manager{};
 
@@ -77,7 +79,7 @@ TEST_F(EntityManagerTest, DestroyEntities)
 ///
 /// When an entity that never was created is attempted to be deleted, the destroyEntity() method should fail an
 /// assertion when build in debug mode.
-TEST_F(EntityManagerTest, DestroyNonExistingEntitie)
+TEST_F(EntityManagerDeathTest, DestroyNonExistingEntitie)
 {
     EntityManager manager{};
 
