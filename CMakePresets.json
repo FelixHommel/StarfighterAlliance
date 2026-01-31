@@ -91,6 +91,18 @@
             }
         },
         {
+            "name": "test-release",
+            "displayName": "Test all",
+            "configurePreset": "release",
+            "output": {
+                "outputOnFailure": true
+            },
+            "execution": {
+                "stopOnFailure": false,
+                "jobs": 8
+            }
+        },
+        {
             "name": "test-coverage",
             "displayName": "Test Coverage",
             "configurePreset": "code-coverage",
