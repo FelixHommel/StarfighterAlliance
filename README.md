@@ -10,7 +10,7 @@ This game was developed during winter semester 2024/2025 @ Ulm University.
 
 In Starfighter Alliance, players will control one of the three available spaceships, fight various 
 forms of enemies with their spaceship and earn points while doing so. The ultimate goal of the game
-is to earn as many points as possible. All scores will be saved and the Top 10 all time high scores
+is to earn as many points as possible. All scores will be saved and the Top 10 all-time high scores
 will be shown to the player after a game ended.
 
 ## Features
