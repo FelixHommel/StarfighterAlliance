@@ -1,8 +1,8 @@
 #ifndef SFA_SRC_ENGINE_ECS_SYSTEMS_SPRITE_RENDER_SYSTEM_HPP
 #define SFA_SRC_ENGINE_ECS_SYSTEMS_SPRITE_RENDER_SYSTEM_HPP
 
-#include "core/SpriteRenderer.hpp"
 #include "core/Shader.hpp"
+#include "core/SpriteRenderer.hpp"
 #include "ecs/ComponentRegistry.hpp"
 
 #include "glm/glm.hpp"

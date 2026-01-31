@@ -23,7 +23,9 @@ SpriteRenderer::SpriteRenderer(std::shared_ptr<Shader> shader) : m_shader(std::m
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
 
     glBindVertexArray(m_quadVAO);
-    glVertexAttribPointer(0, SPRITE_VERTEX_ATTRIBUTES, GL_FLOAT, GL_FALSE, SPRITE_VERTEX_ATTRIBUTES * sizeof(float), nullptr);
+    glVertexAttribPointer(
+        0, SPRITE_VERTEX_ATTRIBUTES, GL_FLOAT, GL_FALSE, SPRITE_VERTEX_ATTRIBUTES * sizeof(float), nullptr
+    );
     glEnableVertexAttribArray(0);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -43,7 +45,11 @@ void SpriteRenderer::beginFrame(const glm::mat4& projection)
 }
 
 void SpriteRenderer::draw(
-    std::shared_ptr<Texture2D> texture, const glm::vec2& position, const glm::vec2& scale, float rotate, const glm::vec3& color
+    std::shared_ptr<Texture2D> texture,
+    const glm::vec2& position,
+    const glm::vec2& scale,
+    float rotate,
+    const glm::vec3& color
 )
 {
     m_shader->use();

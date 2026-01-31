@@ -27,10 +27,7 @@ public:
     TextureTest& operator=(const TextureTest&) = delete;
     TextureTest& operator=(TextureTest&&) = delete;
 
-    void SetUp() override
-    {
-        m_context = std::make_unique<OpenGLTestFixture>();
-    }
+    void SetUp() override { m_context = std::make_unique<OpenGLTestFixture>(); }
 
 protected:
     static constexpr auto TEST_IMAGE_WIDTH{ 1 };

@@ -13,7 +13,9 @@
 namespace sfa
 {
 
-ParticleGenerator::ParticleGenerator(std::shared_ptr<Shader> shader, std::shared_ptr<Texture2D> texture, std::size_t amount)
+ParticleGenerator::ParticleGenerator(
+    std::shared_ptr<Shader> shader, std::shared_ptr<Texture2D> texture, std::size_t amount
+)
     : m_shader(std::move(shader)), m_texture(std::move(texture)), m_particles(amount)
 {
     glGenVertexArrays(1, &m_vao);

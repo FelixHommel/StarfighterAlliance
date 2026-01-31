@@ -61,7 +61,12 @@ public:
     /// \param pos the position of the text
     /// \param scale(optional) apply extra scale to the text
     /// \param color(optional) the color of the text
-    void render(const std::string& text, const glm::vec2& pos, const glm::vec2& scale = DEFAULT_SCALE, glm::vec3 color = DEFAULT_COLOR);
+    void render(
+        const std::string& text,
+        const glm::vec2& pos,
+        const glm::vec2& scale = DEFAULT_SCALE,
+        glm::vec3 color = DEFAULT_COLOR
+    );
 
 private:
     static constexpr std::size_t LOADED_ASCII_CHARS{ 128 };

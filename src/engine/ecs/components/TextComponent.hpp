@@ -13,7 +13,7 @@ namespace sfa
 /// \brief Allow entities to have Text properties.
 ///
 /// Give text field, scale, color, and renderLayer to an entity.
-/// 
+///
 /// \author Felix Hommel
 /// \date 1/26/2026
 struct TextComponent : public IComponent

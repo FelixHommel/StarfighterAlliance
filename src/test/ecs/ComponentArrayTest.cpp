@@ -37,7 +37,10 @@ protected:
 ///
 /// \author Felix Hommel
 /// \date 1/26/2026
-struct TestComponent : public IComponent { int data{ ComponentArrayTest::DEFAULT_DATA }; };
+struct TestComponent : public IComponent
+{
+    int data{ ComponentArrayTest::DEFAULT_DATA };
+};
 
 /// \brief Test the Construction of a new \ref ComponentArray.
 ///
@@ -246,7 +249,9 @@ TEST_F(ComponentArrayTest, IterationSupport)
     array.insert(ENTITY_2, { .data = DATA_ENTITY_2 });
 
     // NOLINTNEXTLINE(misc-include-cleaner): clang-tidy says that no header providing std::ranges::fold_left is included, but <alogirthm> is included
-    const auto sum{ std::ranges::fold_left(array, 0, [](int accumulator, const TestComponent& comp){ return accumulator + comp.data; }) };
+    const auto sum{ std::ranges::fold_left(array, 0, [](int accumulator, const TestComponent& comp) {
+        return accumulator + comp.data;
+    }) };
 
     EXPECT_EQ(sum, DEFAULT_DATA + DATA_ENTITY_2);
 }
@@ -278,7 +283,9 @@ TEST_F(ComponentArrayTest, SpanSupport)
     array.insert(ENTITY_2, { .data = DATA_ENTITY_2 });
 
     // NOLINTNEXTLINE(misc-include-cleaner): clang-tidy says that no header providing std::ranges::fold_left is included, but <alogirthm> is included
-    const auto sum{ std::ranges::fold_left(array.span(), 0, [](int accumulator, const TestComponent& comp){ return accumulator + comp.data; }) };
+    const auto sum{ std::ranges::fold_left(array.span(), 0, [](int accumulator, const TestComponent& comp) {
+        return accumulator + comp.data;
+    }) };
 
     EXPECT_EQ(sum, DEFAULT_DATA + DATA_ENTITY_2);
 }

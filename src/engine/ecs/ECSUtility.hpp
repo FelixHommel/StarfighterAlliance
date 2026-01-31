@@ -11,7 +11,7 @@
 namespace sfa
 {
 
-using EntityID = std::uint32_t; ///< Define what represents an EntityID
+using EntityID = std::uint32_t;      ///< Define what represents an EntityID
 constexpr EntityID NULL_ENTITY{ 0 }; ///< Define what value represents a null/invalid entity
 
 using ComponentTypeID = std::size_t; ///< Define what represents a ComponentTypeID

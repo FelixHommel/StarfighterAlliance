@@ -18,7 +18,12 @@
 namespace sfa
 {
 
-void ResourceContext::loadShaderFromFile(const std::string& name, const std::filesystem::path& vert, const std::filesystem::path& frag, const std::filesystem::path& geom)
+void ResourceContext::loadShaderFromFile(
+    const std::string& name,
+    const std::filesystem::path& vert,
+    const std::filesystem::path& frag,
+    const std::filesystem::path& geom
+)
 {
     std::string vertexShaderCode;
     std::string fragmentShaderCode;
@@ -54,12 +59,7 @@ void ResourceContext::loadShaderFromFile(const std::string& name, const std::fil
     }
 
     m_shaderCache.store(
-        name,
-        std::make_shared<Shader>(
-            vertexShaderCode.c_str(),
-            fragmentShaderCode.c_str(),
-            geometryShaderCode.c_str()
-        )
+        name, std::make_shared<Shader>(vertexShaderCode.c_str(), fragmentShaderCode.c_str(), geometryShaderCode.c_str())
     );
 }
 
@@ -73,7 +73,7 @@ void ResourceContext::clear()
     m_shaderCache.clear();
     m_textureCache.clear();
 }
-    
+
 // Shader ResourceContext::loadShader(const std::filesystem::path& vert, const std::filesystem::path& frag, const std::filesystem::path& geom)
 // {
 // }

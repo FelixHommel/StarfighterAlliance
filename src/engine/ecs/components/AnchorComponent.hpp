@@ -16,10 +16,17 @@ namespace sfa
 /// \date 1/29/2026
 struct AnchorComponent : public IComponent
 {
-    enum class Point : std::uint8_t {
-        TopLeft, TopCenter, TopRoght,
-        CenterLeft, Center, CenterRight,
-        BottomLeft, BottomCenter, BottomRight
+    enum class Point : std::uint8_t
+    {
+        TopLeft,
+        TopCenter,
+        TopRoght,
+        CenterLeft,
+        Center,
+        CenterRight,
+        BottomLeft,
+        BottomCenter,
+        BottomRight
     };
 
     Point point;

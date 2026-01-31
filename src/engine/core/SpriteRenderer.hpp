@@ -67,12 +67,8 @@ private:
     static constexpr std::size_t SPRITE_VERTICES{ 6 };
     static constexpr std::size_t SPRITE_VERTEX_ATTRIBUTES{ 4 };
     static constexpr std::array<float, SPRITE_VERTICES * SPRITE_VERTEX_ATTRIBUTES> vertices{
-        0.0f, 1.0f, 0.0f, 1.0f,
-        1.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f, 1.0f,
-        1.0f, 1.0f, 1.0f, 1.0f,
-        1.0f, 0.0f, 1.0f, 0.0f
+        0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f
     };
     static constexpr auto DEFAULT_DRAW_SCALE{ glm::vec2(10.f) };
     static constexpr auto DEFAULT_ROTATION{ 0.f };
