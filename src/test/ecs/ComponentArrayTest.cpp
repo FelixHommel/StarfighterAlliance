@@ -33,6 +33,8 @@ protected:
     static constexpr int DATA_ENTITY_2{ 4 };
 };
 
+using ComponentArrayDeathTest = ComponentArrayTest;
+
 /// \brief Component purely used to test the ComponentArray
 ///
 /// \author Felix Hommel
@@ -73,7 +75,7 @@ TEST_F(ComponentArrayTest, InsertIntoArrayNoDuplicate)
 ///
 /// When a duplicate component is attempted to be inserted, the insert() method should fail an assertion when build in
 /// debug mode.
-TEST_F(ComponentArrayTest, InsertDuplicateIntoArray)
+TEST_F(ComponentArrayDeathTest, InsertDuplicateIntoArray)
 {
     ComponentArray<TestComponent> array;
     array.insert(ENTITY_1, {});
@@ -114,7 +116,7 @@ TEST_F(ComponentArrayTest, RemovingExistingComponentNotAtBack)
 /// \brief Test the removal of a non existing component from the \ref ComponentArray.
 ///
 /// If a non existing component is removed the remove() method should fail an assertion when build in debug mode.
-TEST_F(ComponentArrayTest, RemoveNonExistingComponent)
+TEST_F(ComponentArrayDeathTest, RemoveNonExistingComponent)
 {
     ComponentArray<TestComponent> array;
 
@@ -186,7 +188,7 @@ TEST_F(ComponentArrayTest, GetEntityAtIndex)
 ///
 /// When a component wasn't inserted into the \ref ComponentArray the entityAtIndex() method should fail an assertion,
 /// when build in debug mode
-TEST_F(ComponentArrayTest, GetEntityAtInvalidIndex)
+TEST_F(ComponentArrayDeathTest, GetEntityAtInvalidIndex)
 {
     ComponentArray<TestComponent> array;
 

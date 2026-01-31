@@ -29,6 +29,8 @@ protected:
     static constexpr EntityID ENTITY_1{ 1 };
 };
 
+using ComponentRegistryDeathTest = ComponentRegistryTest;
+
 /// \brief Simple test component to conduct unit tests with
 ///
 /// \author Felix Hommel
@@ -65,7 +67,7 @@ TEST_F(ComponentRegistryTest, RegisteringNewComponent)
 ///
 /// When trying to register a component that already is registered, the \ref ComponentRegistry should fail an assertion
 /// when build in debug mode.
-TEST_F(ComponentRegistryTest, AttemptRegisteringDuplicateComponent)
+TEST_F(ComponentRegistryDeathTest, AttemptRegisteringDuplicateComponent)
 {
     ComponentRegistry manager;
     manager.registerComponent<TestComponent>();
@@ -121,7 +123,7 @@ TEST_F(ComponentRegistryTest, RemoveRegisteredComponentFromEntity)
 ///
 /// When a component wasn't registered and is attempted to be removed the removeComponent() method should fail an
 /// assertion when build in debug mode.
-TEST_F(ComponentRegistryTest, RemoveNotRegisteredComponent)
+TEST_F(ComponentRegistryDeathTest, RemoveNotRegisteredComponent)
 {
     ComponentRegistry manager;
 
@@ -132,7 +134,7 @@ TEST_F(ComponentRegistryTest, RemoveNotRegisteredComponent)
 ///
 /// When the component was registered prior to the removal attempt but the entity it is removed from never added it,
 /// the removeComponent() method should fail an assertion when build in debug mode.
-TEST_F(ComponentRegistryTest, RemoveRegisteredComponentFromEntityWithoutComponent)
+TEST_F(ComponentRegistryDeathTest, RemoveRegisteredComponentFromEntityWithoutComponent)
 {
     ComponentRegistry manager;
     manager.registerComponent<TestComponent>();
@@ -144,7 +146,7 @@ TEST_F(ComponentRegistryTest, RemoveRegisteredComponentFromEntityWithoutComponen
 ///
 /// When trying to get a not registered component, the getComponent() method should fail an assertion when build in
 /// debug mode.
-TEST_F(ComponentRegistryTest, GetNotRegisteredComponent)
+TEST_F(ComponentRegistryDeathTest, GetNotRegisteredComponent)
 {
     ComponentRegistry manager;
 
@@ -155,7 +157,7 @@ TEST_F(ComponentRegistryTest, GetNotRegisteredComponent)
 ///
 /// When trying to get the component from an entity that does not have the component, the getComponent() method should
 /// fail an assertion when build in debug mode.
-TEST_F(ComponentRegistryTest, GetComponentFromEntityWithoutComponent)
+TEST_F(ComponentRegistryDeathTest, GetComponentFromEntityWithoutComponent)
 {
     ComponentRegistry manager;
     manager.registerComponent<TestComponent>();
@@ -180,7 +182,7 @@ TEST_F(ComponentRegistryTest, ConstGetComponent)
 ///
 /// When trying to get a component that was not registered before, getComponent() should fail an assertion when build
 /// in debug mode.
-TEST_F(ComponentRegistryTest, ConstGetNotRegisteredComponent)
+TEST_F(ComponentRegistryDeathTest, ConstGetNotRegisteredComponent)
 {
     ComponentRegistry manager;
     const auto& refManager{ manager };
@@ -192,7 +194,7 @@ TEST_F(ComponentRegistryTest, ConstGetNotRegisteredComponent)
 ///
 /// When trying to get the component from an entity that does not have the component, the getComponent() method should
 /// fail an assertion when build in debug mode.
-TEST_F(ComponentRegistryTest, ConstGetComponentFromEntityWithoutComponent)
+TEST_F(ComponentRegistryDeathTest, ConstGetComponentFromEntityWithoutComponent)
 {
     ComponentRegistry manager;
     manager.registerComponent<TestComponent>();
@@ -229,7 +231,7 @@ TEST_F(ComponentRegistryTest, DoesNotContainComponent)
 //
 // When checking if an entity has a component but the component was never registered, the contains() method should fail
 // an assertion when build in debug mode.
-TEST_F(ComponentRegistryTest, ContainsNotRegisteredComponent)
+TEST_F(ComponentRegistryDeathTest, ContainsNotRegisteredComponent)
 {
     ComponentRegistry manager;
 
@@ -251,7 +253,7 @@ TEST_F(ComponentRegistryTest, GetComponentArray)
 ///
 /// When trying to get the \ref ComponentArray of a component that was not registered previously, the getComponentArray
 /// should fail an assertion when build in debug mode.
-TEST_F(ComponentRegistryTest, GetComponentArrayForNotRegisteredComponent)
+TEST_F(ComponentRegistryDeathTest, GetComponentArrayForNotRegisteredComponent)
 {
     ComponentRegistry manager;
 
@@ -274,7 +276,7 @@ TEST_F(ComponentRegistryTest, ConstGetComponentArray)
 ///
 /// When trying to get the \ref ComponentArray of a component that was not registered previously, the getComponentArray()
 /// method should fail an assertion when build in debug mode.
-TEST_F(ComponentRegistryTest, ConstGetComponentArrayForNotRegisteredComponent)
+TEST_F(ComponentRegistryDeathTest, ConstGetComponentArrayForNotRegisteredComponent)
 {
     ComponentRegistry manager;
     const auto& refManager{ manager };
