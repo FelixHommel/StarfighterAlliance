@@ -1,10 +1,10 @@
 #ifndef SFA_SRC_ENGINE_ECS_COMPONENT_ARRAY_HPP
 #define SFA_SRC_ENGINE_ECS_COMPONENT_ARRAY_HPP
 
-#include "core/Utility.hpp"
 #include "ECSUtility.hpp"
 #include "IComponentArray.hpp"
 #include "components/IComponent.hpp"
+#include "core/Utility.hpp"
 
 #include <array>
 #include <cassert>

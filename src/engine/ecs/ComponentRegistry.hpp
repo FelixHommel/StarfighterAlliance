@@ -1,11 +1,11 @@
 #ifndef SFA_SRC_ENGINE_ECS_COMPONENT_MANAGER_HPP
 #define SFA_SRC_ENGINE_ECS_COMPONENT_MANAGER_HPP
 
-#include "core/Utility.hpp"
 #include "ComponentArray.hpp"
 #include "ECSUtility.hpp"
 #include "IComponentArray.hpp"
 #include "components/IComponent.hpp"
+#include "core/Utility.hpp"
 
 #include <cassert>
 #include <cstddef>
