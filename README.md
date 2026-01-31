@@ -1,7 +1,8 @@
 # Starfighter Alliance
 
-![Build](https://github.com/FelixHommel/StarfighterAlliance/actions/workflows/cmake-multi-platform.yml/badge.svg)
-![Coverage](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/FelixHommel/StarfighterAlliance/badges/.github/badges/coverage-badge.json)
+![Build](https://github.com/FelixHommel/StarfighterAlliance/actions/workflows/build.yml/badge.svg)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/efae3d2fc84948c68ec4fb1330994353)](https://app.codacy.com/gh/FelixHommel/StarfighterAlliance/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/efae3d2fc84948c68ec4fb1330994353)](https://app.codacy.com/gh/FelixHommel/StarfighterAlliance/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
 
 A 2D game about shooting Meteorites and other Space objects, in order to achieve the highest score.
 This game was developed during winter semester 2024/2025 @ Ulm University.
