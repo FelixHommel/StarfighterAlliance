@@ -1,8 +1,8 @@
 #ifndef SFA_SRC_TEST_FIXTURES_OPENGL_TEST_FIXTURE_HPP
 #define SFA_SRC_TEST_FIXTURES_OPENGL_TEST_FIXTURE_HPP
 
-#include <gtest/gtest.h>
 #include <glad/gl.h>
+#include <gtest/gtest.h>
 #include <spdlog/spdlog.h>
 
 #define GLFW_INCLUDE_NONE

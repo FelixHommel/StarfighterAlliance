@@ -1,8 +1,8 @@
 #include "core/Texture.hpp"
 #include "fixtures/OpenGLTestFixture.hpp"
 
-#include <gtest/gtest.h>
 #include <glad/gl.h>
+#include <gtest/gtest.h>
 
 #include <array>
 #include <cstddef>
@@ -27,15 +27,9 @@ public:
     TextureTest& operator=(const TextureTest&) = delete;
     TextureTest& operator=(TextureTest&&) = delete;
 
-    void SetUp() override
-    {
-        m_context->setup();
-    }
+    void SetUp() override { m_context->setup(); }
 
-    void TearDown() override
-    {
-        m_context->teardown();
-    }
+    void TearDown() override { m_context->teardown(); }
 
 protected:
     static constexpr auto TEST_IMAGE_WIDTH{ 1 };
