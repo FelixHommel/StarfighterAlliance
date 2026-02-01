@@ -3,11 +3,11 @@
 
 #include <glad/gl.h>
 #include <gtest/gtest.h>
-#include <spdlog/spdlog.h>
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
+#include <iostream>
 #include <stdexcept>
 
 namespace sfa
@@ -63,7 +63,7 @@ public:
                const GLchar* message,
                const void* /*user*/) {
                 if(severity == GL_DEBUG_SEVERITY_HIGH)
-                    spdlog::error("OpenGL error({}): {}", type, message);
+                    std::cerr << "OpenGL error(" << type << "): " << message << '\n';
             },
             nullptr
         );
