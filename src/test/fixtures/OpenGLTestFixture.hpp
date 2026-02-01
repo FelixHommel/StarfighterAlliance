@@ -1,10 +1,10 @@
 #ifndef SFA_SRC_TEST_FIXTURES_OPENGL_TEST_FIXTURE_HPP
 #define SFA_SRC_TEST_FIXTURES_OPENGL_TEST_FIXTURE_HPP
 
-#include <glad/gl.h>
 #include <gtest/gtest.h>
 
-#define GLFW_INCLUDE_NONE
+#include <glad/gl.h>
+
 #include <GLFW/glfw3.h>
 
 #include <iostream>
