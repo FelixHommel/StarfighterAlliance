@@ -60,7 +60,8 @@ void TextRenderer::load(const std::filesystem::path& filepath, unsigned int font
         std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
 
     FT_Face face{};
-    if(FT_New_Face(ft, filepath.c_str(), 0, &face) != 0)
+    const auto u8path{ filepath.u8string() };
+    if(FT_New_Face(ft, reinterpret_cast<const char*>(u8path.c_str()), 0, &face) != 0)
         std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
 
     FT_Set_Pixel_Sizes(face, 0, fontSize);
