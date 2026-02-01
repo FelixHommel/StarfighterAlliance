@@ -17,7 +17,7 @@ void LayoutSystem::update(ComponentRegistry& registry)
 
     for(std::size_t i{ 0 }; i < layouts.size(); ++i)
     {
-        const std::size_t entity{ layouts.entityAtIndex(i) };
+        const auto entity{ layouts.entityAtIndex(i) };
         const auto& layout{ layouts.get(entity) };
         const auto& parentTransform{ transforms.get(entity) };
 

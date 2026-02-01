@@ -20,7 +20,7 @@ void ButtonSystem::update(ComponentRegistry& registry, float dt, const glm::vec2
 
     for(std::size_t i{ 0 }; i < buttons.size(); ++i)
     {
-        const std::size_t entity{ buttons.entityAtIndex(i) };
+        const auto entity{ buttons.entityAtIndex(i) };
         auto& button{ buttons.get(entity) };
         auto& sprite{ sprites.get(entity) };
         const auto& transform{ transforms.get(entity) };

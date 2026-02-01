@@ -47,7 +47,7 @@ void ResourceContext::loadShaderFromFile(
         shaderCode << geometryShaderFile.rdbuf();
         geometryShaderCode = shaderCode.str();
     }
-    catch(const std::exception& e)
+    catch(const std::exception&)
     {
         spdlog::error(
             "Failed to read source files for {} shader at:\n\t- {}\n\t- {}\n\t- {}",
