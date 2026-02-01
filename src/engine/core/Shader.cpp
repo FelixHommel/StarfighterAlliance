@@ -158,7 +158,7 @@ void Shader::checkCompileErrors(unsigned int object, CompilationType type)
         glGetShaderiv(object, GL_COMPILE_STATUS, &success);
         if(success == 0)
         {
-            glGetShaderInfoLog(object, infoLog.size(), nullptr, infoLog.data());
+            glGetShaderInfoLog(object, static_cast<GLsizei>(infoLog.size()), nullptr, infoLog.data());
             spdlog::error("Shader compile-error({}):\n{}", compilationTypeToString(type), infoLog.data());
         }
     }
@@ -167,7 +167,7 @@ void Shader::checkCompileErrors(unsigned int object, CompilationType type)
         glGetProgramiv(object, GL_LINK_STATUS, &success);
         if(success == 0)
         {
-            glGetProgramInfoLog(object, infoLog.size(), nullptr, infoLog.data());
+            glGetProgramInfoLog(object, static_cast<GLsizei>(infoLog.size()), nullptr, infoLog.data());
             spdlog::error("Program link-error({}):\n{}", compilationTypeToString(type), infoLog.data());
         }
     }
