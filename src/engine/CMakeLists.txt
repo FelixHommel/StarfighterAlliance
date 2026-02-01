@@ -54,6 +54,15 @@ target_sources(${NAME}
 )
 
 target_compile_features(${NAME} PRIVATE cxx_std_23)
+
+if(MSVC)
+    target_compile_options(${NAME} PRIVATE
+        /external:W0
+        /external:anglebrackets
+        /external:templates-
+    )
+endif()
+
 target_link_libraries(${NAME}
     PRIVATE
         project_warnings

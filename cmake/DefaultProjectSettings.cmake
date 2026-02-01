@@ -14,6 +14,10 @@ else()
     message(STATUS "Ccache not found")
 endif()
 
+if(MSVC)
+    add_compile_options(/utf-8)
+endif()
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 option(SFA_DEBUG "Enable debug statements and asserts" OFF)
