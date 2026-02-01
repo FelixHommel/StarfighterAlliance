@@ -14,6 +14,7 @@ add_library(${NAME}
     ./ecs/systems/MovementSystem.cpp
     ./ecs/systems/SpriteRenderSystem.cpp
     ./ecs/systems/TextRenderSystem.cpp
+    ./external/stb_image_impl.cpp
 )
 
 target_sources(${NAME}
