@@ -83,7 +83,8 @@ Texture2D ResourceContext::loadTexture(const std::filesystem::path& filepath)
     int width{};
     int height{};
     int nrChannels{};
-    stbi_uc* data{ stbi_load(filepath.c_str(), &width, &height, &nrChannels, 0) };
+    const auto u8path{ filepath.u8string() };
+    stbi_uc* data{ stbi_load(reinterpret_cast<const char*>(u8path.c_str()), &width, &height, &nrChannels, 0) };
 
     const auto size{ static_cast<std::size_t>(width * height) * 4 };
     std::span<const std::byte> pixels{ reinterpret_cast<const std::byte*>(data), size };
