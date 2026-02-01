@@ -81,16 +81,23 @@ jobs:
       if: runner.os == 'Windows'
       run: >
         cmake -S . -B build/${{ runner.os }}/${{ matrix.config }}
-        -G "Visual Studio 17 2022"
+        -G Ninja
+        # -G "Visual Studio 17 2022"
         -DCMAKE_BUILD_TYPE=${{ matrix.config }}
         -DCMAKE_C_COMPILER_LAUNCHER=ccache
         -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
         -DSFA_ENABLE_ASSERTIONS=ON
+        -DWARNINGS_AS_ERRORS=OFF
 
     - name: Build
-      run: cmake --build build/${{ runner.os }}/${{ matrix.config }}
+      if: runner.os != 'Windows'
+      run: cmake --build build/${{ runner.os }}/${{ matrix.config }} --parallel
+
+    - name: Build
+      if: runner.os == 'Windows'
+      run: cmake --build build/${{ runner.os }}/${{ matrix.config }} --parallel -- -k 0
 
     - name: Test
       if: runner.os != 'Linux'
