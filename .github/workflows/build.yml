@@ -65,7 +65,7 @@ jobs:
         restore-keys: |
           vcpkg-bin-${{ runner.os }}
 
-    - name: Configure CMake
+    - name: Configure CMake Linux and Mac
       if: runner.os != 'Windows'
       run: >
         cmake -S . -B build/${{ runner.os }}/${{ matrix.config }}
@@ -77,7 +77,7 @@ jobs:
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
         -DSFA_ENABLE_ASSERTIONS=ON
 
-    - name: Configure CMake
+    - name: Configure CMake Windows
       if: runner.os == 'Windows'
       run: >
         cmake -S . -B build/${{ runner.os }}/${{ matrix.config }}
@@ -90,18 +90,18 @@ jobs:
         -DSFA_ENABLE_ASSERTIONS=ON
         -DWARNINGS_AS_ERRORS=OFF
 
-    - name: Build
+    - name: Build Linux and Mac
       if: runner.os != 'Windows'
       run: cmake --build build/${{ runner.os }}/${{ matrix.config }} --parallel
 
-    - name: Build
+    - name: Build Windows
       if: runner.os == 'Windows'
       run: cmake --build build/${{ runner.os }}/${{ matrix.config }} --parallel -- -k 0
 
-    - name: Test
+    - name: Test Windows and Mac
       if: runner.os != 'Linux'
       run: ctest --test-dir build/${{ runner.os }}/${{ matrix.config }} --output-on-failure
 
-    - name: Test
+    - name: Test Linux
       if: runner.os == 'Linux'
       run: xvfb-run -a ctest --test-dir build/${{ runner.os }}/${{ matrix.config }} --output-on-failure
