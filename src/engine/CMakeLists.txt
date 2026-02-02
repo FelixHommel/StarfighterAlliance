@@ -65,15 +65,16 @@ if(MSVC)
 endif()
 
 target_link_libraries(${NAME}
+    PUBLIC
+        Glad2CMake::glad2cmake
+        glfw
     PRIVATE
         project_warnings
         OpenGL::GL
-        Glad2CMake::glad2cmake
         SQLiteCpp
         Freetype::Freetype
         nlohmann_json::nlohmann_json
         glm::glm
-        glfw
         spdlog::spdlog
         valijson
         fmt::fmt

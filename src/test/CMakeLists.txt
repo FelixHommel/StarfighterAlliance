@@ -22,8 +22,6 @@ target_compile_features(${NAME} PRIVATE cxx_std_23)
 target_link_libraries(${NAME}
     PRIVATE
         project_warnings
-        Glad2CMake::glad2cmake
-        glfw
         GTest::gtest
         GTest::gmock
         StarfighterAllianceEngine
