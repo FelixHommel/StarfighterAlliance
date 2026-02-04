@@ -29,3 +29,6 @@ target_link_libraries(${NAME}
 
 include(GoogleTest)
 gtest_discover_tests(${NAME})
+
+# https://discourse.cmake.org/t/differences-in-set-property-vs-set-tests-properties-for-discovered-gtest-tests/8080
+set_property(DIRECTORY APPEND PROPERTY TEST_INCLUDE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/labelTests.cmake)
