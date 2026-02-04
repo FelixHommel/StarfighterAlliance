@@ -1,9 +1,10 @@
 #ifndef SFA_SRC_ENGINE_ECS_COMPONENT_ARRAY_HPP
 #define SFA_SRC_ENGINE_ECS_COMPONENT_ARRAY_HPP
 
-#include "IComponentArray.hpp"
 #include "ECSUtility.hpp"
+#include "IComponentArray.hpp"
 #include "components/IComponent.hpp"
+#include "core/Utility.hpp"
 
 #include <array>
 #include <cassert>
@@ -22,7 +23,7 @@ namespace sfa
 ///
 /// \author Felux Hommel
 /// \date 1/25/2026
-template <Component T>
+template<Component T>
 class ComponentArray : public IComponentArray
 {
 public:
@@ -40,9 +41,7 @@ public:
     /// \param component the new component
     void insert(EntityID entity, T component)
     {
-#if defined(SFA_DEBUG)
-        assert(!m_entityToIndex.contains(entity) && "Component already exists");
-#endif // !SFA_DEBUG
+        SFA_ASSERT(!m_entityToIndex.contains(entity), "Component already exists");
 
         const std::size_t newIndex{ m_actualSize++ };
         m_entityToIndex[entity] = newIndex;
@@ -55,9 +54,7 @@ public:
     /// \param entity the target entity
     void remove(EntityID entity)
     {
-#if defined(SFA_DEBUG)
-        assert(m_entityToIndex.contains(entity) && "Component doesn't exist");
-#endif // !SFA_DEBUG
+        SFA_ASSERT(m_entityToIndex.contains(entity), "Component doesn't exist");
 
         // NOTE: Swap with last element to maintain density
         const std::size_t indexOfRemoved{ m_entityToIndex[entity] };
@@ -81,9 +78,7 @@ public:
     /// \returns reference to component of \p entity
     T& get(EntityID entity)
     {
-#if defined(SFA_DEBUG)
-        assert(m_entityToIndex.contains(entity) && "Component doesn't exist");
-#endif // !SFA_DEBUG
+        SFA_ASSERT(m_entityToIndex.contains(entity), "Component doesn't exist");
 
         return m_components[m_entityToIndex[entity]];
     }
@@ -95,9 +90,7 @@ public:
     /// \returns const-ref to component of \p entity
     const T& get(EntityID entity) const
     {
-#if defined(SFA_DEBUG)
-        assert(m_entityToIndex.contains(entity) && "Component doesn't exist");
-#endif // !SFA_DEBUG
+        SFA_ASSERT(m_entityToIndex.contains(entity), "Component doesn't exist");
 
         return m_components.at(m_entityToIndex.at(entity));
     }
@@ -107,10 +100,7 @@ public:
     /// \param entity the target entity
     ///
     /// \returns *true* if the entity has the component, *false* otherwise
-    bool contains(EntityID entity) const
-    {
-        return m_entityToIndex.contains(entity);
-    }
+    bool contains(EntityID entity) const { return m_entityToIndex.contains(entity); }
 
     /// \brief Get the entity ID of a component.
     ///
@@ -119,13 +109,11 @@ public:
     /// \returns \ref EntityID that owns the component at \p index
     EntityID entityAtIndex(std::size_t index) const
     {
-#if defined(SFA_DEBUG)
-        assert(index <= m_actualSize && "Index is out of range");
-#endif // !SFA_DEBUG
+        SFA_ASSERT(index <= m_actualSize, "Index is out of range");
 
         return m_indexToEntity.at(index);
     }
-    
+
     /// \brief Destroy the component of an entity if the component exists.
     ///
     /// \param entity the entity of which the component is getting destroyed
@@ -146,7 +134,7 @@ public:
     std::span<const T> span() const noexcept { return { m_components.data(), m_actualSize }; }
 
 private:
-    static constexpr std::size_t MAX_COMPONENTS{ 10'000 };
+    static constexpr std::size_t MAX_COMPONENTS{ 10000 };
 
     std::array<T, MAX_COMPONENTS> m_components;
     std::unordered_map<EntityID, std::size_t> m_entityToIndex;

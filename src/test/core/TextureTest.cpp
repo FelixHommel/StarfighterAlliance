@@ -1,8 +1,9 @@
 #include "core/Texture.hpp"
-#include "fixtures/OpenGLTestFicture.hpp"
+#include "fixtures/OpenGLTestFixture.hpp"
 
-#include "glad/gl.h"
-#include "gtest/gtest.h"
+#include <glad/gl.h>
+
+#include <gtest/gtest.h>
 
 #include <array>
 #include <cstddef>
@@ -27,10 +28,9 @@ public:
     TextureTest& operator=(const TextureTest&) = delete;
     TextureTest& operator=(TextureTest&&) = delete;
 
-    void SetUp() override
-    {
-        m_context = std::make_unique<OpenGLTestFixture>();
-    }
+    void SetUp() override { m_context->setup(); }
+
+    void TearDown() override { m_context->teardown(); }
 
 protected:
     static constexpr auto TEST_IMAGE_WIDTH{ 1 };
@@ -38,7 +38,7 @@ protected:
     static constexpr auto TEST_IMAGE_CHANNELS{ 4 };
     static constexpr std::array TEST_IMAGE_PIXELS{ std::byte(255), std::byte(255), std::byte(255), std::byte(255) };
 
-    std::unique_ptr<OpenGLTestFixture> m_context;
+    std::unique_ptr<OpenGLTestFixture> m_context{ std::make_unique<OpenGLTestFixture>() };
 };
 
 /// \brief Test the \ref Texture RAII behavior.

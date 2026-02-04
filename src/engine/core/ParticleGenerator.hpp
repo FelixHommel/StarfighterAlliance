@@ -49,14 +49,9 @@ public:
 private:
     static constexpr std::size_t PARTICLE_QUAD_VERTICES{ 6 };
     static constexpr std::size_t PARTICLE_QUAD_VERTICES_ATTRIBUTES{ 4 };
-    static constexpr std::array<float, PARTICLE_QUAD_VERTICES * PARTICLE_QUAD_VERTICES_ATTRIBUTES> particle_quad = {
-        0.0f, 1.0f, 0.0f, 1.0f,
-        1.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f, 1.0f,
-        1.0f, 1.0f, 1.0f, 1.0f,
-        1.0f, 0.0f, 1.0f, 0.0f
-    };
+    static constexpr std::array<float, PARTICLE_QUAD_VERTICES * PARTICLE_QUAD_VERTICES_ATTRIBUTES> particle_quad
+        = { 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+            0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f };
 
     std::shared_ptr<Shader> m_shader;
     std::shared_ptr<Texture2D> m_texture;

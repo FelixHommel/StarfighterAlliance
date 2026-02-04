@@ -5,6 +5,7 @@
 #include "ECSUtility.hpp"
 #include "IComponentArray.hpp"
 #include "components/IComponent.hpp"
+#include "core/Utility.hpp"
 
 #include <cassert>
 #include <cstddef>
@@ -39,9 +40,7 @@ public:
     void registerComponent()
     {
         ComponentTypeID typeID{ getComponentTypeID<T>() };
-#if defined(SFA_DEBUG)
-        assert(!m_components.contains(typeID) && "Component already registered");
-#endif // !SFA_DEBUG
+        SFA_ASSERT(!m_components.contains(typeID), "Component already registered");
 
         m_components[typeID] = std::make_unique<ComponentArray<T>>();
     }
@@ -71,10 +70,8 @@ public:
     template<Component T>
     void removeComponent(EntityID entity)
     {
-#if defined(SFA_DEBUG)
-        assert(isComponentRegistered<T>() && "Component is not registered");
-        assert(contains<T>(entity) && "The entity does not have the component");
-#endif // !SFA_DEBUG
+        SFA_ASSERT(isComponentRegistered<T>(), "Component is not registered");
+        SFA_ASSERT(contains<T>(entity), "The entity does not have the component");
 
         getComponentArray<T>().remove(entity);
     }
@@ -89,10 +86,8 @@ public:
     template<Component T>
     T& getComponent(EntityID entity)
     {
-#if defined(SFA_DEBUG)
-        assert(isComponentRegistered<T>() && "Component is not registered");
-        assert(contains<T>(entity) && "The entity does not have the component");
-#endif // !SFA_DEBUG
+        SFA_ASSERT(isComponentRegistered<T>(), "Component is not registered");
+        SFA_ASSERT(contains<T>(entity), "The entity does not have the component");
 
         return getComponentArray<T>().get(entity);
     }
@@ -107,10 +102,8 @@ public:
     template<Component T>
     const T& getComponent(EntityID entity) const
     {
-#if defined(SFA_DEBUG)
-        assert(isComponentRegistered<T>() && "Component is not registered");
-        assert(contains<T>(entity) && "The entity does not have the component");
-#endif // !SFA_DEBUG
+        SFA_ASSERT(isComponentRegistered<T>(), "Component is not registered");
+        SFA_ASSERT(contains<T>(entity), "The entity does not have the component");
 
         return getComponentArray<T>().get(entity);
     }
@@ -125,9 +118,7 @@ public:
     template<Component T>
     bool contains(EntityID entity) const
     {
-#if defined(SFA_DEBUG)
-        assert(isComponentRegistered<T>() && "Component is not registered");
-#endif // !SFA_DEBUG
+        SFA_ASSERT(isComponentRegistered<T>(), "Component is not registered");
 
         return getComponentArray<T>().contains(entity);
     }
@@ -140,9 +131,7 @@ public:
     template<Component T>
     ComponentArray<T>& getComponentArray()
     {
-#if defined(SFA_DEBUG)
-        assert(isComponentRegistered<T>() && "Component is not registered");
-#endif // !SFA_DEBUG
+        SFA_ASSERT(isComponentRegistered<T>(), "Component is not registered");
 
         return static_cast<ComponentArray<T>&>(*m_components[getComponentTypeID<T>()]);
     }
@@ -155,9 +144,7 @@ public:
     template<Component T>
     const ComponentArray<T>& getComponentArray() const
     {
-#if defined(SFA_DEBUG)
-        assert(isComponentRegistered<T>() && "Component is not registered");
-#endif // !SFA_DEBUG
+        SFA_ASSERT(isComponentRegistered<T>(), "Component is not registered");
 
         return static_cast<const ComponentArray<T>&>(*m_components.at(getComponentTypeID<T>()));
     }

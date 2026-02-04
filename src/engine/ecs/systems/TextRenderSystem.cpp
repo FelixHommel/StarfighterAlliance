@@ -34,7 +34,7 @@ void TextRenderSystem::render(const ComponentRegistry& components, const glm::ma
             renderables.emplace_back(entity);
     }
 
-    std::ranges::sort(renderables, [&](EntityID a, EntityID b){
+    std::ranges::sort(renderables, [&](EntityID a, EntityID b) {
         return texts.get(a).renderLayer < texts.get(b).renderLayer;
     });
 

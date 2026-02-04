@@ -26,13 +26,17 @@ private:
     /// \param registry \ref ComponentRegistry containing all the components
     /// \param layout The \ref LayoutComponent that is updated
     /// \param parentTransform The \ref TransformComponent of the parent \ref LayoutComponent
-    static void updateVerticalLayout(ComponentRegistry& registry, const LayoutComponent& layout, const TransformComponent& parentTransform);
+    static void updateVerticalLayout(
+        ComponentRegistry& registry, const LayoutComponent& layout, const TransformComponent& parentTransform
+    );
     /// \brief Update all horizontal layout elements.
     ///
     /// \param registry \ref ComponentRegistry containing all the components
     /// \param layout The \ref LayoutComponent that is updated
     /// \param parentTransform The \ref TransformComponent of the parent \ref LayoutComponent
-    static void updateHorizontalLayout(ComponentRegistry& registry, const LayoutComponent& layout, const TransformComponent& parentTransform);
+    static void updateHorizontalLayout(
+        ComponentRegistry& registry, const LayoutComponent& layout, const TransformComponent& parentTransform
+    );
 };
 
 } // namespace sfa

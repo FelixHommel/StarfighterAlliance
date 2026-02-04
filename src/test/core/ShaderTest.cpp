@@ -1,8 +1,9 @@
 #include "core/Shader.hpp"
-#include "fixtures/OpenGLTestFicture.hpp"
+#include "fixtures/OpenGLTestFixture.hpp"
 
-#include "glad/gl.h"
 #include <gtest/gtest.h>
+
+#include <glad/gl.h>
 
 #include <memory>
 #include <utility>
@@ -25,10 +26,9 @@ public:
     ShaderTest& operator=(const ShaderTest&) = delete;
     ShaderTest& operator=(ShaderTest&&) = delete;
 
-    void SetUp() override
-    {
-        m_glContext = std::make_unique<OpenGLTestFixture>();
-    }
+    void SetUp() override { m_glContext->setup(); }
+
+    void TearDown() override { m_glContext->teardown(); }
 
 protected:
     static constexpr auto VERTEX_SHADER_SRC = R"(
@@ -44,7 +44,7 @@ protected:
         void main() { FragColor = vec4(1.0); }
     )";
 
-    std::unique_ptr<OpenGLTestFixture> m_glContext;
+    std::unique_ptr<OpenGLTestFixture> m_glContext{ std::make_unique<OpenGLTestFixture>() };
 };
 
 /// \brief Test the \ref Shader RAII behavior.

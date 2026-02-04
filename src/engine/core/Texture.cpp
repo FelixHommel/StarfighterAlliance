@@ -10,8 +10,7 @@ namespace sfa
 {
 
 Texture2D::Texture2D(int width, int height, int channels, std::span<const std::byte> pixels)
-    : m_width{ width }
-    , m_height{ height }
+    : m_width{ width }, m_height{ height }
 {
     if(channels == RGBA_CHANNELS)
         setRGBA();

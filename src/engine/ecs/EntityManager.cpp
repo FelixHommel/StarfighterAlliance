@@ -1,5 +1,6 @@
 #include "EntityManager.hpp"
 
+#include "core/Utility.hpp"
 #include "ecs/ECSUtility.hpp"
 
 #include <cassert>
@@ -16,9 +17,7 @@ EntityManager::EntityManager()
 
 EntityID EntityManager::createEntity()
 {
-#if defined(SFA_DEBUG)
-    assert(m_livingEntityCount < MAX_ENTITIES && "Too many entities");
-#endif // !SFA_DEBUG
+    SFA_ASSERT(m_livingEntityCount < MAX_ENTITIES, "Too many entities");
 
     EntityID id{ m_availableEntities.front() };
     m_availableEntities.pop();
@@ -29,9 +28,7 @@ EntityID EntityManager::createEntity()
 
 void EntityManager::destroyEntity(EntityID entity)
 {
-#if defined(SFA_DEBUG)
-    assert(entity <= m_livingEntityCount && "Entity out of range");
-#endif // !SFA_DEBUG
+    SFA_ASSERT(entity <= m_livingEntityCount, "Entity out of range");
 
     m_availableEntities.push(entity);
     --m_livingEntityCount;

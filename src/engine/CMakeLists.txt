@@ -14,6 +14,7 @@ add_library(${NAME}
     ./ecs/systems/MovementSystem.cpp
     ./ecs/systems/SpriteRenderSystem.cpp
     ./ecs/systems/TextRenderSystem.cpp
+    ./external/stb_image_impl.cpp
 )
 
 target_sources(${NAME}
@@ -25,6 +26,7 @@ target_sources(${NAME}
             ./core/SpriteRenderer.hpp
             ./core/TextRenderer.hpp
             ./core/Texture.hpp
+            ./core/Utility.hpp
             ./core/resourceManagement/ResourceCache.hpp
             ./core/resourceManagement/ResourceContext.hpp
             ./ecs/ComponentArray.hpp
@@ -53,16 +55,26 @@ target_sources(${NAME}
 )
 
 target_compile_features(${NAME} PRIVATE cxx_std_23)
+
+if(MSVC)
+    target_compile_options(${NAME} PRIVATE
+        /external:W0
+        /external:anglebrackets
+        /external:templates-
+    )
+endif()
+
 target_link_libraries(${NAME}
+    PUBLIC
+        Glad2CMake::glad2cmake
+        glfw
     PRIVATE
         project_warnings
         OpenGL::GL
-        Glad2CMake::glad2cmake
         SQLiteCpp
         Freetype::Freetype
         nlohmann_json::nlohmann_json
         glm::glm
-        glfw
         spdlog::spdlog
         valijson
         fmt::fmt

@@ -1,11 +1,13 @@
 #ifndef SFA_SRC_TEST_FIXTURES_OPENGL_TEST_FIXTURE_HPP
 #define SFA_SRC_TEST_FIXTURES_OPENGL_TEST_FIXTURE_HPP
 
-#include "glad/gl.h"
-#include <spdlog/spdlog.h>
-#define GLFW_INCLUDE_NONE
-#include "GLFW/glfw3.h"
+#include <gtest/gtest.h>
 
+#include <glad/gl.h>
+
+#include <GLFW/glfw3.h>
+
+#include <iostream>
 #include <stdexcept>
 
 namespace sfa
@@ -20,10 +22,18 @@ namespace sfa
 class OpenGLTestFixture
 {
 public:
-    OpenGLTestFixture()
+    OpenGLTestFixture() = default;
+    ~OpenGLTestFixture() = default;
+
+    OpenGLTestFixture(const OpenGLTestFixture&) = delete;
+    OpenGLTestFixture(OpenGLTestFixture&&) = delete;
+    OpenGLTestFixture& operator=(const OpenGLTestFixture&) = delete;
+    OpenGLTestFixture& operator=(OpenGLTestFixture&&) = delete;
+
+    void setup()
     {
         if(glfwInit() != GLFW_TRUE)
-            throw std::runtime_error("Failed to init GLFW");
+            GTEST_SKIP() << "GLFW initialization failed, skipping test";
 
         // NOTE: Configure GLFW to create a Headless OpenGL 3.3 Context
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, GL_CONTEXT_MAJ);
@@ -36,7 +46,7 @@ public:
         if(m_window == nullptr)
         {
             glfwTerminate();
-            throw std::runtime_error("Failed to create window");
+            GTEST_SKIP() << "GLFW couldn't create a window, skipping test";
         }
         glfwMakeContextCurrent(m_window);
 
@@ -45,25 +55,27 @@ public:
 
         glEnable(GL_DEBUG_OUTPUT);
         glDebugMessageCallback(
-            [](GLenum /*source*/, GLenum type, GLuint /*id*/, GLenum severity, GLsizei /*length*/, const GLchar* message, const void* /*user*/) {
-            if(severity == GL_DEBUG_SEVERITY_HIGH)
-                spdlog::error("OpenGL error({}): {}", type, message);
+            [](GLenum /*source*/,
+               GLenum type,
+               GLuint /*id*/,
+               GLenum severity,
+               GLsizei /*length*/,
+               const GLchar* message,
+               const void* /*user*/) {
+                if(severity == GL_DEBUG_SEVERITY_HIGH)
+                    std::cerr << "OpenGL error(" << type << "): " << message << '\n';
             },
             nullptr
         );
     }
-    ~OpenGLTestFixture()
+
+    void teardown()
     {
         if(m_window != nullptr)
             glfwDestroyWindow(m_window);
 
         glfwTerminate();
     }
-
-    OpenGLTestFixture(const OpenGLTestFixture&) = delete;
-    OpenGLTestFixture(OpenGLTestFixture&&) = delete;
-    OpenGLTestFixture& operator=(const OpenGLTestFixture&) = delete;
-    OpenGLTestFixture& operator=(OpenGLTestFixture&&) = delete;
 
 private:
     static constexpr auto GL_CONTEXT_MAJ{ 3 };

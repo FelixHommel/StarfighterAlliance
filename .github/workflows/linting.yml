@@ -1,0 +1,61 @@
+name: Linting Check
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  clang-format-check:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the Repository
+      uses: actions/checkout@v6 # v6
+
+    - name: Run clang-format
+      uses: jidicula/clang-format-action@6cd220de46c89139a0365edae93eee8eb30ca8fe # v4.16
+      with:
+        clang-format-version: "21"
+        check-path: "src"
+        fallback-style: "LLVM"
+
+  clang-tidy-check:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the Repository
+      uses: actions/checkout@v6 # v6
+
+    - name: Install Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libgl1-mesa-dev libglu1-mesa-dev xorg-dev xvfb
+
+    - name: Install CMake and Ninja
+      uses: lukka/get-cmake@f176ccd3f28bda569c43aae4894f06b2435a3375 # v4.2.3
+      with:
+        cmakeVersion: 3.31.10
+        ninjaVersion: 1.11.1
+
+    - name: Setup vcpkg
+      uses: lukka/run-vcpkg@5e0cab206a5ea620130caf672fce3e4a6b5666a1 # v11.5
+
+    - name: Configure CMake
+      uses: lukka/run-cmake@af1be47fd7c933593f687731bc6fdbee024d3ff4 # v10.8
+      with:
+        configurePreset: gcc-debug
+
+    - name: Run cpp-linter for clang-tidy
+      id: cpp_linter
+      uses: cpp-linter/cpp-linter-action@b6edc0625e3941baa1797f4b4326adeab6890c97 #v2.16.7
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        version: 21
+        style: "" # disable clang-format check
+        tidy-checks: "" # use .clang-tidy file
+        files-changed-only: true
+        database: "./build/debug"
+
+    - name: Fail if clang-tidy found issues
+      if: steps.cpp_linter.outputs.clang-tidy-checks-failed != '0'
+      run: exit 1

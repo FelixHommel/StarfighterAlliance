@@ -1,12 +1,16 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FelixHommel/Glad2-CMake
-    REF v1.1.5
-    SHA512 1b211a56e1ed27328862cf785057d5efc2bcd1f1f37d13d1064d290583e836578907c898765a9c8aca5044b546cad320465eafe066ba85086c5e5ecd18dded36
+    REF v1.1.7
+    SHA512 197482d85da5a5b93cd5e3ea27600fefad86a5eb63359c6fbe12ea67d7fb9b39c3a44c79543478718e6505cf3a16f41dae530cb971470c674cfa4e0c35daeb15
 )
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DBUILD_SHARED_LIBS=OFF
 )
 
 vcpkg_cmake_install()

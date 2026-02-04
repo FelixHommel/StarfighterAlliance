@@ -34,12 +34,12 @@ public:
     /// \returns \ref EntityID of the new entity
     [[nodiscard]] EntityID createEntity();
     /// \brief Destroy an entity.
-    /// 
+    ///
     /// \param entity the entity that is being destroyed
     void destroyEntity(EntityID entity);
 
 private:
-    static constexpr std::size_t MAX_ENTITIES{ 10'000 };
+    static constexpr std::size_t MAX_ENTITIES{ 10000 };
 
     std::queue<EntityID> m_availableEntities;
     std::size_t m_livingEntityCount{ 0 };

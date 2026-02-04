@@ -1,7 +1,8 @@
 # Starfighter Alliance
 
-![Build](https://github.com/FelixHommel/StarfighterAlliance/actions/workflows/cmake-multi-platform.yml/badge.svg)
-![Coverage](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/FelixHommel/StarfighterAlliance/badges/.github/badges/coverage-badge.json)
+![Build](https://github.com/FelixHommel/StarfighterAlliance/actions/workflows/build.yml/badge.svg)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/efae3d2fc84948c68ec4fb1330994353)](https://app.codacy.com/gh/FelixHommel/StarfighterAlliance/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/efae3d2fc84948c68ec4fb1330994353)](https://app.codacy.com/gh/FelixHommel/StarfighterAlliance/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
 
 A 2D game about shooting Meteorites and other Space objects, in order to achieve the highest score.
 This game was developed during winter semester 2024/2025 @ Ulm University.
@@ -10,7 +11,7 @@ This game was developed during winter semester 2024/2025 @ Ulm University.
 
 In Starfighter Alliance, players will control one of the three available spaceships, fight various 
 forms of enemies with their spaceship and earn points while doing so. The ultimate goal of the game
-is to earn as many points as possible. All scores will be saved and the Top 10 all time high scores
+is to earn as many points as possible. All scores will be saved and the Top 10 all-time high scores
 will be shown to the player after a game ended.
 
 ## Features
@@ -26,25 +27,24 @@ will be shown to the player after a game ended.
 
 > Items are not in any particular order
 
-- [ ] Reenable tests (add\_directory)
+- [x] Re-enable tests (add_directory)
 
   - Fix tests
   - figure out gmock issue
   - classes for each test type
 
-- [ ] Fix All warnings
+- [x] Fix All warnings
 
   - Turn on Warnings as errors
 
-- [ ] Convert comments to Doxygen
-- [ ] Namespaces for everything
+- [x] Convert comments to Doxygen
+- [x] Namespaces for everything
 - [ ] Clean up architecture
 
   - JSONReader class complete overhaul
   - better/different solution for ResourceManager?
 
 - [ ] Resolve the color picking service issue (Server is offline)
-- [ ] Figure out what is wrong with the multi build workflow
 
 ## Building
 
@@ -68,5 +68,4 @@ will be shown to the player after a game ended.
 
 ## Acknowledgments / Credits
 
-- [LeranOpenGL.com](https://learnopengl.com/)
-- [How to use websocket++](https://medium.com/nerd-for-tech/your-first-c-websocket-client-4e7b36353d26)
+- [LearnOpenGL.com](https://learnopengl.com/)

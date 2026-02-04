@@ -9,11 +9,11 @@ namespace sfa
 /// \brief Interface for all components.
 ///
 /// This allows for type safe dealing with Components.
-struct IComponent {};
+struct IComponent
+{};
 
 /// \brief Concept defining what a valid Component is.
-template<typename T>
-concept Component = std::is_base_of_v<IComponent, T>;
+template<typename T> concept Component = std::is_base_of_v<IComponent, T>;
 
 } // namespace sfa
 

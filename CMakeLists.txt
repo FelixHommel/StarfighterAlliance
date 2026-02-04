@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.30)
 project(
     StarfighterAlliance
     DESCRIPTION "Space invaders like game"
-    LANGUAGES CXX
+    LANGUAGES C CXX
     VERSION 2.0.0
 )
 

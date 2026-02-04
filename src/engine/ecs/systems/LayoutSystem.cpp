@@ -17,7 +17,7 @@ void LayoutSystem::update(ComponentRegistry& registry)
 
     for(std::size_t i{ 0 }; i < layouts.size(); ++i)
     {
-        const std::size_t entity{ layouts.entityAtIndex(i) };
+        const auto entity{ layouts.entityAtIndex(i) };
         const auto& layout{ layouts.get(entity) };
         const auto& parentTransform{ transforms.get(entity) };
 
@@ -28,7 +28,9 @@ void LayoutSystem::update(ComponentRegistry& registry)
     }
 }
 
-void LayoutSystem::updateVerticalLayout(ComponentRegistry& registry, const LayoutComponent& layout, const TransformComponent& parentTransform)
+void LayoutSystem::updateVerticalLayout(
+    ComponentRegistry& registry, const LayoutComponent& layout, const TransformComponent& parentTransform
+)
 {
     const auto& sprites{ registry.getComponentArray<SpriteComponent>() };
     auto& transforms{ registry.getComponentArray<TransformComponent>() };
@@ -46,7 +48,9 @@ void LayoutSystem::updateVerticalLayout(ComponentRegistry& registry, const Layou
     }
 }
 
-void LayoutSystem::updateHorizontalLayout(ComponentRegistry& registry, const LayoutComponent& layout, const TransformComponent& parentTransform)
+void LayoutSystem::updateHorizontalLayout(
+    ComponentRegistry& registry, const LayoutComponent& layout, const TransformComponent& parentTransform
+)
 {
     const auto& sprites{ registry.getComponentArray<SpriteComponent>() };
     auto& transforms{ registry.getComponentArray<TransformComponent>() };

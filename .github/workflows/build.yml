@@ -1,0 +1,111 @@
+name: Build
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: ${{ matrix.os }} - ${{ matrix.config }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        config: [ Debug, Release ]
+
+    env:
+      CCACHE_DIR: ${{ github.workspace }}/.ccache
+      CCACHE_MAXSIZE: 500M
+      CCACHE_COMPRESS: "true"
+
+      VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/.vcpkg_cache,readwrite"
+      VCPKG_DISABLE_METRICS: "1"
+
+    steps:
+    - name: Checkout the Repository
+      uses: actions/checkout@v6 # v6
+
+    - name: Install ccache
+      uses: hendrikmuhs/ccache-action@5ebbd400eff9e74630f759d94ddd7b6c26299639 # v1.2.20
+      with:
+        key: ccache-${{ runner.os }}-${{ matrix.config }}
+        max-size: 500M
+
+    - name: Install CMake and Ninja
+      uses: lukka/get-cmake@f176ccd3f28bda569c43aae4894f06b2435a3375 # v4.2.3
+      with:
+        cmakeVersion: 3.31.10
+        ninjaVersion: 1.11.1
+
+    - name: Install Linux Dependencies
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libgl1-mesa-dev libglu1-mesa-dev xorg-dev xvfb
+
+    - name: Setup vcpkg
+      uses: lukka/run-vcpkg@5e0cab206a5ea620130caf672fce3e4a6b5666a1 # v11.5
+      with:
+        vcpkgDirectory: ${{ github.workspace }}/vcpkg
+
+    - name: MSVC dev cmd
+      if: runner.os == 'Windows'
+      uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1.13
+
+    - name: Cache vcpkg binary packages
+      uses: actions/cache@v5
+      with:
+        path: .vcpkg_cache
+        key: vcpkg-bin-${{ runner.os }}-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json', 'vcpkg-lock.json') }}
+        restore-keys: |
+          vcpkg-bin-${{ runner.os }}
+
+    - name: Configure CMake Linux and Mac
+      if: runner.os != 'Windows'
+      run: >
+        cmake -S . -B build/${{ runner.os }}/${{ matrix.config }}
+        -G Ninja
+        -DCMAKE_BUILD_TYPE=${{ matrix.config }}
+        -DCMAKE_C_COMPILER_LAUNCHER=ccache
+        -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+        -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+        -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
+        -DSFA_ENABLE_ASSERTIONS=ON
+
+    - name: Configure CMake Windows
+      if: runner.os == 'Windows'
+      run: >
+        cmake -S . -B build/${{ runner.os }}/${{ matrix.config }}
+        -G Ninja
+        -DCMAKE_BUILD_TYPE=${{ matrix.config }}
+        -DCMAKE_C_COMPILER_LAUNCHER=ccache
+        -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+        -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+        -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
+        -DSFA_ENABLE_ASSERTIONS=ON
+        -DWARNINGS_AS_ERRORS=OFF
+
+    - name: Build Linux and Mac
+      if: runner.os != 'Windows'
+      run: cmake --build build/${{ runner.os }}/${{ matrix.config }} --parallel
+
+    - name: Build Windows
+      if: runner.os == 'Windows'
+      run: cmake --build build/${{ runner.os }}/${{ matrix.config }} --parallel -- -k 0
+
+    - name: Test MacOS
+      if: runner.os == 'macOS'
+      run: ctest --test-dir build/${{ runner.os }}/${{ matrix.config }} --output-on-failure
+
+    - name: Test Windows
+      if: runner.os == 'Windows'
+      run: ctest -LE opengl --test-dir build/${{ runner.os }}/${{ matrix.config }} --output-on-failure
+
+    - name: Test Linux
+      if: runner.os == 'Linux'
+      run: xvfb-run -a ctest --test-dir build/${{ runner.os }}/${{ matrix.config }} --output-on-failure
