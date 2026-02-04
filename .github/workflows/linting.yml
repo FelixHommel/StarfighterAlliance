@@ -42,7 +42,7 @@ jobs:
     - name: Configure CMake
       uses: lukka/run-cmake@af1be47fd7c933593f687731bc6fdbee024d3ff4 # v10.8
       with:
-        configurePreset: debug
+        configurePreset: gcc-debug
 
     - name: Run cpp-linter for clang-tidy
       id: cpp_linter

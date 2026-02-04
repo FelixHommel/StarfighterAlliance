@@ -3,85 +3,176 @@
     "$schema": "https://cmake.org/cmake/help/latest/_downloads/3e2d73bff478d88a7de0de736ba5e361/schema.json",
     "configurePresets": [
         {
-            "name": "debug",
-            "displayName": "Debug",
+            "name": "base",
+            "description": "Configure basic template that can be shared across all configurations",
+            "hidden": true,
             "generator": "Ninja",
-            "binaryDir": "build/debug",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+            "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+            "condition": {
+                "type": "notEquals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
             }
         },
         {
-            "name": "release",
-            "displayName": "Release",
-            "generator": "Ninja",
-            "binaryDir": "build/release",
+            "name": "debug-base",
+            "description": "Configure a project for debug mode",
+            "inherits": "base",
+            "hidden": true,
+            "binaryDir": "${sourceDir}/build/debug",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "release-base",
+            "description": "Configure a project for release mode",
+            "inherits": "base",
+            "hidden": true,
+            "binaryDir": "${sourceDir}/build/release",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release"
             }
         },
         {
-            "name": "code-coverage",
-            "displayName": "Debug",
-            "generator": "Ninja",
-            "binaryDir": "build/code-coverage",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "CODE_COVERAGE": "ON",
-                "CMAKE_C_COMPILER": "gcc",
-                "CMAKE_CXX_COMPILER": "g++",
-                "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
-            }
-        },
-        {
             "name": "clang-debug",
-            "displayName": "clang Debug",
-            "generator": "Ninja",
-            "binaryDir": "build/debug",
+            "description": "Configure the project for clang compiler debug mode",
+            "displayName": "Debug (on clang compilers)",
+            "inherits": "debug-base",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_C_COMPILER": "clang",
                 "CMAKE_CXX_COMPILER": "clang++"
             }
         },
         {
             "name": "clang-release",
-            "displayName": "clang Release",
-            "generator": "Ninja",
-            "binaryDir": "build/release",
+            "description": "Configure the project for clang compiler release mode",
+            "displayName": "Release (on clang compilers)",
+            "inherits": "release-base",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release",
                 "CMAKE_C_COMPILER": "clang",
                 "CMAKE_CXX_COMPILER": "clang++"
+            }
+        },
+        {
+            "name": "gcc-debug",
+            "description": "Configure the project for gcc compiler debug mode",
+            "displayName": "Debug (on gcc compilers)",
+            "inherits": "debug-base",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "gcc",
+                "CMAKE_CXX_COMPILER": "g++"
+            }
+        },
+        {
+            "name": "gcc-release",
+            "description": "Configure the project for gcc compiler release mode",
+            "displayName": "Release (on gcc compilers)",
+            "inherits": "release-base",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "gcc",
+                "CMAKE_CXX_COMPILER": "g++"
+            }
+        },
+        {
+            "name": "windows-debug",
+            "description": "Configure the project for windows debug",
+            "displayName": "Debug (on msvc compilers)",
+            "inherits": "debug-base",
+            "cacheVariables": {
+                "VCPKG_TARGET_TRIPLET": "x64-windows"
+            },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            }
+        },
+        {
+            "name": "windows-release",
+            "description": "Configure the project for windows release",
+            "displayName": "Release (on msvc compilers)",
+            "inherits": "release-base",
+            "cacheVariables": {
+                "VCPKG_TARGET_TRIPLET": "x64-windows"
+            },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            }
+        },
+        {
+            "name": "code-coverage",
+            "description": "Configure the project for code coverage",
+            "displayName": "Code Coverage",
+            "inherits": "gcc-debug",
+            "binaryDir": "${sourceDir}/build/code-coverage",
+            "cacheVariables": {
+                "CODE_COVERAGE": "ON"
             }
         }
     ],
     "buildPresets": [
         {
-            "name": "debug",
-            "displayName": "Build Debug",
-            "configurePreset": "debug",
+            "name": "debug-build-base",
+            "description": "Build the project in debug mode",
+            "hidden": true,
             "configuration": "Debug"
         },
         {
-            "name": "release",
-            "displayName": "Build Release",
-            "configurePreset": "release",
+            "name": "release-build-base",
+            "description": "Build the project in release mode",
+            "hidden": true,
             "configuration": "Release"
         },
         {
+            "name": "clang-debug",
+            "displayName": "Build Debug (on clang compilers)",
+            "inherits": "debug-build-base",
+            "configurePreset": "clang-debug"
+        },
+        {
+            "name": "clang-release",
+            "displayName": "Build Release (on clang compilers)",
+            "inherits": "release-build-base",
+            "configurePreset": "clang-release"
+        },
+        {
+            "name": "gcc-debug",
+            "displayName": "Build Debug (on gcc compilers)",
+            "inherits": "debug-build-base",
+            "configurePreset": "gcc-debug"
+        },
+        {
+            "name": "gcc-release",
+            "displayName": "Build Release (on gcc compilers)",
+            "inherits": "release-build-base",
+            "configurePreset": "gcc-release"
+        },
+        {
+            "name": "windows-debug",
+            "displayName": "Build Debug (on msvc compilers)",
+            "inherits": "debug-build-base",
+            "configurePreset": "windows-debug"
+        },
+        {
+            "name": "windows-release",
+            "displayName": "Build Release (on msvc compilers)",
+            "inherits": "release-build-base",
+            "configurePreset": "windows-release"
+        },
+        {
             "name": "code-coverage",
-            "displayName": "build code-coverage",
-            "configurePreset": "code-coverage",
-            "configuration": "Debug"
+            "displayName": "Build for Code Coverage",
+            "inherits": "debug-build-base",
+            "configurePreset": "code-coverage"
         }
     ],
     "testPresets": [
         {
-            "name": "test-all",
-            "displayName": "Test all",
-            "configurePreset": "debug",
+            "name": "test-base",
+            "hidden": true,
             "output": {
                 "outputOnFailure": true
             },
@@ -91,28 +182,46 @@
             }
         },
         {
-            "name": "test-release",
-            "displayName": "Test all",
-            "configurePreset": "release",
-            "output": {
-                "outputOnFailure": true
-            },
-            "execution": {
-                "stopOnFailure": false,
-                "jobs": 8
-            }
+            "name": "clang-debug",
+            "displayName": "Clang Debug Build Tests",
+            "inherits": "test-base",
+            "configurePreset": "clang-debug"
+        },
+        {
+            "name": "clang-release",
+            "displayName": "Clang Release Build Tests",
+            "inherits": "test-base",
+            "configurePreset": "clang-release"
+        },
+        {
+            "name": "gcc-debug",
+            "displayName": "GCC Debug Build Tests",
+            "inherits": "test-base",
+            "configurePreset": "gcc-debug"
+        },
+        {
+            "name": "gcc-release",
+            "displayName": "GCC Release Build Tests",
+            "inherits": "test-base",
+            "configurePreset": "gcc-release"
+        },
+        {
+            "name": "windows-debug",
+            "displayName": "MSVC Debug Build Tests",
+            "inherits": "test-base",
+            "configurePreset": "windows-debug"
+        },
+        {
+            "name": "windows-release",
+            "displayName": "MSVC Release Build Tests",
+            "inherits": "test-base",
+            "configurePreset": "windows-release"
         },
         {
             "name": "test-coverage",
             "displayName": "Test Coverage",
-            "configurePreset": "code-coverage",
-            "output": {
-                "outputOnFailure": true
-            },
-            "execution": {
-                "stopOnFailure": false,
-                "jobs": 8
-            }
+            "inherits": "test-base",
+            "configurePreset": "code-coverage"
         }
     ]
 }
