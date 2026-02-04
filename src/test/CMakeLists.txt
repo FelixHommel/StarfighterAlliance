@@ -27,4 +27,5 @@ target_link_libraries(${NAME}
         StarfighterAllianceEngine
 )
 
-add_test(NAME ${NAME} COMMAND ${NAME})
+include(GoogleTest)
+gtest_discover_tests(${NAME})
