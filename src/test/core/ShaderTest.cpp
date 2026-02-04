@@ -1,8 +1,9 @@
 #include "core/Shader.hpp"
 #include "fixtures/OpenGLTestFixture.hpp"
 
-#include <glad/gl.h>
 #include <gtest/gtest.h>
+
+#include <glad/gl.h>
 
 #include <memory>
 #include <utility>

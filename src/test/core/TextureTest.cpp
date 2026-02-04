@@ -2,6 +2,7 @@
 #include "fixtures/OpenGLTestFixture.hpp"
 
 #include <glad/gl.h>
+
 #include <gtest/gtest.h>
 
 #include <array>
