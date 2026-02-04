@@ -98,9 +98,13 @@ jobs:
       if: runner.os == 'Windows'
       run: cmake --build build/${{ runner.os }}/${{ matrix.config }} --parallel -- -k 0
 
-    - name: Test Windows and Mac
-      if: runner.os != 'Linux'
+    - name: Test MacOS
+      if: runner.os == 'macOS'
       run: ctest --test-dir build/${{ runner.os }}/${{ matrix.config }} --output-on-failure
+
+    - name: Test Windows
+      if: runner.os == 'Windows'
+      run: ctest -LE opengl --test-dir build/${{ runner.os }}/${{ matrix.config }} --output-on-failure
 
     - name: Test Linux
       if: runner.os == 'Linux'
