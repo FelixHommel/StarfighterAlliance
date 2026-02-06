@@ -16,6 +16,7 @@ target_sources(${NAME}
         FILE_SET HEADERS
         FILES
             ./fixtures/OpenGLTestFixture.hpp
+            ./testUtility/RandomNumberGenerator.hpp
 )
 
 target_compile_features(${NAME} PRIVATE cxx_std_23)

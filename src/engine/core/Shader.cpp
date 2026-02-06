@@ -1,8 +1,11 @@
 #include "Shader.hpp"
 
-#include "glad/gl.h"
-#include "glm/gtc/type_ptr.hpp"
-#include "spdlog/spdlog.h"
+#include "core/Utility.hpp"
+
+#include <glad/gl.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <spdlog/spdlog.h>
 
 #include <array>
 #include <cassert>
@@ -13,15 +16,15 @@
 namespace sfa
 {
 
-Shader::Shader(const char* vertSource, const char* fragSource, const char* geomSource) : m_id{ glCreateProgram() }
+Shader::Shader(const char* pVertSource, const char* pFragSource, const char* pGeomSource) : m_id{ glCreateProgram() }
 {
-    const unsigned int vertId{ compileShader(vertSource, CompilationType::Vertex) };
-    const unsigned int fragId{ compileShader(fragSource, CompilationType::Fragment) };
-    const unsigned int geomId{ compileShader(geomSource, CompilationType::Geometry) };
+    const auto vertId{ compileShader(pVertSource, CompilationType::Vertex) };
+    const auto fragId{ compileShader(pFragSource, CompilationType::Fragment) };
+    const auto geomId{ compileShader(pGeomSource, CompilationType::Geometry) };
 
     glAttachShader(m_id, vertId);
     glAttachShader(m_id, fragId);
-    if(geomSource != nullptr)
+    if(pGeomSource != nullptr)
         glAttachShader(m_id, geomId);
 
     glLinkProgram(m_id);
@@ -29,7 +32,7 @@ Shader::Shader(const char* vertSource, const char* fragSource, const char* geomS
 
     glDeleteShader(vertId);
     glDeleteShader(fragId);
-    if(geomSource != nullptr)
+    if(pGeomSource != nullptr)
         glDeleteShader(geomId);
 }
 
@@ -57,59 +60,76 @@ void Shader::use() const
     glUseProgram(m_id);
 }
 
-void Shader::setFloat(const char* name, float value, bool useShader) const
+void Shader::setFloat(const char* pName, float value, bool useShader) const
 {
     if(useShader)
         use();
-    glUniform1f(glGetUniformLocation(m_id, name), value);
+
+    glUniform1f(glGetUniformLocation(m_id, pName), value);
 }
-void Shader::setInteger(const char* name, int value, bool useShader) const
+
+void Shader::setInteger(const char* pName, int value, bool useShader) const
 {
     if(useShader)
         use();
-    glUniform1i(glGetUniformLocation(m_id, name), value);
+
+    glUniform1i(glGetUniformLocation(m_id, pName), value);
 }
-void Shader::setVector2f(const char* name, float x, float y, bool useShader) const
+
+void Shader::setVector2f(const char* pName, float x, float y, bool useShader) const
 {
     if(useShader)
         use();
-    glUniform2f(glGetUniformLocation(m_id, name), x, y);
+
+    glUniform2f(glGetUniformLocation(m_id, pName), x, y);
 }
-void Shader::setVector2f(const char* name, const glm::vec2& value, bool useShader) const
+
+void Shader::setVector2f(const char* pName, const glm::vec2& value, bool useShader) const
 {
     if(useShader)
         use();
-    glUniform2f(glGetUniformLocation(m_id, name), value.x, value.y);
+
+    glUniform2f(glGetUniformLocation(m_id, pName), value.x, value.y);
 }
-void Shader::setVector3f(const char* name, float x, float y, float z, bool useShader) const
+
+void Shader::setVector3f(const char* pName, float x, float y, float z, bool useShader) const
 {
     if(useShader)
         use();
-    glUniform3f(glGetUniformLocation(m_id, name), x, y, z);
+
+    glUniform3f(glGetUniformLocation(m_id, pName), x, y, z);
 }
-void Shader::setVector3f(const char* name, const glm::vec3& value, bool useShader) const
+
+void Shader::setVector3f(const char* pName, const glm::vec3& value, bool useShader) const
 {
     if(useShader)
         use();
-    glUniform3f(glGetUniformLocation(m_id, name), value.x, value.y, value.z);
+
+    glUniform3f(glGetUniformLocation(m_id, pName), value.x, value.y, value.z);
 }
-void Shader::setVector4f(const char* name, float x, float y, float z, float w, bool useShader) const
+
+void Shader::setVector4f(const char* pName, float x, float y, float z, float w, bool useShader) const
 {
     if(useShader)
         use();
-    glUniform4f(glGetUniformLocation(m_id, name), x, y, z, w);
+
+    glUniform4f(glGetUniformLocation(m_id, pName), x, y, z, w);
 }
-void Shader::setVector4f(const char* name, const glm::vec4& value, bool useShader) const
+
+void Shader::setVector4f(const char* pName, const glm::vec4& value, bool useShader) const
 {
     if(useShader)
         use();
-    glUniform4f(glGetUniformLocation(m_id, name), value.x, value.y, value.z, value.w);
+
+    glUniform4f(glGetUniformLocation(m_id, pName), value.x, value.y, value.z, value.w);
 }
-void Shader::setMatrix4(const char* name, const glm::mat4& matrix, bool useShader) const
+
+void Shader::setMatrix4(const char* pName, const glm::mat4& matrix, bool useShader) const
 {
     if(useShader)
         use();
-    glUniformMatrix4fv(glGetUniformLocation(m_id, name), 1, 0, glm::value_ptr(matrix));
+
+    glUniformMatrix4fv(glGetUniformLocation(m_id, pName), 1, 0, glm::value_ptr(matrix));
 }
 
 /// \brief Delete the shader program stored in this shader.
@@ -121,24 +141,22 @@ void Shader::releaseShaderProgram() const
 
 /// \brief Compile a shader.
 ///
-/// \param source the source code of the shader
+/// \param pSource the source code of the shader
 /// \param type what kind of shader it is
 ///
 /// \returns the ID of the created shader
-unsigned int Shader::compileShader(const char* source, CompilationType type)
+GLuint Shader::compileShader(const char* pSource, CompilationType type)
 {
-#ifdef SFA_DEBUG
-    assert(type != CompilationType::Program && "Program is not a compilable type");
-#endif
+    SFA_ASSERT(type != CompilationType::Program, "Program is not a compilable type");
 
-    if(source == nullptr)
+    if(pSource == nullptr)
     {
         spdlog::warn("No source was provided for {} shader", compilationTypeToString(type));
-        return 0;
+        return 0u;
     }
 
-    unsigned int id{ glCreateShader(compilationTypeToGlenum(type)) };
-    glShaderSource(id, 1, &source, nullptr);
+    const auto id{ glCreateShader(compilationTypeToGlenum(type)) };
+    glShaderSource(id, 1, &pSource, nullptr);
     glCompileShader(id);
     checkCompileErrors(id, type);
 
@@ -212,10 +230,10 @@ GLenum Shader::compilationTypeToGlenum(CompilationType type)
         return GL_GEOMETRY_SHADER;
     case CompilationType::Program:
         return GL_PROGRAM;
+    default:
+        // TODO: replace with custom exception
+        throw std::runtime_error("Unknown compilation type");
     }
-
-    // TODO: Add custom exception
-    throw std::runtime_error("Unknown  CompilationType");
 }
 
 } // namespace sfa

@@ -27,24 +27,27 @@ will be shown to the player after a game ended.
 
 > Items are not in any particular order
 
-- [x] Re-enable tests (add_directory)
-
+- [x] Re-enable tests
   - Fix tests
-  - figure out gmock issue
-  - classes for each test type
-
+  - Figure out gmock issue
+  - Classes for each test type
 - [x] Fix All warnings
-
   - Turn on Warnings as errors
-
 - [x] Convert comments to Doxygen
 - [x] Namespaces for everything
-- [ ] Clean up architecture
-
+- [x] Clean up architecture
   - JSONReader class complete overhaul
-  - better/different solution for ResourceManager?
-
+  - Better/Different solution for ResourceManager?
+    - Multithreaded resource loading
 - [ ] Resolve the color picking service issue (Server is offline)
+  - Provide simple custom server to self host
+  - Make color random
+  - Make color pickable
+
+## Notes on Tests in CI
+
+The Windows CI environment is not able to run tets that require OpenGL. Because of that, tests that require OpenGL are
+labeled as such and can be filtered out by ctest.
 
 ## Building
 
