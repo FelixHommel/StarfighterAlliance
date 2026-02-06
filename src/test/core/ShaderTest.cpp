@@ -2,11 +2,11 @@
 #include "fixtures/OpenGLTestFixture.hpp"
 #include "testUtility/RandomNumberGenerator.hpp"
 
-#include <glm/gtc/type_ptr.hpp>
 #include <gtest/gtest.h>
 
 #include <glad/gl.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <array>
 #include <cstddef>
@@ -14,13 +14,6 @@
 #include <span>
 #include <type_traits>
 #include <utility>
-
-namespace
-{
-
-constexpr auto SHADER_PARAMETERIZED_TEST_CASES{ 5 };
-
-} // namespace
 
 namespace sfa::testing
 {
