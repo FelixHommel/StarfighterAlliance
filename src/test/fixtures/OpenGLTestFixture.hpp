@@ -30,10 +30,14 @@ public:
     OpenGLTestFixture& operator=(const OpenGLTestFixture&) = delete;
     OpenGLTestFixture& operator=(OpenGLTestFixture&&) = delete;
 
-    void setup()
+    bool setup()
     {
         if(glfwInit() != GLFW_TRUE)
-            GTEST_SKIP() << "GLFW initialization failed, skipping test";
+        {
+            m_skippingReason = "GLFW initialization failed, skipping test";
+
+            return false;
+        }
 
         // NOTE: Configure GLFW to create a Headless OpenGL 3.3 Context
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, GL_CONTEXT_MAJ);
@@ -46,12 +50,27 @@ public:
         if(m_window == nullptr)
         {
             glfwTerminate();
-            GTEST_SKIP() << "GLFW couldn't create a window, skipping test";
+
+            m_initialized = false;
+            m_skippingReason = "GLFW couldn't create a window, skipping test";
+
+            return false;
         }
         glfwMakeContextCurrent(m_window);
 
         if(gladLoadGL(glfwGetProcAddress) == 0)
-            throw std::runtime_error("Failed to load OpenGL");
+        {
+            glfwDestroyWindow(m_window);
+            glfwTerminate();
+
+            m_window = nullptr;
+            m_initialized = false;
+            m_skippingReason = "Failed to load OpenGL, skipping test";
+
+            return false;
+        }
+
+        m_skippingReason.clear();
 
         glEnable(GL_DEBUG_OUTPUT);
         glDebugMessageCallback(
@@ -67,21 +86,34 @@ public:
             },
             nullptr
         );
+
+        return true;
     }
 
     void teardown()
     {
+        if(!m_initialized)
+            return;
+
         if(m_window != nullptr)
             glfwDestroyWindow(m_window);
 
         glfwTerminate();
+
+        m_window = nullptr;
+        m_initialized = false;
     }
+
+    [[nodiscard]] const std::string& getSkipReason() const noexcept { return m_skippingReason; }
 
 private:
     static constexpr auto GL_CONTEXT_MAJ{ 3 };
     static constexpr auto GL_CONTEXT_MIN{ 3 };
 
     GLFWwindow* m_window{ nullptr };
+
+    bool m_initialized{ false };
+    std::string m_skippingReason;
 };
 
 } // namespace sfa

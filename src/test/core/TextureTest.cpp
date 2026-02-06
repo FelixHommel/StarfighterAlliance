@@ -28,7 +28,11 @@ public:
     TextureTest& operator=(const TextureTest&) = delete;
     TextureTest& operator=(TextureTest&&) = delete;
 
-    void SetUp() override { m_context->setup(); }
+    void SetUp() override
+    {
+        if(!m_context->setup())
+            GTEST_SKIP() << m_context->getSkipReason();
+    }
 
     void TearDown() override { m_context->teardown(); }
 

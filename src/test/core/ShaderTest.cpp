@@ -35,7 +35,8 @@ public:
 
     void SetUp() override
     {
-        m_glContext->setup();
+        if(!m_glContext->setup())
+            GTEST_SKIP() << m_glContext->getSkipReason();
 
         m_shader = std::make_unique<Shader>(VERTEX_SHADER_SRC, FRAGMENT_SHADER_SRC);
 
@@ -81,8 +82,15 @@ protected:
     static constexpr auto GEOMETRY_SHADER_SRC = R"(
         #version 330 core
         layout(points) in;
+        layout(line_strip, max_vertices = 2) out;
 
-        void main() {}
+        void main() {
+            gl_Position = gl_in[0].gl_Position + vec4(-0.1, 0.0, 0.0, 0.0);
+            EmitVertex();
+            gl_Position = gl_in[0].gl_Position + vec4(0.1, 0.0, 0.0, 0.0);
+            EmitVertex();
+            EndPrimitive();
+        }
     )";
     static constexpr auto INT_UNIFORM{ "intUniform" };
     static constexpr auto FLOAT_UNIFORM{ "floatUniform" };
