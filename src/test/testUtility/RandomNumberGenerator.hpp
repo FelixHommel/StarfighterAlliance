@@ -51,7 +51,7 @@ template<::NumericalValue T>
 T generateRandomValue(
     T min = std::numeric_limits<T>::min(),
     T max = std::numeric_limits<T>::max(),
-    const std::unordered_set<T> exclusions = ::emptySetProvider<T>(),
+    const std::unordered_set<T>& exclusions = ::emptySetProvider<T>(),
     std::uint32_t seed = DEFAULT_RNG_SEED
 )
 {
@@ -97,7 +97,7 @@ std::vector<T> generateRandomVector(
     std::size_t n,
     T min = std::numeric_limits<T>::min(),
     T max = std::numeric_limits<T>::max(),
-    const std::unordered_set<T> exclusions = ::emptySetProvider<T>(),
+    const std::unordered_set<T>& exclusions = ::emptySetProvider<T>(),
     std::uint32_t seed = DEFAULT_RNG_SEED
 )
 {
