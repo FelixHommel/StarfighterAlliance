@@ -26,12 +26,11 @@ const std::unordered_set<T>& emptySetProvider()
     return empty;
 }
 
-template<typename T>
-concept NumericalValue = std::is_integral_v<T> || std::is_floating_point_v<T>;
+template<typename T> concept NumericalValue = std::is_integral_v<T> || std::is_floating_point_v<T>;
 
 constexpr std::uint32_t DEFAULT_RNG_SEED{ 0xC0FFEEu };
 
-}
+} // namespace
 
 namespace sfa::testing
 {
@@ -49,7 +48,12 @@ namespace sfa::testing
 /// \author Felix Hommel
 /// \date 2/4/2025
 template<::NumericalValue T>
-T generateRandomValue(T min = std::numeric_limits<T>::min(), T max = std::numeric_limits<T>::max(), const std::unordered_set<T> exclusions = ::emptySetProvider<T>(), std::uint32_t seed = DEFAULT_RNG_SEED)
+T generateRandomValue(
+    T min = std::numeric_limits<T>::min(),
+    T max = std::numeric_limits<T>::max(),
+    const std::unordered_set<T> exclusions = ::emptySetProvider<T>(),
+    std::uint32_t seed = DEFAULT_RNG_SEED
+)
 {
     thread_local std::mt19937 mt(static_cast<std::seed_seq::result_type>(seed));
 
@@ -89,7 +93,13 @@ T generateRandomValue(T min = std::numeric_limits<T>::min(), T max = std::numeri
 /// \author Felix Hommel
 /// \date 2/4/2025
 template<::NumericalValue T>
-std::vector<T> generateRandomVector(std::size_t n, T min = std::numeric_limits<T>::min(), T max = std::numeric_limits<T>::max(), const std::unordered_set<T> exclusions = ::emptySetProvider<T>(), std::uint32_t seed = DEFAULT_RNG_SEED)
+std::vector<T> generateRandomVector(
+    std::size_t n,
+    T min = std::numeric_limits<T>::min(),
+    T max = std::numeric_limits<T>::max(),
+    const std::unordered_set<T> exclusions = ::emptySetProvider<T>(),
+    std::uint32_t seed = DEFAULT_RNG_SEED
+)
 {
     std::vector<T> vec(n);
 
@@ -99,7 +109,7 @@ std::vector<T> generateRandomVector(std::size_t n, T min = std::numeric_limits<T
     return vec;
 }
 
-} // sfa::testing
+} // namespace sfa::testing
 
 #endif // !SFA_SRC_TEST_TEST_UTILITY_RANDOM_NUMBER_GENERATOR_HPP
 

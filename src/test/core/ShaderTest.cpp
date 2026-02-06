@@ -262,7 +262,9 @@ TEST_F(ShaderTest, SetFloatVector2ValueWithUse)
 
 TEST_F(ShaderTest, SetThreeSingleFloatValuesWithUse)
 {
-    const std::array original{ generateRandomValue<float>(), generateRandomValue<float>(), generateRandomValue<float>() };
+    const std::array original{ generateRandomValue<float>(),
+                               generateRandomValue<float>(),
+                               generateRandomValue<float>() };
 
     m_shader->setVector3f(FLOAT_3_UNIFORM, original[0], original[1], original[2], true);
 
@@ -274,7 +276,9 @@ TEST_F(ShaderTest, SetThreeSingleFloatValuesWithUse)
 
 TEST_F(ShaderTest, SetFloatVector3ValueWithUse)
 {
-    const auto vec{ glm::vec3(generateRandomValue<float>(), generateRandomValue<float>(), generateRandomValue<float>()) };
+    const auto vec{
+        glm::vec3(generateRandomValue<float>(), generateRandomValue<float>(), generateRandomValue<float>())
+    };
 
     m_shader->setVector3f(FLOAT_3_UNIFORM, vec, true);
 
@@ -288,7 +292,10 @@ TEST_F(ShaderTest, SetFloatVector3ValueWithUse)
 
 TEST_F(ShaderTest, SetFourSingleFloatValuesWithUse)
 {
-    const std::array original{ generateRandomValue<float>(), generateRandomValue<float>(), generateRandomValue<float>(), generateRandomValue<float>() };
+    const std::array original{ generateRandomValue<float>(),
+                               generateRandomValue<float>(),
+                               generateRandomValue<float>(),
+                               generateRandomValue<float>() };
 
     // NOLINTNEXTLINE(readability-magic-numbers): 3 used as array index
     m_shader->setVector4f(FLOAT_4_UNIFORM, original[0], original[1], original[2], original[3], true);
@@ -301,7 +308,12 @@ TEST_F(ShaderTest, SetFourSingleFloatValuesWithUse)
 
 TEST_F(ShaderTest, SetFloatVector4ValueWithUse)
 {
-    const auto vec{ glm::vec4(generateRandomValue<float>(), generateRandomValue<float>(), generateRandomValue<float>(), generateRandomValue<float>()) };
+    const auto vec{ glm::vec4(
+        generateRandomValue<float>(),
+        generateRandomValue<float>(),
+        generateRandomValue<float>(),
+        generateRandomValue<float>()
+    ) };
 
     m_shader->setVector4f(FLOAT_4_UNIFORM, vec, true);
 
