@@ -206,6 +206,9 @@ TEST_F(ShaderTest, ShaderUseActivatesProgram)
     EXPECT_EQ(currentProgram, m_shader->getID());
 }
 
+/// \brief Test uploading a single float uniform value
+///
+/// When a value is uploaded to a uniform, the shader should receive the uploaded value
 TEST_F(ShaderTest, SetSingleFloatingValueWithUse)
 {
     const auto val{ generateRandomValue<float>() };
@@ -217,6 +220,9 @@ TEST_F(ShaderTest, SetSingleFloatingValueWithUse)
     EXPECT_FLOAT_EQ(val, uniformValue);
 }
 
+/// \brief Test uploading a single integer uniform value
+///
+/// When a value is uploaded to a uniform, the shader should receive the uploaded value
 TEST_F(ShaderTest, SetSingleIntegerValueWithUse)
 {
     const auto val{ generateRandomValue<int>() };
@@ -228,6 +234,9 @@ TEST_F(ShaderTest, SetSingleIntegerValueWithUse)
     EXPECT_EQ(val, uniformValue);
 }
 
+/// \brief Test uploading a 2 element float vector uniform value using 2 individual values
+///
+/// When a value is uploaded to a uniform, the shader should receive the uploaded value
 TEST_F(ShaderTest, SetTwoSingleFloatValuesWithUse)
 {
     const std::array original{ generateRandomValue<float>(), generateRandomValue<float>() };
@@ -240,6 +249,9 @@ TEST_F(ShaderTest, SetTwoSingleFloatValuesWithUse)
     EXPECT_EQ(original, uniformValues);
 }
 
+/// \brief Test uploading a 2 element float vector uniform value using a glm::vec2
+///
+/// When a value is uploaded to a uniform, the shader should receive the uploaded value
 TEST_F(ShaderTest, SetFloatVector2ValueWithUse)
 {
     const auto vec{ glm::vec2(generateRandomValue<float>(), generateRandomValue<float>()) };
@@ -253,6 +265,9 @@ TEST_F(ShaderTest, SetFloatVector2ValueWithUse)
     EXPECT_FLOAT_EQ(vec.y, uniformValues.at(1));
 }
 
+/// \brief Test uploading a 3 element float vector uniform value using 3 individual values
+///
+/// When a value is uploaded to a uniform, the shader should receive the uploaded value
 TEST_F(ShaderTest, SetThreeSingleFloatValuesWithUse)
 {
     const std::array original{ generateRandomValue<float>(),
@@ -267,6 +282,9 @@ TEST_F(ShaderTest, SetThreeSingleFloatValuesWithUse)
     EXPECT_EQ(original, uniformValues);
 }
 
+/// \brief Test uploading a 3 element float vectir uniform value using a glm::vec3
+///
+/// When a value is uploaded to a uniform, the shader should receive the uploaded value
 TEST_F(ShaderTest, SetFloatVector3ValueWithUse)
 {
     const auto vec{
@@ -283,6 +301,9 @@ TEST_F(ShaderTest, SetFloatVector3ValueWithUse)
     EXPECT_FLOAT_EQ(vec.z, uniformValues.at(2));
 }
 
+/// \brief Test uploading a 4 element float vector uniform value using 4 individual values
+///
+/// When a value is uploaded to a uniform, the shader should receive the uploaded value
 TEST_F(ShaderTest, SetFourSingleFloatValuesWithUse)
 {
     const std::array original{ generateRandomValue<float>(),
@@ -299,6 +320,9 @@ TEST_F(ShaderTest, SetFourSingleFloatValuesWithUse)
     EXPECT_EQ(original, uniformValues);
 }
 
+/// \brief Test uploading a 4 element float vector uniform value using a single glm::vec4
+///
+/// When a value is uploaded to a uniform, the shader should receive the uploaded value
 TEST_F(ShaderTest, SetFloatVector4ValueWithUse)
 {
     const auto vec{ glm::vec4(
@@ -319,6 +343,9 @@ TEST_F(ShaderTest, SetFloatVector4ValueWithUse)
     EXPECT_FLOAT_EQ(vec.w, uniformValues.at(3));
 }
 
+/// \brief Test uploading a 4x4 float matrix uniform value
+///
+/// When a value is uploaded to a uniform, the shader should receive the uploaded value
 TEST_F(ShaderTest, SetMatrix4ValueWithUse)
 {
     const auto mat{ glm::mat4(generateRandomValue<float>()) };
