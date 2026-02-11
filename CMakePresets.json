@@ -223,5 +223,85 @@
             "inherits": "test-base",
             "configurePreset": "code-coverage"
         }
+    ],
+    "workflowPresets": [
+        {
+            "name": "clang-debug",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "clang-debug"
+                },
+                {
+                    "type": "build",
+                    "name": "clang-debug"
+                }
+            ]
+        },
+        {
+            "name": "clang-release",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "clang-release"
+                },
+                {
+                    "type": "build",
+                    "name": "clang-release"
+                }
+            ]
+        },
+        {
+            "name": "gcc-debug",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "gcc-debug"
+                },
+                {
+                    "type": "build",
+                    "name": "gcc-debug"
+                }
+            ]
+        },
+        {
+            "name": "gcc-release",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "gcc-release"
+                },
+                {
+                    "type": "build",
+                    "name": "gcc-release"
+                }
+            ]
+        },
+        {
+            "name": "windows-debug",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "windows-debug"
+                },
+                {
+                    "type": "build",
+                    "name": "windows-debug"
+                }
+            ]
+        },
+        {
+            "name": "windows-release",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "windows-release"
+                },
+                {
+                    "type": "build",
+                    "name": "windows-release"
+                }
+            ]
+        }
     ]
 }
