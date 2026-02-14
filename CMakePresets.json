@@ -302,6 +302,23 @@
                     "name": "windows-release"
                 }
             ]
+        },
+        {
+            "name": "code-coverage",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "code-coverage"
+                },
+                {
+                    "type": "build",
+                    "name": "code-coverage"
+                },
+                {
+                    "type": "test",
+                    "name": "test-coverage"
+                }
+            ]
         }
     ]
 }
