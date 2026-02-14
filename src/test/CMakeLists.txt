@@ -9,6 +9,8 @@ add_executable(${NAME}
     ./ecs/ComponentArrayTest.cpp
     ./ecs/EntityManagerTest.cpp
     ./ecs/ComponentRegistryTest.cpp
+    ./utility/BlockingQueueTest.cpp
+    ./utility/ThreadPoolTest.cpp
 )
 
 target_sources(${NAME}

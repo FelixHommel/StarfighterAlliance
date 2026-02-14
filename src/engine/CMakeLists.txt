@@ -15,6 +15,7 @@ add_library(${NAME}
     ./ecs/systems/SpriteRenderSystem.cpp
     ./ecs/systems/TextRenderSystem.cpp
     ./external/stb_image_impl.cpp
+    ./utility/ThreadPool.cpp
 )
 
 target_sources(${NAME}
@@ -52,6 +53,8 @@ target_sources(${NAME}
             ./ecs/systems/MovementSystem.hpp
             ./ecs/systems/SpriteRenderSystem.hpp
             ./ecs/systems/TextRenderSystem.hpp
+            ./utility/BlockingQueue.hpp
+            ./utility/ThreadPool.hpp
 )
 
 target_compile_features(${NAME} PRIVATE cxx_std_23)
