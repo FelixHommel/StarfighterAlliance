@@ -3,6 +3,7 @@
 
 #include "spdlog/spdlog.h"
 
+#include <cstddef>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -27,9 +28,9 @@ public:
     ~ResourceCache() = default;
 
     ResourceCache(const ResourceCache&) = delete;
-    ResourceCache(ResourceCache&&) = delete;
     ResourceCache& operator=(const ResourceCache&) = delete;
-    ResourceCache& operator=(ResourceCache&&) = delete;
+    ResourceCache(ResourceCache&&) noexcept = delete;
+    ResourceCache& operator=(ResourceCache&&) noexcept = delete;
 
     /// \brief Store a new resource.
     ///
@@ -49,21 +50,43 @@ public:
     ///
     /// \param key which resource to access
     ///
+    /// \returns shared_ptr to the resource
+    ///
     /// \throws \ref std::runtime_error if there is no resource stored under the name \p key
-    [[nodiscard]] std::shared_ptr<T> get(const std::string& key) const
+    [[nodiscard]] std::shared_ptr<T> get(const std::string& key)
     {
         const auto it{ m_resources.find(key) };
-        if(it != m_resources.end())
+        if(it == m_resources.end())
+        {
             // TODO: replace with custom exception
             throw std::runtime_error("resource not found");
+        }
 
         return it->second;
     }
 
-    /// \brief Check if a resource has been stored under \p key
+    /// \brief Access a resource.
     ///
-    /// \returns *true* if \p key already has been stored, *false* if not
-    [[nodiscard]] bool has(const std::string& key) const { return m_resources.contains(key); }
+    /// \param key which resource to access
+    ///
+    /// \returns shared_ptr to the resource
+    ///
+    /// \throws \ref std::runtime_error if there is no resource stored under the name \p key
+    [[nodiscard]] std::shared_ptr<T> get(const std::string& key) const
+    {
+        const auto it{ m_resources.find(key) };
+        if(it == m_resources.end())
+        {
+            // TODO: replace with custom exception
+            throw std::runtime_error("resource not found");
+        }
+
+        return it->second;
+    }
+
+    [[nodiscard]] bool contains(const std::string& key) const { return m_resources.contains(key); }
+    [[nodiscard]] bool empty() const noexcept { return m_resources.empty(); }
+    [[nodiscard]] std::size_t size() const noexcept { return m_resources.size(); }
     void clear() noexcept { m_resources.clear(); }
 
 private:

@@ -6,6 +6,7 @@ add_executable(${NAME}
     ./testMain.cpp
     ./core/ShaderTest.cpp
     ./core/TextureTest.cpp
+    ./core/resourceManagement/ResourceCacheTest.cpp
     ./core/resourceManagement/ResourceLoaderTest.cpp
     ./ecs/ComponentArrayTest.cpp
     ./ecs/EntityManagerTest.cpp
