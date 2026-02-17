@@ -1,14 +1,11 @@
 #ifndef SFA_SRC_TEST_FIXTURES_OPENGL_TEST_FIXTURE_HPP
 #define SFA_SRC_TEST_FIXTURES_OPENGL_TEST_FIXTURE_HPP
 
-#include <gtest/gtest.h>
-
 #include <glad/gl.h>
 
 #include <GLFW/glfw3.h>
 
 #include <iostream>
-#include <stdexcept>
 
 namespace sfa
 {
