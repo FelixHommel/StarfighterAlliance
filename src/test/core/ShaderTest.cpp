@@ -51,7 +51,7 @@ public:
     void TearDown() override { m_glContext->teardown(); }
 
 protected:
-    static constexpr auto VERTEX_SHADER_SRC = R"(
+    static constexpr auto VERTEX_SHADER_SRC{ R"(
         #version 330 core
 
         uniform int intUniform;
@@ -70,16 +70,16 @@ protected:
             result = mat4Uniform * result;
             gl_Position = normalize(result);
         }
-    )";
+    )" };
 
-    static constexpr auto FRAGMENT_SHADER_SRC = R"(
+    static constexpr auto FRAGMENT_SHADER_SRC{ R"(
         #version 330 core
         out vec4 FragColor;
 
         void main() { FragColor = vec4(1.0); }
-    )";
+    )" };
 
-    static constexpr auto GEOMETRY_SHADER_SRC = R"(
+    static constexpr auto GEOMETRY_SHADER_SRC{ R"(
         #version 330 core
         layout(points) in;
         layout(line_strip, max_vertices = 2) out;
@@ -91,7 +91,7 @@ protected:
             EmitVertex();
             EndPrimitive();
         }
-    )";
+    )" };
     static constexpr auto INT_UNIFORM{ "intUniform" };
     static constexpr auto FLOAT_UNIFORM{ "floatUniform" };
     static constexpr auto FLOAT_2_UNIFORM{ "float2Uniform" };
