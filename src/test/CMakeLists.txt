@@ -7,6 +7,7 @@ add_executable(${NAME}
     ./core/ShaderTest.cpp
     ./core/TextureTest.cpp
     ./core/resourceManagement/ResourceCacheTest.cpp
+    ./core/resourceManagement/ResourceContextTest.cpp
     ./core/resourceManagement/ResourceLoaderTest.cpp
     ./ecs/ComponentArrayTest.cpp
     ./ecs/EntityManagerTest.cpp
