@@ -8,6 +8,7 @@ add_library(${NAME}
     ./core/TextRenderer.cpp
     ./core/Texture.cpp
     ./core/resourceManagement/ResourceContext.cpp
+    ./core/resourceManagement/ResourceLoader.cpp
     ./ecs/EntityManager.cpp
     ./ecs/systems/ButtonSystem.cpp
     ./ecs/systems/LayoutSystem.cpp
@@ -28,8 +29,12 @@ target_sources(${NAME}
             ./core/TextRenderer.hpp
             ./core/Texture.hpp
             ./core/Utility.hpp
+            ./core/resourceManagement/IntermediateResourceData.hpp
+            ./core/resourceManagement/IResourceLoader.hpp
             ./core/resourceManagement/ResourceCache.hpp
             ./core/resourceManagement/ResourceContext.hpp
+            ./core/resourceManagement/ResourceError.hpp
+            ./core/resourceManagement/ResourceLoader.hpp
             ./ecs/ComponentArray.hpp
             ./ecs/ComponentRegistry.hpp
             ./ecs/ECSUtility.hpp

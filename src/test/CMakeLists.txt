@@ -6,6 +6,7 @@ add_executable(${NAME}
     ./testMain.cpp
     ./core/ShaderTest.cpp
     ./core/TextureTest.cpp
+    ./core/resourceManagement/ResourceLoaderTest.cpp
     ./ecs/ComponentArrayTest.cpp
     ./ecs/EntityManagerTest.cpp
     ./ecs/ComponentRegistryTest.cpp
@@ -19,7 +20,9 @@ target_sources(${NAME}
         FILE_SET HEADERS
         FILES
             ./fixtures/OpenGLTestFixture.hpp
+            ./mocks/MockResourceLoader.hpp
             ./testUtility/RandomNumberGenerator.hpp
+            ./testUtility/ResourceGenerator.hpp
 )
 
 target_compile_features(${NAME} PRIVATE cxx_std_23)
