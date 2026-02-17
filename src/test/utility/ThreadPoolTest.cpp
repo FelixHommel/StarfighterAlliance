@@ -112,14 +112,12 @@ TEST_F(ThreadPoolTest, ShutdownCancel)
             completed.fetch_add(1, std::memory_order_relaxed);
         }));
     }
-    
+
     startedTasks.wait();
 
     for(int i{ 0 }; i < NUM_TASKS_AFTERWARDS; ++i)
     {
-        futures.push_back(pool.enqueue([&completed]() {
-            completed.fetch_add(1, std::memory_order_relaxed);
-        }));
+        futures.push_back(pool.enqueue([&completed]() { completed.fetch_add(1, std::memory_order_relaxed); }));
     }
 
     pool.shutdown(false);
@@ -137,7 +135,10 @@ TEST_F(ThreadPoolTest, WorkerThrowsException)
 
     ThreadPool pool(THREAD_POOL_SIZE);
 
-    auto f{ pool.enqueue([]() -> int { throw std::runtime_error("error"); return 1; }) };
+    auto f{ pool.enqueue([]() -> int {
+        throw std::runtime_error("error");
+        return 1;
+    }) };
 
     EXPECT_THROW({ f.get(); }, std::runtime_error);
 }

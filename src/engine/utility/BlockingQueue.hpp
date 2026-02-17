@@ -2,6 +2,7 @@
 #define SFA_SRC_ENGINE_UTILITY_BLOCKING_QUEUE_HPP
 
 #include <condition_variable>
+#include <cstddef>
 #include <mutex>
 #include <optional>
 #include <queue>
@@ -86,6 +87,13 @@ public:
         std::lock_guard lock(m_mutex);
 
         return m_queue.empty();
+    }
+
+    [[nodiscard]] std::size_t size() const
+    {
+        std::lock_guard lock(m_mutex);
+
+        return m_queue.size();
     }
 
     /// \brief Try to take an element out of the queue.

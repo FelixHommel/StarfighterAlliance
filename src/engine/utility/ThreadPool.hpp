@@ -58,14 +58,12 @@ public:
     {
         using R = std::invoke_result_t<std::decay_t<F>, std::decay_t<Args>...>;
 
-        auto task{
-            std::make_shared<std::packaged_task<R()>>(
-                [func = std::decay_t<F>(std::forward<F>(f)),
-                 tup = std::tuple<std::decay_t<Args>...>(std::forward<Args>(args)...)]() mutable -> R {
-                    return std::apply(func, tup);
-                }
-            )
-        };
+        auto task{ std::make_shared<std::packaged_task<R()>>(
+            [func = std::decay_t<F>(std::forward<F>(f)),
+             tup = std::tuple<std::decay_t<Args>...>(std::forward<Args>(args)...)]() mutable -> R {
+                return std::apply(func, tup);
+            }
+        ) };
 
         auto future{ task->get_future() };
 

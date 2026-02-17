@@ -91,12 +91,12 @@ TEST_F(BlockingQueueTest, CloseWhileWatching)
 
     std::atomic<bool> consumerExited{ false };
 
-    std::jthread consumer{ [&]() { 
+    std::jthread consumer{ [&]() {
         const auto v{ m_queue.waitAndPop() };
         EXPECT_FALSE(v.has_value());
 
         consumerExited = true;
-    }};
+    } };
 
     std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_DELAY));
 

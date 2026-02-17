@@ -15,6 +15,9 @@ namespace sfa
 
 ThreadPool::ThreadPool(std::size_t nThreads)
 {
+    if(nThreads < 1)
+        nThreads = 1;
+
     m_workers.reserve(nThreads);
 
     for(auto i{ 0 }; i < nThreads; ++i)
@@ -36,9 +39,7 @@ void ThreadPool::shutdown(bool drainQueue) noexcept
         }
 
         std::unique_lock lock(m_mutex);
-        m_drainingComplete.wait(lock, [this]() {
-            return m_queue.empty();
-        });
+        m_drainingComplete.wait(lock, [this]() { return m_queue.empty(); });
     }
     else
     {
@@ -67,9 +68,7 @@ void ThreadPool::worker(std::stop_token st)
 
         {
             std::unique_lock lock(m_mutex);
-            m_signal.wait(lock, [&]() {
-                return st.stop_requested() || !m_queue.empty();
-            });
+            m_signal.wait(lock, [&]() { return st.stop_requested() || !m_queue.empty(); });
 
             // NOTE:
             // If queue is in draining mode, finish the current queue
