@@ -9,6 +9,7 @@ add_executable(${NAME}
     ./ecs/ComponentArrayTest.cpp
     ./ecs/EntityManagerTest.cpp
     ./ecs/ComponentRegistryTest.cpp
+    ./testUtility/stb_image_write_impl.cpp
     ./utility/BlockingQueueTest.cpp
     ./utility/ThreadPoolTest.cpp
 )
