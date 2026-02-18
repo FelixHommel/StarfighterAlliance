@@ -78,7 +78,6 @@ public:
     // NOLINTNEXTLINE(bugprone-forwarding-reference-overload): thread_t should accept a rvalue function like object
     explicit thread_t(F&& f)
     {
-        m_source = stop_source_t{};
         auto token{ m_source.get_token() };
 
         m_thread = std::thread([func = std::forward<F>(f), token]() mutable { func(token); });
