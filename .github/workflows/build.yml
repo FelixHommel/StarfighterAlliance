@@ -76,10 +76,11 @@ jobs:
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
         -DSFA_ENABLE_ASSERTIONS=ON
+        -DSFA_ENABLE_CLANG_TIDY=OFF
         -DCMAKE_C_COMPILER=gcc-14
         -DCMAKE_CXX_COMPILER=g++-14
 
-    - name: Configure CMake Linux and Mac
+    - name: Configure CMake MacOS
       if: runner.os == 'macOS'
       run: >
         cmake -S . -B build/${{ runner.os }}/${{ matrix.config }}
@@ -90,6 +91,7 @@ jobs:
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
         -DSFA_ENABLE_ASSERTIONS=ON
+        -DSFA_ENABLE_CLANG_TIDY=OFF
         -DCMAKE_OSX_DEPLOYMENT_TARGET=13.3
 
     - name: Configure CMake Windows
@@ -103,6 +105,7 @@ jobs:
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
         -DSFA_ENABLE_ASSERTIONS=ON
+        -DSFA_ENABLE_CLANG_TIDY=OFF
         -DWARNINGS_AS_ERRORS=OFF
 
     - name: Build Linux and Mac
