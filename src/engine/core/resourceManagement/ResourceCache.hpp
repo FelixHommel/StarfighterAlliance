@@ -2,6 +2,7 @@
 #define SFA_SRC_ENGINE_CORE_RESOURCE_MANAGEMENT_RESOURCE_CACHE_HPP
 
 #include "spdlog/spdlog.h"
+#include "fmt/format.h"
 
 #include <cstddef>
 #include <memory>
@@ -59,7 +60,7 @@ public:
         if(it == m_resources.end())
         {
             // TODO: replace with custom exception
-            throw std::runtime_error("resource not found");
+            throw std::runtime_error(fmt::format("No resource not found at key '{}'", key));
         }
 
         return it->second;
@@ -78,7 +79,7 @@ public:
         if(it == m_resources.end())
         {
             // TODO: replace with custom exception
-            throw std::runtime_error("resource not found");
+            throw std::runtime_error(fmt::format("No resource not found at key '{}'", key));
         }
 
         return it->second;
