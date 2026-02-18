@@ -46,7 +46,7 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         sudo apt-get update
-        sudo apt-get install -y libgl1-mesa-dev libglu1-mesa-dev xorg-dev xvfb
+        sudo apt-get install -y libgl1-mesa-dev libglu1-mesa-dev xorg-dev xvfb gcc-14 g++-14
 
     - name: Setup vcpkg
       uses: lukka/run-vcpkg@5e0cab206a5ea620130caf672fce3e4a6b5666a1 # v11.5
@@ -65,8 +65,8 @@ jobs:
         restore-keys: |
           vcpkg-bin-${{ runner.os }}
 
-    - name: Configure CMake Linux and Mac
-      if: runner.os != 'Windows'
+    - name: Configure CMake Linux
+      if: runner.os == 'Linux'
       run: >
         cmake -S . -B build/${{ runner.os }}/${{ matrix.config }}
         -G Ninja
@@ -76,6 +76,21 @@ jobs:
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
         -DSFA_ENABLE_ASSERTIONS=ON
+        -DCMAKE_C_COMPILER=gcc-14
+        -DCMAKE_CXX_COMPILER=g++-14
+
+    - name: Configure CMake Linux and Mac
+      if: runner.os == 'macOS'
+      run: >
+        cmake -S . -B build/${{ runner.os }}/${{ matrix.config }}
+        -G Ninja
+        -DCMAKE_BUILD_TYPE=${{ matrix.config }}
+        -DCMAKE_C_COMPILER_LAUNCHER=ccache
+        -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+        -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+        -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
+        -DSFA_ENABLE_ASSERTIONS=ON
+        -DCMAKE_OSX_DEPLOYMENT_TARGET=13.3
 
     - name: Configure CMake Windows
       if: runner.os == 'Windows'
