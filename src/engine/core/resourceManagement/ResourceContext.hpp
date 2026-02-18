@@ -39,7 +39,7 @@ public:
         std::string name;
         std::filesystem::path vert;
         std::filesystem::path frag;
-        std::filesystem::path geom{ "" };
+        std::filesystem::path geom;
     };
 
     /// \brief Containing information needed to load and upload a texture.
