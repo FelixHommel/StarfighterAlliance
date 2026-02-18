@@ -39,8 +39,8 @@ public:
 
     ~ResourceGenerator() { std::filesystem::remove_all(m_tempDirPath); }
 
-    ResourceGenerator(const ResourceGenerator&) = default;
-    ResourceGenerator& operator=(const ResourceGenerator&) = default;
+    ResourceGenerator(const ResourceGenerator&) = delete;
+    ResourceGenerator& operator=(const ResourceGenerator&) = delete;
     ResourceGenerator(ResourceGenerator&&) noexcept = delete;
     ResourceGenerator& operator=(ResourceGenerator&&) noexcept = delete;
 
