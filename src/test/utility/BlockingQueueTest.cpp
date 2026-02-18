@@ -1,4 +1,5 @@
 #include "utility/BlockingQueue.hpp"
+
 #include "utility/details/Threading.hpp"
 
 #include <gtest/gtest.h>
@@ -50,7 +51,7 @@ TEST_F(BlockingQueueTest, MultipleProducersMultipleConsumers)
     std::vector<threading::thread_t> producers;
     for(int p{ 0 }; p < NUM_PRODUCERS; ++p)
     {
-        producers.emplace_back([&, p]() {
+        producers.emplace_back([this, &start_barrier, p]() {
             start_barrier.arrive_and_wait();
 
             for(int i{ 0 }; i < ITEMS_PER_PRODUCER; ++i)
@@ -61,7 +62,7 @@ TEST_F(BlockingQueueTest, MultipleProducersMultipleConsumers)
     std::vector<threading::thread_t> consumers;
     for(int c{ 0 }; c < NUM_CONSUMERS; ++c)
     {
-        consumers.emplace_back([&]() {
+        consumers.emplace_back([this, &start_barrier, &sum, &consumed]() {
             start_barrier.arrive_and_wait();
 
             while(const auto v{ m_queue.waitAndPop() })
@@ -92,7 +93,7 @@ TEST_F(BlockingQueueTest, CloseWhileWatching)
 
     std::atomic<bool> consumerExited{ false };
 
-    threading::thread_t consumer{ [&]() {
+    threading::thread_t consumer{ [this, &consumerExited]() {
         const auto v{ m_queue.waitAndPop() };
         EXPECT_FALSE(v.has_value());
 
