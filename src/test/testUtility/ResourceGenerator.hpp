@@ -79,7 +79,9 @@ private:
         auto path{ m_tempDirPath / "test.png" };
 
         stbi_write_png(
-            reinterpret_cast<const char*>(path.u8string().c_str()), // NOTE: Ensure windows compatibility by using u8string
+            reinterpret_cast<const char*>(
+                path.u8string().c_str()
+            ), // NOTE: Ensure windows compatibility by using u8string
             IMAGE_WIDTH,
             IMAGE_HEIGHT,
             IMAGE_CHANNELS,

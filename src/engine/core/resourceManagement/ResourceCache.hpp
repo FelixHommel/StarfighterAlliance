@@ -1,8 +1,8 @@
 #ifndef SFA_SRC_ENGINE_CORE_RESOURCE_MANAGEMENT_RESOURCE_CACHE_HPP
 #define SFA_SRC_ENGINE_CORE_RESOURCE_MANAGEMENT_RESOURCE_CACHE_HPP
 
-#include "spdlog/spdlog.h"
 #include "fmt/format.h"
+#include "spdlog/spdlog.h"
 
 #include <cstddef>
 #include <memory>

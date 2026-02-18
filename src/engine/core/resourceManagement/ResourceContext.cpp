@@ -42,7 +42,7 @@ void ResourceContext::processUploadQueue(std::size_t maxUploads)
     // NOTE: This style of for loop is an imitation for the non-existing while loop with init statement
 
     while(maxUploads == 0 || processed < maxUploads)
-    { 
+    {
         if(const auto& task{ m_uploadQueue.tryPop() }; task.has_value())
         {
             processUploadTask(*task);
