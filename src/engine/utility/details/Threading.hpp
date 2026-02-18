@@ -14,6 +14,7 @@
 #    include <atomic>
 #    include <memory>
 #    include <thread>
+#    include <type_traits>
 #    include <utility>
 #endif
 
@@ -78,9 +79,12 @@ public:
     // NOLINTNEXTLINE(bugprone-forwarding-reference-overload): thread_t should accept a rvalue function like object
     explicit thread_t(F&& f)
     {
-        auto token{ m_source.get_token() };
-
-        m_thread = std::thread([func = std::forward<F>(f), token]() mutable { func(token); });
+        m_thread = std::thread([func = std::forward<F>(f), token = m_source.get_token()]() mutable {
+            if constexpr(std::is_invocable_v<F&, stop_token_t>)
+                func(token);
+            else
+                func();
+        });
     }
     ~thread_t()
     {
