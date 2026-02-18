@@ -12,7 +12,6 @@
 #include <cstddef>
 #include <exception>
 #include <memory>
-#include <mutex>
 #include <string>
 #include <thread>
 #include <utility>
@@ -41,19 +40,28 @@ void ResourceContext::processUploadQueue(std::size_t maxUploads)
 {
     std::size_t processed{ 0 };
     // NOTE: This style of for loop is an imitation for the non-existing while loop with init statement
-    for(auto task{ m_uploadQueue.tryPop() }; task && (maxUploads == 0 || processed < maxUploads);
-        task = m_uploadQueue.tryPop())
-    {
-        processUploadTask(*task);
 
-        if(m_inFlight.fetch_sub(1) == 1)
+    while(maxUploads == 0 || processed < maxUploads)
+    { 
+        if(const auto& task{ m_uploadQueue.tryPop() }; task.has_value())
         {
-            std::lock_guard lock(m_doneMutex);
-            m_done.notify_all();
-        }
+            processUploadTask(*task);
 
-        ++processed;
+            m_inFlight.fetch_sub(1);
+            ++processed;
+        }
+        else
+            break;
     }
+
+    // for(auto task{ m_uploadQueue.tryPop() }; task && (maxUploads == 0 || processed < maxUploads);
+    //     task = m_uploadQueue.tryPop())
+    // {
+    //     processUploadTask(*task);
+    //
+    //     m_inFlight.fetch_sub(1);
+    //     ++processed;
+    // }
 }
 
 void ResourceContext::waitForAllUploads()
