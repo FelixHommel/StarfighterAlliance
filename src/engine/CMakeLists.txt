@@ -60,6 +60,7 @@ target_sources(${NAME}
             ./ecs/systems/TextRenderSystem.hpp
             ./utility/BlockingQueue.hpp
             ./utility/ThreadPool.hpp
+            ./utility/details/Threading.hpp
 )
 
 target_compile_features(${NAME} PRIVATE cxx_std_23)

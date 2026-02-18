@@ -1,14 +1,15 @@
 #include "ThreadPool.hpp"
 
+#include "utility/details/Threading.hpp"
+
+#include <spdlog/spdlog.h>
+
 #include <cstddef>
 #include <exception>
 #include <functional>
 #include <mutex>
 #include <queue>
-#include <stop_token>
 #include <utility>
-
-#include <spdlog/spdlog.h>
 
 namespace sfa
 {
@@ -21,7 +22,7 @@ ThreadPool::ThreadPool(std::size_t nThreads)
     m_workers.reserve(nThreads);
 
     for(std::size_t i{ 0 }; i < nThreads; ++i)
-        m_workers.emplace_back([this](std::stop_token st) { worker(st); });
+        m_workers.emplace_back([this](threading::stop_token_t st) { worker(st); });
 }
 
 ThreadPool::~ThreadPool()
@@ -60,7 +61,7 @@ void ThreadPool::shutdown(bool drainQueue) noexcept
 }
 
 /// \brief Wrapper function that invokes the enqueued tasks
-void ThreadPool::worker(std::stop_token st)
+void ThreadPool::worker(threading::stop_token_t st)
 {
     for(;;)
     {

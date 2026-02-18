@@ -2,6 +2,7 @@
 #define SFA_SRC_ENGINE_UTILITY_THREAD_POOL_HPP
 
 #include "core/Utility.hpp"
+#include "utility/details/Threading.hpp"
 
 #include <algorithm>
 #include <condition_variable>
@@ -11,8 +12,6 @@
 #include <memory>
 #include <mutex>
 #include <queue>
-#include <stop_token>
-#include <thread>
 #include <tuple>
 #include <type_traits>
 #include <utility>
@@ -96,14 +95,14 @@ public:
     }
 
 private:
-    std::vector<std::jthread> m_workers;
+    std::vector<threading::thread_t> m_workers;
     mutable std::mutex m_mutex;
     std::condition_variable m_signal;
     std::condition_variable m_drainingComplete;
     std::queue<std::function<void()>> m_queue;
     bool m_draining{ false };
 
-    void worker(std::stop_token stopToken);
+    void worker(threading::stop_token_t stopToken);
 };
 
 } // namespace sfa
