@@ -53,7 +53,8 @@ LoadResult ResourceLoader::loadTexture(const std::filesystem::path& filepath)
     int width{};
     int height{};
     int nrChannels{};
-    stbi_uc* imageData{ stbi_load(filepath.c_str(), &width, &height, &nrChannels, 0) };
+    // NOTE: Need to access filepath as u8string to ensure windows file paths are accessed in the right way
+    stbi_uc* imageData{ stbi_load(reinterpret_cast<const char*>(filepath.u8string().c_str()), &width, &height, &nrChannels, 0) };
 
     if(imageData == nullptr)
         return std::unexpected(
