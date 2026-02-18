@@ -3,7 +3,7 @@ issue_templates:
   - name: Job Story
     description: Describe what Job need to be done. Good for a general overview of a broad Task.
     title: "[Job] "
-    labels: [job-story]
+    lables: [job-story]
     file: job-story.md
   - name: Problem Story
     description: Document bugs, unsolved design issues and other problems.
