@@ -11,6 +11,7 @@
 #include <expected>
 #include <filesystem>
 #include <fstream>
+#include <limits>
 #include <sstream>
 #include <utility>
 #include <vector>
@@ -54,14 +55,43 @@ LoadResult ResourceLoader::loadTexture(const std::filesystem::path& filepath)
     int height{};
     int nrChannels{};
     // NOTE: Need to access filepath as u8string to ensure windows file paths are accessed in the right way
-    stbi_uc* imageData{ stbi_load(reinterpret_cast<const char*>(filepath.u8string().c_str()), &width, &height, &nrChannels, 0) };
+    stbi_uc* imageData{
+        stbi_load(reinterpret_cast<const char*>(filepath.u8string().c_str()), &width, &height, &nrChannels, 0)
+    };
 
     if(imageData == nullptr)
         return std::unexpected(
             ResourceError::invalidFormat(filepath, fmt::format("stb_image failed: {}", stbi_failure_reason()))
         );
 
-    const auto size{ static_cast<std::size_t>(width * height * nrChannels) };
+    if(width <= 0 || height <= 0 || nrChannels <= 0)
+    {
+        stbi_image_free(imageData);
+        return std::unexpected(
+            ResourceError::invalidFormat(
+                filepath,
+                fmt::format("Invalid image dimensions (width: {}, height: {}, channels: {})", width, height, nrChannels)
+            )
+        );
+    }
+
+    const auto w{ static_cast<std::size_t>(width) };
+    const auto h{ static_cast<std::size_t>(height) };
+    const auto c{ static_cast<std::size_t>(nrChannels) };
+
+    if(w > std::numeric_limits<std::size_t>::max() / h || w * h > std::numeric_limits<std::size_t>::max() / c)
+    {
+        stbi_image_free(imageData);
+        return std::unexpected(
+            ResourceError::invalidFormat(
+                filepath,
+                fmt::format("Image size overflow (width: {}, height: {}, channels: {})", width, height, nrChannels)
+            )
+        );
+    }
+
+    const auto size{ w * h * c };
+
     std::vector<std::byte> pixels(size);
     std::memcpy(pixels.data(), imageData, size);
     stbi_image_free(imageData);
