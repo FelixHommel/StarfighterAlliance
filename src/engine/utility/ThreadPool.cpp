@@ -20,7 +20,7 @@ ThreadPool::ThreadPool(std::size_t nThreads)
 
     m_workers.reserve(nThreads);
 
-    for(auto i{ 0 }; i < nThreads; ++i)
+    for(std::size_t i{ 0 }; i < nThreads; ++i)
         m_workers.emplace_back([this](std::stop_token st) { worker(st); });
 }
 
