@@ -77,13 +77,13 @@ target_link_libraries(${NAME}
         Glad2CMake::glad2cmake
         glfw
         glm::glm
+        spdlog::spdlog
     PRIVATE
         project_warnings
         OpenGL::GL
         SQLiteCpp
         Freetype::Freetype
         nlohmann_json::nlohmann_json
-        spdlog::spdlog
         valijson
         fmt::fmt
 )
