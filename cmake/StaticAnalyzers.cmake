@@ -1,14 +1,21 @@
 if(NOT CMAKE_BUILD_TYPE STREQUAL "Release")
-    find_program(CLANGTIDY clang-tidy)
-    if(CLANGTIDY)
-        message(STATUS "Using clang-tidy")
-        set(CMAKE_CXX_CLANG_TIDY "${CLANGTIDY};-extra-arg=-Wno-unknown-warning-option")
+    option(SFA_ENABLE_CLANG_TIDY "Enable clang-tidy during compilation" ON)
 
-        if(WIN32)
-            set(CMAKE_CXX_CLANG_TIDY "${CLANGTIDY};--extra-arg=/EHsc")
+    if(SFA_ENABLE_CLANG_TIDY)
+        find_program(CLANGTIDY clang-tidy)
+
+        if(CLANGTIDY)
+            message(STATUS "Using clang-tidy")
+            set(CMAKE_CXX_CLANG_TIDY "${CLANGTIDY};-extra-arg=-Wno-unknown-warning-option")
+
+            if(WIN32)
+                set(CMAKE_CXX_CLANG_TIDY "${CLANGTIDY};--extra-arg=/EHsc")
+            endif()
+        else()
+            message(WARNING "clang-tidy requested but executable not found")
         endif()
     else()
-        message(WARNING "clang-tidy requested but executable not found")
+        message(STATUS "clang-tidy integration disabled")
     endif()
 
     if(NOT WIN32)
