@@ -14,7 +14,7 @@ jobs:
     - name: Install Dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y lcov libgl1-mesa-dev libglu1-mesa-dev xorg-dev xvfb gcc-14 g++-14
+        sudo apt-get install -y lcov libgl1-mesa-dev libglu1-mesa-dev xorg-dev xvfb
 
     - name: Install CMake and Ninja
       uses: lukka/get-cmake@f176ccd3f28bda569c43aae4894f06b2435a3375 # v4.2.3
@@ -42,7 +42,7 @@ jobs:
       uses: lukka/run-cmake@af1be47fd7c933593f687731bc6fdbee024d3ff4 # v10.8
       with:
         configurePreset: code-coverage 
-        configurePresetAdditionalArgs: "[`-DCMAKE_CXX_COMPILER=g++-14`, `-DCMAKE_C_COMPILER=gcc-14`, `-DSFA_ENABLE_CLANG_TIDY=OFF`]"
+        configurePresetAdditionalArgs: "[`-DSFA_ENABLE_CLANG_TIDY=OFF`]"
         buildPreset: code-coverage
 
     - name: Run Tests
