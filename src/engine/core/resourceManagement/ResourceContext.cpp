@@ -32,8 +32,16 @@ ResourceContext::~ResourceContext()
 
 void ResourceContext::requestResource(const ResourceRequest& request)
 {
-    m_inFlight.fetch_add(1);
-    std::visit([this](const auto& req) { this->enqueueLoadTask(req); }, request);
+    try
+    {
+        std::visit([this](const auto& req) { this->enqueueLoadTask(req); }, request);
+        m_inFlight.fetch_add(1);
+    }
+    catch(const std::exception& e)
+    {
+        spdlog::error("Failed to enqueue resource request: {}", e.what());
+        throw;
+    }
 }
 
 void ResourceContext::processUploadQueue(std::size_t maxUploads)
