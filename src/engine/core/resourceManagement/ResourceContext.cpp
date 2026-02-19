@@ -26,7 +26,7 @@ ResourceContext::ResourceContext(std::unique_ptr<IResourceLoader> loader)
 
 ResourceContext::~ResourceContext()
 {
-    m_threadPool->shutdown(false);
+    m_threadPool->shutdown(true);
     m_uploadQueue.close();
 }
 
