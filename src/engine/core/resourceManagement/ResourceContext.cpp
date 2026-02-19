@@ -44,7 +44,7 @@ void ResourceContext::processUploadQueue(std::size_t maxUploads)
         {
             processUploadTask(*task);
 
-            m_inFlight.fetch_sub(1);
+            m_inFlight.fetch_sub(1, std::memory_order_release);
             ++processed;
         }
         else
