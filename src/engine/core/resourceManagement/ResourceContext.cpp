@@ -32,16 +32,7 @@ ResourceContext::~ResourceContext()
 
 void ResourceContext::requestResource(const ResourceRequest& request)
 {
-    try
-    {
-        std::visit([this](const auto& req) { this->enqueueLoadTask(req); }, request);
-        m_inFlight.fetch_add(1);
-    }
-    catch(const std::exception& e)
-    {
-        spdlog::error("Failed to enqueue resource request: {}", e.what());
-        throw;
-    }
+    std::visit([this](const auto& req) { this->enqueueLoadTask(req); }, request);
 }
 
 void ResourceContext::processUploadQueue(std::size_t maxUploads)
@@ -82,9 +73,9 @@ void ResourceContext::clear()
 void ResourceContext::enqueueLoadTask(const ShaderLoadRequest& request)
 {
     m_threadPool->enqueue([this, req = request]() {
-        const auto loadResult{ m_loader->loadShader(req.vert, req.frag, req.geom) };
+        m_inFlight.fetch_add(1);
 
-        m_uploadQueue.emplace(req.name, std::move(loadResult));
+        m_uploadQueue.emplace(req.name, m_loader->loadShader(req.vert, req.frag, req.geom));
     });
 }
 
@@ -94,9 +85,9 @@ void ResourceContext::enqueueLoadTask(const ShaderLoadRequest& request)
 void ResourceContext::enqueueLoadTask(const TextureLoadRequest& request)
 {
     m_threadPool->enqueue([this, req = request]() {
-        const auto loadResult{ m_loader->loadTexture(req.filepath) };
+        m_inFlight.fetch_add(1);
 
-        m_uploadQueue.emplace(req.name, std::move(loadResult));
+        m_uploadQueue.emplace(req.name, m_loader->loadTexture(req.filepath));
     });
 }
 
