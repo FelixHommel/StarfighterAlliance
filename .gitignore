@@ -3,6 +3,7 @@
 .vscode
 build
 *.db3
+docs
 
 # LSPs
 .clangd
