@@ -8,6 +8,7 @@ add_library(${NAME}
     ./core/TextRenderer.cpp
     ./core/Texture.cpp
     ./core/resourceManagement/ResourceContext.cpp
+    ./core/resourceManagement/ResourceLoader.cpp
     ./ecs/EntityManager.cpp
     ./ecs/systems/ButtonSystem.cpp
     ./ecs/systems/LayoutSystem.cpp
@@ -15,6 +16,7 @@ add_library(${NAME}
     ./ecs/systems/SpriteRenderSystem.cpp
     ./ecs/systems/TextRenderSystem.cpp
     ./external/stb_image_impl.cpp
+    ./utility/ThreadPool.cpp
 )
 
 target_sources(${NAME}
@@ -27,8 +29,12 @@ target_sources(${NAME}
             ./core/TextRenderer.hpp
             ./core/Texture.hpp
             ./core/Utility.hpp
+            ./core/resourceManagement/IntermediateResourceData.hpp
+            ./core/resourceManagement/IResourceLoader.hpp
             ./core/resourceManagement/ResourceCache.hpp
             ./core/resourceManagement/ResourceContext.hpp
+            ./core/resourceManagement/ResourceError.hpp
+            ./core/resourceManagement/ResourceLoader.hpp
             ./ecs/ComponentArray.hpp
             ./ecs/ComponentRegistry.hpp
             ./ecs/ECSUtility.hpp
@@ -52,6 +58,9 @@ target_sources(${NAME}
             ./ecs/systems/MovementSystem.hpp
             ./ecs/systems/SpriteRenderSystem.hpp
             ./ecs/systems/TextRenderSystem.hpp
+            ./utility/BlockingQueue.hpp
+            ./utility/ThreadPool.hpp
+            ./utility/details/Threading.hpp
 )
 
 target_compile_features(${NAME} PRIVATE cxx_std_23)
@@ -69,13 +78,13 @@ target_link_libraries(${NAME}
         Glad2CMake::glad2cmake
         glfw
         glm::glm
+        spdlog::spdlog
     PRIVATE
         project_warnings
         OpenGL::GL
         SQLiteCpp
         Freetype::Freetype
         nlohmann_json::nlohmann_json
-        spdlog::spdlog
         valijson
         fmt::fmt
 )
