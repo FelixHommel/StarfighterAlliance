@@ -92,7 +92,6 @@ jobs:
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
         -DSFA_ENABLE_ASSERTIONS=ON
         -DSFA_ENABLE_CLANG_TIDY=OFF
-        -DCMAKE_OSX_DEPLOYMENT_TARGET=13.3
 
     - name: Configure CMake Windows
       if: runner.os == 'Windows'
