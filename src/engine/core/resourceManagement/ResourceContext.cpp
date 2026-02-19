@@ -53,15 +53,6 @@ void ResourceContext::processUploadQueue(std::size_t maxUploads)
         else
             break;
     }
-
-    // for(auto task{ m_uploadQueue.tryPop() }; task && (maxUploads == 0 || processed < maxUploads);
-    //     task = m_uploadQueue.tryPop())
-    // {
-    //     processUploadTask(*task);
-    //
-    //     m_inFlight.fetch_sub(1);
-    //     ++processed;
-    // }
 }
 
 void ResourceContext::waitForAllUploads()
