@@ -84,7 +84,7 @@ public:
     /// \note Returned value is a point-in-time snapshot
     ///
     /// \returns *true* if it is empty, *false* otherwise
-    [[nodiscard]] bool empty() const
+    [[nodiscard]] bool empty() const noexcept
     {
         std::lock_guard lock(m_mutex);
 
@@ -96,7 +96,7 @@ public:
     /// \note Returned value is a point-in-time snapshot
     ///
     /// \returns how many tasks are enqueued
-    [[nodiscard]] std::size_t size() const
+    [[nodiscard]] std::size_t size() const noexcept
     {
         std::lock_guard lock(m_mutex);
 
