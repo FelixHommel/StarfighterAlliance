@@ -44,7 +44,7 @@ function(set_project_warnings project_name)
         message(STATUS "Compiling with warnings as errors")
         set(MSVC_WARNINGS ${MSVC_WARNINGS} /WX)
         set(CLANG_WARNINGS ${CLANG_WARNINGS} -Werror)
-    elseif()
+    else()
         message(STATUS "Not compiling with warnings as errors")
     endif()
 
