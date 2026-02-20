@@ -3,7 +3,7 @@
 
 #include <version>
 
-#if !defined(__cpp_lib_jthread) && __cpp_lib_jthread >= 201911L
+#if defined(__cpp_lib_jthread) && __cpp_lib_jthread >= 201911L
 #    define HAS_JTHREAD
 #endif
 
