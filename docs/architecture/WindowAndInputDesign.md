@@ -2,7 +2,7 @@
 
 ## Dependency Flowchart
 
-The ```Window``` and ```InputController``` system are closely related to each other, because in many windowing libraries
+The ```IWindow``` and ```IInputController``` system are closely related to each other, because in many windowing libraries
 (i.e., GLFW) user input is coupled with window events. The engine should not be restricted by this coupling and should
 not be dependent on a specific windowing library.
 
@@ -21,7 +21,7 @@ flowchart
 ## Class Diagram
 
 This class diagram shows the conceptual architecture using adapters to translate GLFW events to an engine native event
-format, thereby directly eliminates the close coupling of GLFW into the engine. All that while keeping the concerns as
+format, thereby directly eliminating close coupling of GLFW into the engine. All that while keeping the concerns as
 much separated as possible.
 
 ```mermaid
@@ -126,7 +126,7 @@ classDiagram
 ## Implementation Details
 
 The 3 types of event can be perfectly represented by a ```std::variant``` based approach. That way the
-```IInputController::processEvent(InputEvent ecent)``` method can easily use ```st::visit``` to process all 3 types of
+```IInputController::processEvent(const InputEvent& event)``` method can easily use ```st::visit``` to process all 3 types of
 events.
 Other than that, there is a consideration to make in the ```InputController``` class related to the queue-based
 event approach:
