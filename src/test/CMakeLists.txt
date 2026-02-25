@@ -18,6 +18,7 @@ add_executable(${NAME}
     ./utility/exceptions/ExceptionTest.cpp
     ./utility/exceptions/ResourceUnavailableExceptionTest.cpp
     ./utility/exceptions/WindowCreationExceptionTest.cpp
+    ./utility/userInput/InputControllerTest.cpp
 )
 
 target_sources(${NAME}
