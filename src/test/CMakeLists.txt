@@ -17,6 +17,7 @@ add_executable(${NAME}
     ./utility/ThreadPoolTest.cpp
     ./utility/exceptions/ExceptionTest.cpp
     ./utility/exceptions/ResourceUnavailableExceptionTest.cpp
+    ./utility/exceptions/WindowCreationExceptionTest.cpp
 )
 
 target_sources(${NAME}

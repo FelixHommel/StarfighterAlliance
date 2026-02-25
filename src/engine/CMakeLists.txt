@@ -67,6 +67,7 @@ target_sources(${NAME}
             ./utility/userInput/IInputController.hpp
             ./utility/exceptions/Exception.hpp
             ./utility/exceptions/ResourceUnavailableException.hpp
+            ./utility/exceptions/WindowCreationException.hpp
             ./utility/userInput/InputController.hpp
             ./utility/userInput/InputEvent.hpp
 )
