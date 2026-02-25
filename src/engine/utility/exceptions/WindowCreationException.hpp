@@ -19,7 +19,9 @@ namespace sfa
 class WindowCreationException : public Exception
 {
 public:
-    explicit WindowCreationException(std::string message, std::source_location location = std::source_location::current())
+    explicit WindowCreationException(
+        std::string message, std::source_location location = std::source_location::current()
+    )
         : Exception(std::move(message), std::move(location))
     {}
 };

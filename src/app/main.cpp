@@ -15,8 +15,7 @@ int main()
     GLFWWindow window{ "HelloWorld", TEMP_WINDOW_WIDTH, TEMP_WINDOW_HEIGHT };
 
     while(!window.shouldClose())
-    {
-    }
+    {}
 
     return 0;
 }

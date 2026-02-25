@@ -76,5 +76,5 @@ void InputController::processEvent(const MouseMoveEvent& event)
     m_mousePosY = event.posY;
 }
 
-}
+} // namespace sfa
 

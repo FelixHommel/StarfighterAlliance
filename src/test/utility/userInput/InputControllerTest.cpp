@@ -52,7 +52,7 @@ TEST_F(InputControllerTest, RegisterNewMouseEvent)
 /// When a new \ref MouseMoveEvent is registered, the internal event queue should be increased by one.
 TEST_F(InputControllerTest, RegisterNewMouseMoveEvent)
 {
-    m_controller->registerEvent(MouseMoveEvent{ .posX = 1.f, .posY = 1.f});
+    m_controller->registerEvent(MouseMoveEvent{ .posX = 1.f, .posY = 1.f });
 
     EXPECT_EQ(1, m_controller->queuedEvents());
 }
@@ -139,5 +139,5 @@ TEST_F(InputControllerTest, ProcessUnknownMouseInputEvent)
     EXPECT_EQ(InputAction::Release, m_controller->isMousePressed(MouseButton::Left));
 }
 
-} // namespace sf::testing
+} // namespace sfa::testing
 

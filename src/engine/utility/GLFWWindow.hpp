@@ -51,7 +51,7 @@ public:
 
     /// \brief Attach input controller and register the input controller callbacks with GLFW
     ///
-    /// \param controller 
+    /// \param controller
     void attachInputController(std::shared_ptr<InputController> controller) override;
 
     /// \brief Callback handler for window resize events
@@ -63,10 +63,7 @@ public:
 private:
     struct WindowDeleter
     {
-        void operator()(GLFWwindow* window) const noexcept
-        {
-            glfwDestroyWindow(window);
-        }
+        void operator()(GLFWwindow* window) const noexcept { glfwDestroyWindow(window); }
     };
 
     static constexpr int CONTEXT_VERSION_MAJ{ 3 };
@@ -82,31 +79,44 @@ private:
     {
         switch(key)
         {
-        case GLFW_KEY_W: return Key::W;
-        case GLFW_KEY_A: return Key::A;
-        case GLFW_KEY_S: return Key::S;
-        case GLFW_KEY_D: return Key::D;
-        case GLFW_KEY_ESCAPE: return Key::Esc;
-        default: return Key::Unknown;
+        case GLFW_KEY_W:
+            return Key::W;
+        case GLFW_KEY_A:
+            return Key::A;
+        case GLFW_KEY_S:
+            return Key::S;
+        case GLFW_KEY_D:
+            return Key::D;
+        case GLFW_KEY_ESCAPE:
+            return Key::Esc;
+        default:
+            return Key::Unknown;
         }
     }
     static constexpr MouseButton glfwToButton(int button)
     {
         switch(button)
         {
-        case GLFW_MOUSE_BUTTON_LEFT: return MouseButton::Left;
-        case GLFW_MOUSE_BUTTON_RIGHT: return MouseButton::Right;
-        case GLFW_MOUSE_BUTTON_MIDDLE: return MouseButton::Middle;
-        default: return MouseButton::Unknown;
+        case GLFW_MOUSE_BUTTON_LEFT:
+            return MouseButton::Left;
+        case GLFW_MOUSE_BUTTON_RIGHT:
+            return MouseButton::Right;
+        case GLFW_MOUSE_BUTTON_MIDDLE:
+            return MouseButton::Middle;
+        default:
+            return MouseButton::Unknown;
         }
     }
     static constexpr InputAction glfwToAction(int action)
     {
         switch(action)
         {
-        case GLFW_PRESS: return InputAction::Press;
-        case GLFW_RELEASE: return InputAction::Release;
-        default: return InputAction::Unknown;
+        case GLFW_PRESS:
+            return InputAction::Press;
+        case GLFW_RELEASE:
+            return InputAction::Release;
+        default:
+            return InputAction::Unknown;
         }
     }
     static constexpr KeyboardInputEvent translateKeyEvent(int key, int action);

@@ -8,7 +8,9 @@ namespace
 
 constexpr auto TEST_MESSAGE{ "TestMessage" };
 constexpr auto TEST_KEY{ "Key" };
-constexpr auto throwingStatement = [] { throw sfa::ResourceUnavailableException{ TEST_MESSAGE, TEST_KEY }; };
+constexpr auto throwingStatement = [] {
+    throw sfa::ResourceUnavailableException{ TEST_MESSAGE, TEST_KEY };
+};
 
 } // namespace
 
@@ -30,7 +32,10 @@ TEST(ResourceUnavailableExceptionTest, DefaultConstruction)
 /// When the exception is thrown, the message should contain the message the user specified
 TEST(ResourceUnavailableExceptionTest, ExceptionMessgae)
 {
-    EXPECT_THAT(::throwingStatement, ::testing::ThrowsMessage<ResourceUnavailableException>(::testing::HasSubstr(::TEST_MESSAGE)));
+    EXPECT_THAT(
+        ::throwingStatement,
+        ::testing::ThrowsMessage<ResourceUnavailableException>(::testing::HasSubstr(::TEST_MESSAGE))
+    );
 }
 
 } // namespace sfa::testing

@@ -9,7 +9,9 @@ namespace
 {
 
 constexpr auto TEST_MESSAGE{ "TestMessage" };
-constexpr auto throwingStatement = [] { throw sfa::Exception{ TEST_MESSAGE }; };
+constexpr auto throwingStatement = [] {
+    throw sfa::Exception{ TEST_MESSAGE };
+};
 
 } // namespace
 
@@ -34,5 +36,5 @@ TEST(ExceptionTest, ExceptionMessgae)
     EXPECT_THAT(::throwingStatement, ::testing::ThrowsMessage<Exception>(::testing::HasSubstr(::TEST_MESSAGE)));
 }
 
-} // namespace sf::testing
+} // namespace sfa::testing
 

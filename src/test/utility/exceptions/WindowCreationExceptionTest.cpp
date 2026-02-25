@@ -7,7 +7,9 @@ namespace
 {
 
 constexpr auto TEST_MESSAGE{ "TestMessage" };
-constexpr auto throwingStatement = [] { throw sfa::WindowCreationException{ TEST_MESSAGE }; };
+constexpr auto throwingStatement = [] {
+    throw sfa::WindowCreationException{ TEST_MESSAGE };
+};
 
 } // namespace
 
@@ -29,7 +31,9 @@ TEST(WindowCreationExceptionTest, DefaultConstruction)
 /// When the exception is thrown, the message should contain the message the user specified
 TEST(WindowCreationExceptionTest, ExceptionMessgae)
 {
-    EXPECT_THAT(::throwingStatement, ::testing::ThrowsMessage<WindowCreationException>(::testing::HasSubstr(::TEST_MESSAGE)));
+    EXPECT_THAT(
+        ::throwingStatement, ::testing::ThrowsMessage<WindowCreationException>(::testing::HasSubstr(::TEST_MESSAGE))
+    );
 }
 
 } // namespace sfa::testing

@@ -15,8 +15,7 @@ class Exception : public std::exception
 {
 public:
     explicit Exception(std::string message, std::source_location location = std::source_location::current())
-        : m_message(std::move(message))
-        , m_location(std::move(location))
+        : m_message(std::move(message)), m_location(std::move(location))
     {
         Exception::buildWhatMessage();
     }

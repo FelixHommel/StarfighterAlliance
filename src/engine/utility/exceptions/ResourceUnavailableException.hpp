@@ -19,9 +19,10 @@ namespace sfa
 class ResourceUnavailableException : public Exception
 {
 public:
-    explicit ResourceUnavailableException(std::string message, std::string key, std::source_location location = std::source_location::current())
-        : Exception(std::move(message), std::move(location))
-        , m_key(std::move(key))
+    explicit ResourceUnavailableException(
+        std::string message, std::string key, std::source_location location = std::source_location::current()
+    )
+        : Exception(std::move(message), std::move(location)), m_key(std::move(key))
     {
         ResourceUnavailableException::buildWhatMessage();
     }
