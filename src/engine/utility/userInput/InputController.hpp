@@ -1,35 +1,65 @@
 #ifndef SFA_SRC_ENGINE_UTILITY_INPUT_CONTROLLER_HPP
 #define SFA_SRC_ENGINE_UTILITY_INPUT_CONTROLLER_HPP
 
-#include "utility/IInputController.hpp"
-#include <array>
+#include "utility/userInput/InputEvent.hpp"
+
 #include <cstddef>
+#include <queue>
+#include <unordered_map>
+#include <utility>
 
 namespace sfa
 {
 
-class InputController : public IInputController
+/// \brief The InputController is responsible for processing user input
+///
+/// \author Felix Hommel
+/// \date 2/21/2026
+class InputController
 {
 public:
     InputController() = default;
-    ~InputController() override = default;
+    ~InputController() = default;
 
-    InputController(const InputController&) = default;
-    InputController& operator=(const InputController&) = default;
+    InputController(const InputController&) = delete;
+    InputController& operator=(const InputController&) = delete;
     InputController(InputController&&) noexcept = delete;
     InputController& operator=(InputController&&) noexcept = delete;
 
-    void onKey(int key, int scancode, int action, int mods) override;
-    void onMouseButton(int button, int action, int mods) override;
-    void onMoseMove(double posX, double posY) override;
+    /// \brief Register the occurrence of a new \ref InputEvent.
+    ///
+    /// \param event the new \ref InputEvent
+    void registerEvent(InputEvent event) { m_inputs.push(std::move(event)); }
+    /// \brief Process the queued inputs.
+    void processEventQueue();
+
+    /// \brief Check if a certain key is currently pressed.
+    /// \note Assume Release as state when there has not yet been a state change that was recorded.
+    ///
+    /// \param key the Key to be checked
+    ///
+    /// \returns *Press* if \p key is pressed, *Release* if not
+    [[nodiscard]] InputAction isKeyPressed(Key key) const;
+    /// \brief Check if a certain mouse button is currently pressed.
+    /// \note Assume Release as state when there has not yet been a state change that was recorded.
+    ///
+    /// \param button the button to be checked
+    ///
+    /// \returns *Press* if \p button is pressed, *Release* if not
+    [[nodiscard]] InputAction isMousePressed(MouseButton button) const;
+
+    [[nodiscard]] std::size_t queuedEvents() const noexcept { return m_inputs.size(); }
 
 private:
-    static constexpr std::size_t ARRAY_SIZE{ 50 };
-
-    std::array<bool, ARRAY_SIZE> m_keyStates{};
-    std::array<bool, ARRAY_SIZE> m_mouseStates{};
+    std::queue<InputEvent> m_inputs;
+    std::unordered_map<Key, InputAction> m_keyStates;
+    std::unordered_map<MouseButton, InputAction> m_mouseStates;
     double m_mousePosX{ 0 };
     double m_mousePosY{ 0 };
+
+    void processEvent(const KeyboardInputEvent& event);
+    void processEvent(const MouseInputEvent& event);
+    void processEvent(const MouseMoveEvent& event);
 };
 
 } // namespace sfa

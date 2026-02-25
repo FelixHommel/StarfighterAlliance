@@ -1,7 +1,7 @@
 #ifndef SFA_SRC_ENGINE_UTILITY_I_WINDOW_HPP
 #define SFA_SRC_ENGINE_UTILITY_I_WINDOW_HPP
 
-#include "utility/userInput/IInputController.hpp"
+#include "utility/userInput/InputController.hpp"
 
 #include <memory>
 
@@ -19,7 +19,9 @@ public:
     IWindow(IWindow&&) noexcept = delete;
     IWindow& operator=(IWindow&&) noexcept = delete;
 
-    virtual void attachInputController(std::shared_ptr<IInputController> controller) = 0;
+    [[nodiscard]] virtual bool shouldClose() const = 0;
+
+    virtual void attachInputController(std::shared_ptr<InputController> controller) = 0;
 };
 
 } // namespace sfa

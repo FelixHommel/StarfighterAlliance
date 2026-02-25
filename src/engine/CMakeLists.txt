@@ -18,6 +18,7 @@ add_library(${NAME}
     ./external/stb_image_impl.cpp
     ./utility/GLFWWindow.cpp
     ./utility/ThreadPool.cpp
+    ./utility/userInput/InputController.cpp
 )
 
 target_sources(${NAME}
@@ -64,7 +65,6 @@ target_sources(${NAME}
             ./utility/details/Threading.hpp
             ./utility/GLFWWindow.hpp
             ./utility/IWindow.hpp
-            ./utility/userInput/IInputController.hpp
             ./utility/exceptions/Exception.hpp
             ./utility/exceptions/ResourceUnavailableException.hpp
             ./utility/exceptions/WindowCreationException.hpp

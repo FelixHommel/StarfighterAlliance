@@ -1,6 +1,7 @@
 #include "GLFWWindow.hpp"
 
-#include "utility/userInput/IInputController.hpp"
+#include "utility/exceptions/WindowCreationException.hpp"
+#include "utility/userInput/InputController.hpp"
 #include "utility/userInput/InputEvent.hpp"
 
 #include <glad/gl.h>
@@ -8,20 +9,19 @@
 #include <GLFW/glfw3.h>
 
 #include <memory>
-#include <stdexcept>
 #include <string>
+#include <utility>
 
 namespace sfa
 {
 
 GLFWWindow::GLFWWindow(const std::string& title, int width, int height)
-    : m_window{ std::unique_ptr<GLFWwindow, decltype(WINDOW_DELETER)>(nullptr, WINDOW_DELETER) }
+    : m_window{ std::unique_ptr<GLFWwindow, WindowDeleter>(nullptr, WindowDeleter{}) }
     , m_width{ width }
     , m_height{ height }
 {
     if(glfwInit() == GLFW_FALSE)
-        // TODO: replace with custom exception
-        throw std::runtime_error("Error occured during GLFW initializtion");
+        throw WindowCreationException("Failed to initialize GLFW");
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, CONTEXT_VERSION_MAJ);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, CONTEXT_VERSION_MIN);
@@ -43,8 +43,7 @@ GLFWWindow::GLFWWindow(const std::string& title, int width, int height)
     if(m_window == nullptr)
     {
         glfwTerminate();
-        // TODO: replace with custom exception
-        throw std::runtime_error("Failed to create GLFW window");
+        throw WindowCreationException("Failed to create GLFW window");
     }
 
     glfwMakeContextCurrent(m_window.get());
@@ -53,8 +52,7 @@ GLFWWindow::GLFWWindow(const std::string& title, int width, int height)
     if(gladLoadGL(glfwGetProcAddress) == 0)
     {
         glfwTerminate();
-        // TODO: replace with custom exception
-        throw std::runtime_error("Error occured during GLAD initializtion");
+        throw WindowCreationException("Error occured during GLAD initializtion");
     }
 
     glfwSetFramebufferSizeCallback(m_window.get(), [](GLFWwindow* window, int width, int height) {
@@ -75,7 +73,7 @@ void GLFWWindow::onResize(int width, int height)
     glViewport(0, 0, m_width, m_height);
 }
 
-void GLFWWindow::attachInputController(std::shared_ptr<IInputController> controller)
+void GLFWWindow::attachInputController(std::shared_ptr<InputController> controller)
 {
     if(controller == nullptr)
         return;
