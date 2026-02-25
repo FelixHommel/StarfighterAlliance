@@ -38,7 +38,7 @@ public:
     /// \param title the title of the window
     /// \param width (optional) the with of the window
     /// \param height (optional) the height of the window
-    GLFWWindow(const std::string& title, int width = 0, int height = 0);
+    explicit GLFWWindow(const std::string& title, int width = 0, int height = 0);
     ~GLFWWindow() override;
 
     GLFWWindow(const GLFWWindow&) = delete;
