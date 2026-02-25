@@ -65,6 +65,8 @@ target_sources(${NAME}
             ./utility/GLFWWindow.hpp
             ./utility/IWindow.hpp
             ./utility/userInput/IInputController.hpp
+            ./utility/exceptions/Exception.hpp
+            ./utility/exceptions/ResourceUnavailableException.hpp
             ./utility/userInput/InputController.hpp
             ./utility/userInput/InputEvent.hpp
 )
