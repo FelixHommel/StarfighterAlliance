@@ -1,5 +1,11 @@
 #include "InputController.hpp"
 
+#include "utility/userInput/InputEvent.hpp"
+
+#include <spdlog/spdlog.h>
+
+#include <variant>
+
 namespace sfa
 {
 
@@ -37,7 +43,10 @@ InputAction InputController::isMousePressed(MouseButton button) const
 void InputController::processEvent(const KeyboardInputEvent& event)
 {
     if(event.key == Key::Unknown || event.action == InputAction::Unknown)
+    {
+        spdlog::warn("Keyboard Input Event with unknown parameters processed");
         return;
+    }
 
     m_keyStates.insert_or_assign(event.key, event.action);
 }
@@ -50,7 +59,10 @@ void InputController::processEvent(const KeyboardInputEvent& event)
 void InputController::processEvent(const MouseInputEvent& event)
 {
     if(event.button == MouseButton::Unknown || event.action == InputAction::Unknown)
+    {
+        spdlog::warn("Mouse Input Event with unknown parameters processed");
         return;
+    }
 
     m_mouseStates.insert_or_assign(event.button, event.action);
 }
