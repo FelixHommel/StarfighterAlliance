@@ -32,6 +32,7 @@ ResourceContext::~ResourceContext()
 
 void ResourceContext::requestResource(const ResourceRequest& request)
 {
+    m_inFlight.fetch_add(1, std::memory_order_acq_rel);
     std::visit([this](const auto& req) { this->enqueueLoadTask(req); }, request);
 }
 
@@ -44,7 +45,7 @@ void ResourceContext::processUploadQueue(std::size_t maxUploads)
         {
             processUploadTask(*task);
 
-            m_inFlight.fetch_sub(1, std::memory_order_release);
+            m_inFlight.fetch_sub(1, std::memory_order_acq_rel);
             ++processed;
         }
         else
@@ -73,8 +74,6 @@ void ResourceContext::clear()
 void ResourceContext::enqueueLoadTask(const ShaderLoadRequest& request)
 {
     m_threadPool->enqueue([this, req = request]() {
-        m_inFlight.fetch_add(1);
-
         m_uploadQueue.emplace(req.name, m_loader->loadShader(req.vert, req.frag, req.geom));
     });
 }
@@ -85,8 +84,6 @@ void ResourceContext::enqueueLoadTask(const ShaderLoadRequest& request)
 void ResourceContext::enqueueLoadTask(const TextureLoadRequest& request)
 {
     m_threadPool->enqueue([this, req = request]() {
-        m_inFlight.fetch_add(1);
-
         m_uploadQueue.emplace(req.name, m_loader->loadTexture(req.filepath));
     });
 }
