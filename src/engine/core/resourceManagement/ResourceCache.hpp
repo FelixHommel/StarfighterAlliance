@@ -1,12 +1,12 @@
 #ifndef SFA_SRC_ENGINE_CORE_RESOURCE_MANAGEMENT_RESOURCE_CACHE_HPP
 #define SFA_SRC_ENGINE_CORE_RESOURCE_MANAGEMENT_RESOURCE_CACHE_HPP
 
-#include "fmt/format.h"
+#include "utility/exceptions/ResourceUnavailableException.hpp"
+
 #include "spdlog/spdlog.h"
 
 #include <cstddef>
 #include <memory>
-#include <stdexcept>
 #include <string>
 #include <unordered_map>
 #include <utility>
@@ -58,10 +58,7 @@ public:
     {
         const auto it{ m_resources.find(key) };
         if(it == m_resources.end())
-        {
-            // TODO: replace with custom exception
-            throw std::runtime_error(fmt::format("No resource not found at key '{}'", key));
-        }
+            throw ResourceUnavailableException("Resource cache could not find a resource with the provided key", key);
 
         return it->second;
     }
@@ -77,10 +74,7 @@ public:
     {
         const auto it{ m_resources.find(key) };
         if(it == m_resources.end())
-        {
-            // TODO: replace with custom exception
-            throw std::runtime_error(fmt::format("No resource not found at key '{}'", key));
-        }
+            throw ResourceUnavailableException("Resource cache could not find a resource with the provided key", key);
 
         return it->second;
     }

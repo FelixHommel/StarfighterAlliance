@@ -1,9 +1,9 @@
 #include "core/resourceManagement/ResourceCache.hpp"
+#include "utility/exceptions/ResourceUnavailableException.hpp"
 
 #include <gtest/gtest.h>
 
 #include <memory>
-#include <stdexcept>
 
 namespace sfa::testing
 {
@@ -81,7 +81,7 @@ TEST_F(ResourceCacheTest, GetExistingResource)
 /// When the resource wasn't stored prior to trying to get it, the get mthod should throw an exception.
 TEST_F(ResourceCacheTest, GetNonExistingResource)
 {
-    EXPECT_THROW({ const auto x{ m_cache->get(K) }; }, std::runtime_error);
+    EXPECT_THROW({ const auto x{ m_cache->get(K) }; }, ResourceUnavailableException);
 }
 
 /// \brief Test getting a resource that was previously inserted into the cache.
@@ -106,7 +106,7 @@ TEST_F(ResourceCacheTest, ConstGetNonExistingResource)
     ResourceCache<TestResource> cache;
     const auto& constCache{ cache };
 
-    EXPECT_THROW({ const auto x{ constCache.get(K) }; }, std::runtime_error);
+    EXPECT_THROW({ const auto x{ constCache.get(K) }; }, ResourceUnavailableException);
 }
 
 /// \brief Test clearing the cache.

@@ -3,7 +3,7 @@
 .vscode
 build
 *.db3
-docs
+**/docs/doxygen/**
 
 # LSPs
 .clangd

@@ -17,7 +17,9 @@ add_library(${NAME}
     ./ecs/systems/TextRenderSystem.cpp
     ./ecs/systems/UITransformSystem.cpp
     ./external/stb_image_impl.cpp
+    ./utility/GLFWWindow.cpp
     ./utility/ThreadPool.cpp
+    ./utility/userInput/InputController.cpp
 )
 
 target_sources(${NAME}
@@ -66,6 +68,13 @@ target_sources(${NAME}
             ./utility/BlockingQueue.hpp
             ./utility/ThreadPool.hpp
             ./utility/details/Threading.hpp
+            ./utility/GLFWWindow.hpp
+            ./utility/IWindow.hpp
+            ./utility/exceptions/Exception.hpp
+            ./utility/exceptions/ResourceUnavailableException.hpp
+            ./utility/exceptions/WindowCreationException.hpp
+            ./utility/userInput/InputController.hpp
+            ./utility/userInput/InputEvent.hpp
 )
 
 target_compile_features(${NAME} PRIVATE cxx_std_23)
