@@ -26,13 +26,13 @@ ResourceContext::ResourceContext(std::unique_ptr<IResourceLoader> loader)
 
 ResourceContext::~ResourceContext()
 {
-    m_threadPool->shutdown(false);
+    m_threadPool->shutdown(true);
     m_uploadQueue.close();
 }
 
 void ResourceContext::requestResource(const ResourceRequest& request)
 {
-    m_inFlight.fetch_add(1);
+    m_inFlight.fetch_add(1, std::memory_order_acq_rel);
     std::visit([this](const auto& req) { this->enqueueLoadTask(req); }, request);
 }
 
@@ -45,7 +45,7 @@ void ResourceContext::processUploadQueue(std::size_t maxUploads)
         {
             processUploadTask(*task);
 
-            m_inFlight.fetch_sub(1);
+            m_inFlight.fetch_sub(1, std::memory_order_acq_rel);
             ++processed;
         }
         else
@@ -74,9 +74,7 @@ void ResourceContext::clear()
 void ResourceContext::enqueueLoadTask(const ShaderLoadRequest& request)
 {
     m_threadPool->enqueue([this, req = request]() {
-        const auto loadResult{ m_loader->loadShader(req.vert, req.frag, req.geom) };
-
-        m_uploadQueue.emplace(req.name, std::move(loadResult));
+        m_uploadQueue.emplace(req.name, m_loader->loadShader(req.vert, req.frag, req.geom));
     });
 }
 
@@ -86,9 +84,7 @@ void ResourceContext::enqueueLoadTask(const ShaderLoadRequest& request)
 void ResourceContext::enqueueLoadTask(const TextureLoadRequest& request)
 {
     m_threadPool->enqueue([this, req = request]() {
-        const auto loadResult{ m_loader->loadTexture(req.filepath) };
-
-        m_uploadQueue.emplace(req.name, std::move(loadResult));
+        m_uploadQueue.emplace(req.name, m_loader->loadTexture(req.filepath));
     });
 }
 

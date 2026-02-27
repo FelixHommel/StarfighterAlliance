@@ -92,10 +92,23 @@ public:
             join();
     }
 
+    thread_t& operator=(thread_t&& other) noexcept
+    {
+        if(this != &other)
+        {
+            if(joinable())
+                join();
+
+            m_thread = std::move(other.m_thread);
+            m_source = std::move(other.m_source);
+        }
+
+        return *this;
+    }
+
     thread_t(const thread_t&) = delete;
     thread_t& operator=(const thread_t&) = delete;
     thread_t(thread_t&&) noexcept = default;
-    thread_t& operator=(thread_t&&) noexcept = default;
 
     [[nodiscard]] bool joinable() const noexcept { return m_thread.joinable(); }
     void join() { m_thread.join(); }

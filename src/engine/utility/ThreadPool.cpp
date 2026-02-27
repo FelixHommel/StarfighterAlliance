@@ -34,12 +34,8 @@ void ThreadPool::shutdown(bool drainQueue) noexcept
 {
     if(drainQueue)
     {
-        {
-            std::lock_guard lock(m_mutex);
-            m_draining = true;
-        }
-
         std::unique_lock lock(m_mutex);
+        m_draining = true;
         m_drainingComplete.wait(lock, [this]() { return m_queue.empty(); });
     }
     else
