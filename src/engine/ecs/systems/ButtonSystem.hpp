@@ -2,6 +2,7 @@
 #define SFA_SRC_ENGINE_ECS_SYSTEMS_BUTTON_SYSTEM_HPP
 
 #include "ecs/ComponentRegistry.hpp"
+#include "ecs/components/UIButtonComponent.hpp"
 
 #include <glm/glm.hpp>
 
@@ -24,6 +25,9 @@ public:
     /// \param mousePos the position of the mouse pointer at the time of the update.
     /// \param mousePressed if the left mouse button is pressed or not at the time of the update.
     static void update(ComponentRegistry& registry, float dt, const glm::vec2& mousePos, bool mousePressed);
+
+private:
+    static glm::vec3 determineButtonColor(const UIButtonComponent& button);
 };
 
 } // namespace sfa

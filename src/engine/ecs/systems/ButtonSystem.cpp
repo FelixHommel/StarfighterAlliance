@@ -1,9 +1,9 @@
 #include "ButtonSystem.hpp"
 
 #include "ecs/ComponentRegistry.hpp"
-#include "ecs/components/ButtonComponent.hpp"
 #include "ecs/components/SpriteComponent.hpp"
 #include "ecs/components/TransformComponent.hpp"
+#include "ecs/components/UIButtonComponent.hpp"
 
 #include <glm/glm.hpp>
 
@@ -16,7 +16,7 @@ void ButtonSystem::update(ComponentRegistry& registry, float dt, const glm::vec2
 {
     const auto& transforms{ registry.getComponentArray<TransformComponent>() };
     auto& sprites{ registry.getComponentArray<SpriteComponent>() };
-    auto& buttons{ registry.getComponentArray<ButtonComponent>() };
+    auto& buttons{ registry.getComponentArray<UIButtonComponent>() };
 
     for(std::size_t i{ 0 }; i < buttons.size(); ++i)
     {
@@ -28,16 +28,15 @@ void ButtonSystem::update(ComponentRegistry& registry, float dt, const glm::vec2
         if(button.cooldownTimer > 0.f)
             button.cooldownTimer -= dt;
 
-        glm::vec2 min{ transform.position };
-        glm::vec2 max{ transform.position + sprite.size };
+        const glm::vec2 min{ transform.position };
+        const glm::vec2 max{ transform.position + sprite.size };
 
-        bool isHover{ mousePos.x >= min.x && mousePos.x <= max.x && mousePos.y >= min.y && mousePos.y <= max.y };
-
-        if(isHover)
+        if(mousePos.x >= min.x && mousePos.x <= max.x && mousePos.y >= min.y
+           && mousePos.y <= max.y) // Mouse is in button AABB
         {
             if(mousePressed && button.cooldownTimer <= 0.f)
             {
-                button.activeColor = button.standardColor * button.pressFactor;
+                button.state = UIButtonComponent::ButtonState::Pressed;
 
                 if(button.onClick)
                     button.onClick();
@@ -45,13 +44,25 @@ void ButtonSystem::update(ComponentRegistry& registry, float dt, const glm::vec2
                 button.cooldownTimer = button.pressCooldownMax;
             }
             else
-                button.activeColor = button.standardColor * button.hoverFactor;
+                button.state = UIButtonComponent::ButtonState::Hovered;
         }
         else
-            button.activeColor = button.standardColor;
+            button.state = UIButtonComponent::ButtonState::Normal;
 
-        sprite.color = button.activeColor;
+        sprite.color = determineButtonColor(button);
     }
+}
+
+glm::vec3 ButtonSystem::determineButtonColor(const UIButtonComponent& button)
+{
+    // NOTE: Technically could be cached in the UIButtonComponent, so that color is not calculated every time.
+
+    if(button.state == UIButtonComponent::ButtonState::Pressed)
+        return button.standardColor * button.pressFactor;
+    if(button.state == UIButtonComponent::ButtonState::Hovered)
+        return button.standardColor * button.hoverFactor;
+
+    return button.standardColor;
 }
 
 } // namespace sfa

@@ -2,8 +2,8 @@
 #define SFA_SRC_ENGINE_ECS_SYSTEMS_LAYOUT_SYSTEM_HPP
 
 #include "ecs/ComponentRegistry.hpp"
-#include "ecs/components/LayoutComponent.hpp"
 #include "ecs/components/TransformComponent.hpp"
+#include "ecs/components/UILayoutComponent.hpp"
 
 namespace sfa
 {
@@ -27,7 +27,7 @@ private:
     /// \param layout The \ref LayoutComponent that is updated
     /// \param parentTransform The \ref TransformComponent of the parent \ref LayoutComponent
     static void updateVerticalLayout(
-        ComponentRegistry& registry, const LayoutComponent& layout, const TransformComponent& parentTransform
+        ComponentRegistry& registry, const UILayoutComponent& layout, const TransformComponent& parentTransform
     );
     /// \brief Update all horizontal layout elements.
     ///
@@ -35,7 +35,7 @@ private:
     /// \param layout The \ref LayoutComponent that is updated
     /// \param parentTransform The \ref TransformComponent of the parent \ref LayoutComponent
     static void updateHorizontalLayout(
-        ComponentRegistry& registry, const LayoutComponent& layout, const TransformComponent& parentTransform
+        ComponentRegistry& registry, const UILayoutComponent& layout, const TransformComponent& parentTransform
     );
 };
 
