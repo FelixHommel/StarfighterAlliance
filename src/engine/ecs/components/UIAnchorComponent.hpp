@@ -20,7 +20,7 @@ struct UIAnchorComponent : public IComponent
     {
         TopLeft,
         TopCenter,
-        TopRoght,
+        TopRight,
         CenterLeft,
         Center,
         CenterRight,
