@@ -83,6 +83,7 @@ classDiagram
 
   namespace WindowSystem{
     class IWindow{
+      <<Abstract>>
       -InputController controller
 
       +attachInputController(InputController controller)* void
