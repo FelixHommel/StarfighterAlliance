@@ -14,7 +14,7 @@ namespace sfa
 /// \date 2/24/2026
 struct UILayoutElementComponent : public IComponent
 {
-    glm::vec2 prefferedSize;
+    glm::vec2 preferredSize;
     float flexGrow{ 0.f };
 };
 
