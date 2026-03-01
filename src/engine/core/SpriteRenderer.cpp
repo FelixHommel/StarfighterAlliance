@@ -73,8 +73,11 @@ void SpriteRenderer::draw(
     m_shader->setMatrix4("model", model);
     m_shader->setVector3f("spriteColor", color);
 
-    glActiveTexture(GL_TEXTURE0);
-    texture->bind();
+    if(texture != nullptr)
+    {
+        glActiveTexture(GL_TEXTURE0);
+        texture->bind();
+    }
 
     glBindVertexArray(m_quadVAO);
     glDrawArrays(GL_TRIANGLES, 0, SPRITE_VERTICES);
