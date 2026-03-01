@@ -1,9 +1,12 @@
 #ifndef SFA_SRC_ENGINE_ECS_SYSTEMS_LAYOUT_SYSTEM_HPP
 #define SFA_SRC_ENGINE_ECS_SYSTEMS_LAYOUT_SYSTEM_HPP
 
+#include "ecs/ComponentArray.hpp"
 #include "ecs/ComponentRegistry.hpp"
-#include "ecs/components/TransformComponent.hpp"
+#include "ecs/components/UIHierarchyComponent.hpp"
 #include "ecs/components/UILayoutComponent.hpp"
+#include "ecs/components/UILayoutElementComponent.hpp"
+#include "ecs/components/UITransformComponent.hpp"
 
 namespace sfa
 {
@@ -21,21 +24,19 @@ public:
     static void update(ComponentRegistry& registry);
 
 private:
-    /// \brief Update all vertical layout elements.
-    ///
-    /// \param registry \ref ComponentRegistry containing all the components
-    /// \param layout The \ref LayoutComponent that is updated
-    /// \param parentTransform The \ref TransformComponent of the parent \ref LayoutComponent
     static void updateVerticalLayout(
-        ComponentRegistry& registry, const UILayoutComponent& layout, const TransformComponent& parentTransform
+        const UILayoutComponent& layout,
+        const UIHierarchyComponent& hierarchy,
+        UITransformComponent& parentTransform,
+        ComponentArray<UITransformComponent>& transforms,
+        const ComponentArray<UILayoutElementComponent>& elements
     );
-    /// \brief Update all horizontal layout elements.
-    ///
-    /// \param registry \ref ComponentRegistry containing all the components
-    /// \param layout The \ref LayoutComponent that is updated
-    /// \param parentTransform The \ref TransformComponent of the parent \ref LayoutComponent
     static void updateHorizontalLayout(
-        ComponentRegistry& registry, const UILayoutComponent& layout, const TransformComponent& parentTransform
+        const UILayoutComponent& layout,
+        const UIHierarchyComponent& hierarchy,
+        UITransformComponent& parentTransform,
+        ComponentArray<UITransformComponent>& transforms,
+        const ComponentArray<UILayoutElementComponent>& elements
     );
 };
 
