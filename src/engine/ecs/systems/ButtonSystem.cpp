@@ -2,8 +2,8 @@
 
 #include "ecs/ComponentRegistry.hpp"
 #include "ecs/components/SpriteComponent.hpp"
-#include "ecs/components/TransformComponent.hpp"
 #include "ecs/components/UIButtonComponent.hpp"
+#include "ecs/components/UITransformComponent.hpp"
 
 #include <glm/glm.hpp>
 
@@ -14,22 +14,22 @@ namespace sfa
 
 void ButtonSystem::update(ComponentRegistry& registry, float dt, const glm::vec2& mousePos, bool mousePressed)
 {
-    const auto& transforms{ registry.getComponentArray<TransformComponent>() };
+    const auto& transforms{ registry.getComponentArray<UITransformComponent>() };
     auto& sprites{ registry.getComponentArray<SpriteComponent>() };
     auto& buttons{ registry.getComponentArray<UIButtonComponent>() };
 
     for(std::size_t i{ 0 }; i < buttons.size(); ++i)
     {
         const auto entity{ buttons.entityAtIndex(i) };
+        const auto& transform{ transforms.get(entity) };
         auto& button{ buttons.get(entity) };
         auto& sprite{ sprites.get(entity) };
-        const auto& transform{ transforms.get(entity) };
 
         if(button.cooldownTimer > 0.f)
             button.cooldownTimer -= dt;
 
-        const glm::vec2 min{ transform.position };
-        const glm::vec2 max{ transform.position + sprite.size };
+        const glm::vec2& min{ transform.worldPosition };
+        const glm::vec2 max{ transform.worldPosition + transform.size };
 
         if(mousePos.x >= min.x && mousePos.x <= max.x && mousePos.y >= min.y
            && mousePos.y <= max.y) // Mouse is in button AABB
