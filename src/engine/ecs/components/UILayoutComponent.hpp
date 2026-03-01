@@ -19,8 +19,7 @@ struct UILayoutComponent : public IComponent
     enum class Type : std::uint8_t
     {
         Vertical,
-        Horizontal,
-        Grid
+        Horizontal
     };
 
     Type type;
