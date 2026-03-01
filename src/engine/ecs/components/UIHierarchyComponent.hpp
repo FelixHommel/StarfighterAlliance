@@ -15,7 +15,7 @@ namespace sfa
 /// \date 2/24/2026
 struct UIHierarchyComponent : public IComponent
 {
-    EntityID entity{ NULL_ENTITY };
+    EntityID parent{ NULL_ENTITY };
     std::vector<EntityID> children;
 };
 
