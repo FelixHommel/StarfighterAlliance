@@ -20,7 +20,7 @@ void UITransformSystem::update(ComponentRegistry& registry)
     {
         const auto entity{ hierarchies.entityAtIndex(i) };
 
-        if(hierarchies.get(entity).parent == NULL_ENTITY)
+        if(hierarchies.get(entity).parent == NULL_ENTITY && transforms.contains(entity))
             propagate(entity, transforms, hierarchies);
     }
 }
@@ -32,6 +32,9 @@ void UITransformSystem::update(ComponentRegistry& registry)
 /// \param hierarchies q \ref ComponentArray with all \ref UIHierarchyComponent stored in it
 void UITransformSystem::propagate(EntityID entity, ComponentArray<UITransformComponent>& transforms, const ComponentArray<UIHierarchyComponent>& hierarchies)
 {
+    if(!hierarchies.contains(entity) || !transforms.contains(entity))
+        return;
+
     const auto& hierarchy{ hierarchies.get(entity) };
     auto& transform{ transforms.get(entity) };
 
@@ -41,7 +44,10 @@ void UITransformSystem::propagate(EntityID entity, ComponentArray<UITransformCom
         transform.worldPosition = transform.localPosition;
 
     for(const auto& child : hierarchy.children)
-        propagate(child, transforms, hierarchies);
+    {
+        if(hierarchies.contains(child) && transforms.contains(child))
+            propagate(child, transforms, hierarchies);
+    }
 }
 
 } // namespace sfa
