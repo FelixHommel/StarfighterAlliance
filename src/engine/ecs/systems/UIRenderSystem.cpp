@@ -73,7 +73,13 @@ void UIRenderSystem::render(ComponentRegistry& registry)
         if(texts.contains(entity))
         {
             const auto& text{ texts.get(entity) };
-            const glm::vec2 textPosition{ transform.worldPosition + text.offset };
+
+            glm::vec2 textPosition{ transform.worldPosition + text.offset };
+            if(text.centerInTransform)
+            {
+                const glm::vec2 textSize{ m_textRenderer->measure(text.content, glm::vec2(text.scale)) };
+                textPosition = transform.worldPosition + ((transform.size - textSize) * 0.5f) + text.offset;
+            }
 
             m_textRenderer->render(text.content, textPosition, glm::vec2(text.scale), text.color);
         }
