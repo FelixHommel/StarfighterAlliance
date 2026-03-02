@@ -10,6 +10,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <sys/stat.h>
 
 namespace sfa
 {
@@ -67,6 +68,8 @@ public:
         const glm::vec2& scale = DEFAULT_SCALE,
         glm::vec3 color = DEFAULT_COLOR
     );
+
+    [[nodiscard]] glm::vec2 measure(const std::string& text, const glm::vec2& scale = DEFAULT_SCALE) const;
 
 private:
     static constexpr std::size_t LOADED_ASCII_CHARS{ 128 };

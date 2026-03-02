@@ -10,6 +10,7 @@
 #include "glad/gl.h"
 #include "glm/ext/matrix_clip_space.hpp"
 
+#include <algorithm>
 #include <array>
 #include <iostream>
 #include <memory>
@@ -44,11 +45,6 @@ TextRenderer::~TextRenderer()
 {
     glDeleteBuffers(1, &m_vbo);
     glDeleteVertexArrays(1, &m_vao);
-}
-
-void TextRenderer::beginFrame(const glm::mat4& projection)
-{
-    m_shader->setMatrix4("projection", projection, true);
 }
 
 void TextRenderer::load(const std::filesystem::path& filepath, unsigned int fontSize)
@@ -108,6 +104,11 @@ void TextRenderer::load(const std::filesystem::path& filepath, unsigned int font
     FT_Done_FreeType(ft);
 }
 
+void TextRenderer::beginFrame(const glm::mat4& projection)
+{
+    m_shader->setMatrix4("projection", projection, true);
+}
+
 void TextRenderer::render(const std::string& text, const glm::vec2& pos, const glm::vec2& scale, glm::vec3 color)
 {
     m_shader->setVector3f("textColor", color, true);
@@ -141,6 +142,24 @@ void TextRenderer::render(const std::string& text, const glm::vec2& pos, const g
 
     glBindVertexArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+glm::vec2 TextRenderer::measure(const std::string& text, const glm::vec2& scale) const
+{
+    float width{ 0.f };
+    float height{ 0.f };
+
+    for(const auto c : text)
+    {
+        if(const auto it{ m_characters.find(c) }; it != m_characters.end())
+        {
+            const auto& ch{ it->second };
+            width += static_cast<float>(ch.advance >> ADVANCE_BITSHIFT) * scale.x;
+            height += std::max(height, static_cast<float>(ch.size.y) * scale.y);
+        }
+    }
+
+    return { width, height };
 }
 
 } // namespace sfa
