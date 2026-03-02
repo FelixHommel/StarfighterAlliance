@@ -67,8 +67,7 @@ void UIRenderSystem::render(ComponentRegistry& registry)
         if(sprites.contains(entity))
         {
             const auto& sprite{ sprites.get(entity) };
-
-            m_spriteRenderer->draw(sprite.texture, transform.worldPosition, transform.size, 1.f, sprite.color);
+            m_spriteRenderer->draw(sprite.texture, transform.worldPosition, transform.size, 0.f, sprite.color);
         }
 
         if(texts.contains(entity))
