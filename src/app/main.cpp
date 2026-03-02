@@ -29,7 +29,6 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
-#include <utility>
 
 namespace
 {
@@ -75,12 +74,14 @@ int main()
 
     auto spriteRenderer{ std::make_shared<SpriteRenderer>(spriteShader) };
     auto textRenderer{ std::make_shared<TextRenderer>(textShader) };
+    textRenderer->load(SFA_ROOT "resources/fonts/prstart.ttf", 18);
     UIRenderSystem uiRenderer{ spriteRenderer, textRenderer };
 
     ComponentRegistry registry;
 
     constexpr EntityID rootEntity{ 1 };
-    constexpr EntityID buttonEntity{ 2 };
+    constexpr EntityID buttonEntity1{ 2 };
+    constexpr EntityID buttonEntity2{ 3 };
 
     registry.addComponent<UITransformComponent>(
         rootEntity,
@@ -88,35 +89,55 @@ int main()
     );
     registry.addComponent<UIHierarchyComponent>(
         rootEntity,
-        { .parent = NULL_ENTITY, .children = { buttonEntity } }
+        { .parent = NULL_ENTITY, .children = { buttonEntity1, buttonEntity2 } }
     );
     registry.addComponent<UILayoutComponent>(
         rootEntity,
-        { .type = UILayoutComponent::Type::Vertical, .spacing = 20.f, .padding = { 250.f, 280.f } }
+        { .type = UILayoutComponent::Type::Vertical, .spacing = 200.f, .padding = { 250.f, 280.f } }
     );
 
     registry.addComponent<UITransformComponent>(
-        buttonEntity,
+        buttonEntity1,
         { .localPosition = { 0.f, 0.f }, .worldPosition = { 0.f, 0.f }, .size = { 240.f, 80.f } }
     );
     registry.addComponent<UILayoutElementComponent>(
-        buttonEntity,
+        buttonEntity1,
         { .preferredSize = { 240.f, 80.f }, .flexGrow = 0.f }
     );
     registry.addComponent<SpriteComponent>(
-        buttonEntity,
+        buttonEntity1,
         { .texture = nullptr, .size = { 240.f, 80.f }, .color = { 0.2f, 0.45f, 0.95f }, .renderLayer = 0 }
     );
     registry.addComponent<TextComponent>(
-        buttonEntity,
-        { .content = "Hello", .offset = glm::vec2(0.f), .scale = 1.f, .color = glm::vec3(255.f), .renderLayer = 0 }
+        buttonEntity1,
+        { .content = "PLAY", .offset = glm::vec2(0.f), .scale = 1.f, .color = glm::vec3(0.f), .renderLayer = 1 }
+    );
+
+    registry.addComponent<UITransformComponent>(
+        buttonEntity2,
+        { .localPosition = { 0.f, 0.f }, .worldPosition = { 0.f, 0.f }, .size = { 240.f, 80.f } }
+    );
+    registry.addComponent<UILayoutElementComponent>(
+        buttonEntity2,
+        { .preferredSize = { 240.f, 80.f }, .flexGrow = 0.f }
+    );
+    registry.addComponent<SpriteComponent>(
+        buttonEntity2,
+        { .texture = nullptr, .size = { 240.f, 80.f }, .color = { 0.2f, 0.45f, 0.95f }, .renderLayer = 0 }
+    );
+    registry.addComponent<TextComponent>(
+        buttonEntity2,
+        { .content = "QUIT", .offset = glm::vec2(0.f), .scale = 1.f, .color = glm::vec3(0.f), .renderLayer = 1 }
     );
 
     UIButtonComponent button;
     button.standardColor = { 0.2f, 0.45f, 0.95f };
     button.pressCooldownMax = 0.2f;
     button.onClick = [] { spdlog::info("Sample button clicked"); };
-    registry.addComponent<UIButtonComponent>(buttonEntity, std::move(button));
+    registry.addComponent<UIButtonComponent>(buttonEntity1, button);
+
+    button.onClick = [&window]() { window.setShouldClose(); };
+    registry.addComponent<UIButtonComponent>(buttonEntity2, button);
 
     float lastTime{ static_cast<float>(glfwGetTime()) };
 
@@ -133,7 +154,7 @@ int main()
 
         const bool mousePressed{ input->isMousePressed(MouseButton::Left) == InputAction::Press };
 
-        glClearColor(0.08f, 0.08f, 0.12f, 1.f);
+        glClearColor(1.f, 1.f, 1.f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         LayoutSystem::update(registry);
