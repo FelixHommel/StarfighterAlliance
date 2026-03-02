@@ -1,5 +1,5 @@
-#ifndef SFA_SRC_ENGINE_ECS_COMPONENTS_ANCHOR_COMPONENT_HPP
-#define SFA_SRC_ENGINE_ECS_COMPONENTS_ANCHOR_COMPONENT_HPP
+#ifndef SFA_SRC_ENGINE_ECS_COMPONENTS_UI_ANCHOR_COMPONENT_HPP
+#define SFA_SRC_ENGINE_ECS_COMPONENTS_UI_ANCHOR_COMPONENT_HPP
 
 #include "ecs/components/IComponent.hpp"
 
@@ -20,7 +20,7 @@ struct UIAnchorComponent : public IComponent
     {
         TopLeft,
         TopCenter,
-        TopRoght,
+        TopRight,
         CenterLeft,
         Center,
         CenterRight,
@@ -35,5 +35,5 @@ struct UIAnchorComponent : public IComponent
 
 } // namespace sfa
 
-#endif // !SFA_SRC_ENGINE_ECS_COMPONENTS_ANCHOR_COMPONENT_HPP
+#endif // !SFA_SRC_ENGINE_ECS_COMPONENTS_UI_ANCHOR_COMPONENT_HPP
 

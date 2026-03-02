@@ -4,6 +4,7 @@
 build
 *.db3
 **/docs/doxygen/**
+docs/product_requirements_document_v2.pdf
 
 # LSPs
 .clangd

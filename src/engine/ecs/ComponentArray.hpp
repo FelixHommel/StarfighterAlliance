@@ -125,7 +125,7 @@ public:
 
     std::size_t size() const noexcept { return m_actualSize; }
 
-    auto begin() noexcept { return m_components.begin(); };
+    auto begin() noexcept { return m_components.begin(); }
     auto cbegin() const noexcept { return m_components.cbegin(); }
     auto end() noexcept { return m_components.begin() + static_cast<std::ptrdiff_t>(m_actualSize); }
     auto cend() const noexcept { return m_components.cbegin() + static_cast<std::ptrdiff_t>(m_actualSize); }

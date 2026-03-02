@@ -3,6 +3,8 @@
 
 #include "utility/userInput/InputEvent.hpp"
 
+#include <glm/glm.hpp>
+
 #include <cstddef>
 #include <queue>
 #include <unordered_map>
@@ -10,21 +12,6 @@
 
 namespace sfa
 {
-
-/// \brief Simple struct for providing access to the mouse position.
-///
-/// \author Felix Hommel
-/// \date 2/25/2026
-struct MousePosition
-{
-    double posX;
-    double posY;
-
-    bool operator==(const MousePosition& rhs) const noexcept
-    {
-        return this->posX == rhs.posX && this->posY == rhs.posY;
-    }
-};
 
 /// \brief The InputController is responsible for processing user input
 ///
@@ -62,7 +49,7 @@ public:
     ///
     /// \returns *Press* if \p button is pressed, *Release* if not
     [[nodiscard]] InputAction isMousePressed(MouseButton button) const;
-    [[nodiscard]] MousePosition mousePosition() const { return { .posX = m_mousePosX, .posY = m_mousePosY }; }
+    [[nodiscard]] glm::vec2 mousePosition() const { return { m_mousePosX, m_mousePosY }; }
 
     [[nodiscard]] std::size_t queuedEvents() const noexcept { return m_inputs.size(); }
 

@@ -12,6 +12,9 @@ add_executable(${NAME}
     ./ecs/ComponentArrayTest.cpp
     ./ecs/EntityManagerTest.cpp
     ./ecs/ComponentRegistryTest.cpp
+    ./ecs/systems/UILayoutSystemTest.cpp
+    ./ecs/systems/UITextFieldSystemTest.cpp
+    ./ecs/systems/UITransformSystemTest.cpp
     ./testUtility/stb_image_write_impl.cpp
     ./utility/BlockingQueueTest.cpp
     ./utility/ThreadPoolTest.cpp

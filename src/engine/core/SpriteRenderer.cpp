@@ -32,11 +32,24 @@ SpriteRenderer::SpriteRenderer(std::shared_ptr<Shader> shader) : m_shader(std::m
     glBindVertexArray(0);
 
     glDeleteBuffers(1, &VBO);
+
+    static constexpr std::array<unsigned int, 4> whitePixel{ 255, 255, 255, 255 };
+    glGenTextures(1, &m_fallbackTexture);
+    glBindTexture(GL_TEXTURE_2D, m_fallbackTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, whitePixel.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 SpriteRenderer::~SpriteRenderer()
 {
     glDeleteVertexArrays(1, &m_quadVAO);
+
+    if(m_fallbackTexture != 0)
+        glDeleteTextures(1, &m_fallbackTexture);
 }
 
 void SpriteRenderer::beginFrame(const glm::mat4& projection)
@@ -74,7 +87,10 @@ void SpriteRenderer::draw(
     m_shader->setVector3f("spriteColor", color);
 
     glActiveTexture(GL_TEXTURE0);
-    texture->bind();
+    if(texture != nullptr)
+        texture->bind();
+    else
+        glBindTexture(GL_TEXTURE_2D, m_fallbackTexture);
 
     glBindVertexArray(m_quadVAO);
     glDrawArrays(GL_TRIANGLES, 0, SPRITE_VERTICES);

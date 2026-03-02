@@ -26,6 +26,16 @@ struct Character
     unsigned int advance;   ///< horizontal offset to advance to next glyph
 };
 
+/// \brief Information about the dimensions and bounds of a string.
+///
+/// \author Felix Hommel
+/// \date 3/2/2026
+struct TextBounds
+{
+    glm::vec2 min{ 0.f };
+    glm::vec2 size{ 0.f };
+};
+
 /// \brief Abstraction for rendering Text on the screen.
 ///
 /// Rendering text is a quite difficult task, therefore this class abstracts it in a way where
@@ -67,6 +77,17 @@ public:
         const glm::vec2& scale = DEFAULT_SCALE,
         glm::vec3 color = DEFAULT_COLOR
     );
+
+    /// \brief Estimate bounds of rendered text for the current loaded font.
+    ///
+    /// \param text the string that is measured
+    /// \param scale the scale of the text
+    [[nodiscard]] TextBounds measureBounds(const std::string& text, const glm::vec2& scale = DEFAULT_SCALE) const;
+    /// \brief Estimate the rendered dimensions of a text string for the currently loaded font.
+    ///
+    /// \param text the string that is measured
+    /// \param scale the scale of the text
+    [[nodiscard]] glm::vec2 measure(const std::string& text, const glm::vec2& scale = DEFAULT_SCALE) const;
 
 private:
     static constexpr std::size_t LOADED_ASCII_CHARS{ 128 };

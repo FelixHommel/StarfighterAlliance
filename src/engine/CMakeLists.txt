@@ -15,6 +15,9 @@ add_library(${NAME}
     ./ecs/systems/MovementSystem.cpp
     ./ecs/systems/SpriteRenderSystem.cpp
     ./ecs/systems/TextRenderSystem.cpp
+    ./ecs/systems/UIRenderSystem.cpp
+    ./ecs/systems/UITextFieldSystem.cpp
+    ./ecs/systems/UITransformSystem.cpp
     ./external/stb_image_impl.cpp
     ./utility/GLFWWindow.cpp
     ./utility/ThreadPool.cpp
@@ -42,24 +45,31 @@ target_sources(${NAME}
             ./ecs/ECSUtility.hpp
             ./ecs/EntityManager.hpp
             ./ecs/IComponentArray.hpp
-            ./ecs/components/AnchorComponent.hpp
             ./ecs/components/BoxColliderComponent.hpp
-            ./ecs/components/ButtonComponent.hpp
             ./ecs/components/CircleColliderComponent.hpp
             ./ecs/components/DamageComponent.hpp
             ./ecs/components/HealthComponent.hpp
             ./ecs/components/IComponent.hpp
-            ./ecs/components/LayoutComponent.hpp
             ./ecs/components/RigidBodyComponent.hpp
             ./ecs/components/SpriteComponent.hpp
             ./ecs/components/TextComponent.hpp
             ./ecs/components/TransformComponent.hpp
+            ./ecs/components/UIAnchorComponent.hpp
+            ./ecs/components/UIButtonComponent.hpp
+            ./ecs/components/UIHierarchyComponent.hpp
+            ./ecs/components/UILayoutComponent.hpp
+            ./ecs/components/UILayoutElementComponent.hpp
+            ./ecs/components/UITextFieldComponent.hpp
+            ./ecs/components/UITransformComponent.hpp
             ./ecs/components/VelocityComponent.hpp
             ./ecs/systems/ButtonSystem.hpp
             ./ecs/systems/LayoutSystem.hpp
             ./ecs/systems/MovementSystem.hpp
             ./ecs/systems/SpriteRenderSystem.hpp
             ./ecs/systems/TextRenderSystem.hpp
+            ./ecs/systems/UIRenderSystem.hpp
+            ./ecs/systems/UITextFieldSystem.hpp
+            ./ecs/systems/UITransformSystem.hpp
             ./utility/BlockingQueue.hpp
             ./utility/ThreadPool.hpp
             ./utility/details/Threading.hpp

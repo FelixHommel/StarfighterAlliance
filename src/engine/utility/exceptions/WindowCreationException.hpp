@@ -3,8 +3,6 @@
 
 #include "utility/exceptions/Exception.hpp"
 
-#include <fmt/format.h>
-
 #include <source_location>
 #include <string>
 #include <utility>

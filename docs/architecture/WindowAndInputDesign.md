@@ -2,19 +2,19 @@
 
 ## Dependency Flowchart
 
-The ```IWindow``` and ```IInputController``` system are closely related to each other, because in many windowing libraries
+The ```IWindow``` and ```InputController``` system are closely related to each other, because in many windowing libraries
 (i.e., GLFW) user input is coupled with window events. The engine should not be restricted by this coupling and should
 not be dependent on a specific windowing library.
 
 ```mermaid
 flowchart
-  IInputController --> IWindow
+  InputController --> IWindow
   subgraph Window
     GLFWWindow --> IWindow
     GLFWWindow --> GLFW
   end
   subgraph UserInput
-    InputController --> IInputController
+    InputController
   end
 ```
 
@@ -55,7 +55,7 @@ classDiagram
 
     class MouseInputEvent{
       +InputAction action
-      +MouseBtton button
+      +MouseButton button
     }
 
     class MouseMoveEvent{
@@ -68,25 +68,25 @@ classDiagram
 
   namespace InputSystem{
     class InputController{
-      -array~bool, KEYS~ keysPressed
-      -array~bool, MOUSE_BUTTONS~ buttonsPressed
-      -queue~InputEvent~ events
+      -Map~Key, InputAction~ keysPressed
+      -Map~MouseButton, InputAction~ buttonsPressed
+      -Queue~InputEvent~ events
 
-      +drainEventQueue() void
-    }
+      +registerEvent(InputEvent event) void
+      +processEventQueue() void
 
-    class IInputController{
-      +processEvent(InputEvent event)* void
-      +isKeyPressed(Key key)* bool
-      +isMousePressed(MouseButton button)* bool
+      +isKeyPressed(Key key) bool
+      +isMousePressed(MouseButton button) bool
+      +mousePosition() MousePosition
     }
   }
 
   namespace WindowSystem{
     class IWindow{
-      -IInputController controller
+      <<Abstract>>
+      -InputController controller
 
-      +attachInputController(IInputController controller)* void
+      +attachInputController(InputController controller)* void
     }
 
     class GLFWWindow{
@@ -109,10 +109,9 @@ classDiagram
   MouseInputEvent --> InputEvent
   MouseMoveEvent --> InputEvent
 
-  IInputController ..|> InputController
-  Key --> IInputController
-  MouseButton --> IInputController
-  InputEvent --> IInputController
+  Key --> InputController
+  MouseButton --> InputController
+  InputEvent --> InputController
 
   IWindow ..|> GLFWWindow
   GLFW ..> GLFWWindow
@@ -120,15 +119,14 @@ classDiagram
   MouseInputEvent --> GLFWWindow
   MouseMoveEvent --> GLFWWindow
 
-  IWindow <-- IInputController
+  IWindow <-- InputController
 ```
 
 ## Implementation Details
 
 The 3 types of event can be perfectly represented by a ```std::variant``` based approach. That way the
-```IInputController::processEvent(const InputEvent& event)``` method can easily use ```st::visit``` to process all 3 types of
-events.
-Other than that, there is a consideration to make in the ```InputController``` class related to the queue-based
+```InputController::registerEvent(const InputEvent& event)``` method can easily use ```st::visit``` to process all 3 types
+of events. Other than that, there is a consideration to make in the ```InputController``` class related to the queue-based
 event approach:
 
 1. Immediate State Progression
