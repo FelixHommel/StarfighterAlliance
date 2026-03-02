@@ -4,6 +4,7 @@
 
 #include "ft2build.h"
 #include <filesystem>
+#include <limits>
 // NOLINTNEXTLINE(misc-include-cleaner): FT_FREETYPE_H is a macro that is created by FreeType. That is it's inteded use.
 #include FT_FREETYPE_H
 
@@ -144,22 +145,49 @@ void TextRenderer::render(const std::string& text, const glm::vec2& pos, const g
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-glm::vec2 TextRenderer::measure(const std::string& text, const glm::vec2& scale) const
+TextBounds TextRenderer::measureBounds(const std::string& text, const glm::vec2& scale) const
 {
-    float width{ 0.f };
-    float height{ 0.f };
+    if(text.empty() || m_characters.empty())
+        return {};
+
+    const auto hIt{ m_characters.find('H') };
+    const float hBearing{ hIt != m_characters.end() ? static_cast<float>(hIt->second.bearing.y) : 0.f };
+
+    float penX{ 0.f };
+    float minX{ std::numeric_limits<float>::max() };
+    float minY{ std::numeric_limits<float>::max() };
+    float maxX{ std::numeric_limits<float>::lowest() };
+    float maxY{ std::numeric_limits<float>::lowest() };
 
     for(const auto c : text)
     {
         if(const auto it{ m_characters.find(c) }; it != m_characters.end())
         {
             const auto& ch{ it->second };
-            width += static_cast<float>(ch.advance >> ADVANCE_BITSHIFT) * scale.x;
-            height += std::max(height, static_cast<float>(ch.size.y) * scale.y);
+
+            const float xpos{ penX + (static_cast<float>(ch.bearing.x) * scale.x) };
+            const float ypos{ (hBearing - static_cast<float>(ch.bearing.y)) * scale.y };
+            const float w{ static_cast<float>(ch.size.x) * scale.x };
+            const float h{ static_cast<float>(ch.size.y) * scale.y };
+
+            minX = std::min(minX, xpos);
+            minY = std::min(minY, ypos);
+            maxX = std::max(maxX, xpos + w);
+            maxY = std::max(maxY, ypos + h);
+
+            penX += static_cast<float>(ch.advance >> ADVANCE_BITSHIFT) * scale.x;
         }
     }
 
-    return { width, height };
+    if(minX > maxX || minY > maxY)
+        return {};
+
+    return { .min = { minX, minY }, .size = { maxX - minX, maxY - minY } };
+}
+
+glm::vec2 TextRenderer::measure(const std::string& text, const glm::vec2& scale) const
+{
+    return measureBounds(text, scale).size;
 }
 
 } // namespace sfa
