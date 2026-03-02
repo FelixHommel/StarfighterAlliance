@@ -58,8 +58,6 @@ int main()
 
     GLFWWindow window{ "SFA UI Sample", WINDOW_WIDTH, WINDOW_HEIGHT };
 
-    spdlog::info("created window");
-
     auto input{ std::make_shared<InputController>() };
     window.attachInputController(input);
 
@@ -67,25 +65,17 @@ int main()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    spdlog::info("setup gl state and input controller");
-
     const auto spriteVertSrc{ loadTextFile(SFA_ROOT "resources/shaders/sprite.vert") };
     const auto spriteFragSrc{ loadTextFile(SFA_ROOT "resources/shaders/sprite.frag") };
     const auto textVertSrc{ loadTextFile(SFA_ROOT "resources/shaders/text.vert") };
     const auto textFragSrc{ loadTextFile(SFA_ROOT "resources/shaders/text.frag") };
 
-    spdlog::info("load shader text files");
-
     auto spriteShader{ std::make_shared<Shader>(spriteVertSrc.c_str(), spriteFragSrc.c_str()) };
     auto textShader{ std::make_shared<Shader>(textVertSrc.c_str(), textFragSrc.c_str()) };
-
-    spdlog::info("create shaders");
 
     auto spriteRenderer{ std::make_shared<SpriteRenderer>(spriteShader) };
     auto textRenderer{ std::make_shared<TextRenderer>(textShader) };
     UIRenderSystem uiRenderer{ spriteRenderer, textRenderer };
-
-    spdlog::info("create renderers");
 
     ComponentRegistry registry;
 
@@ -128,11 +118,8 @@ int main()
     button.onClick = [] { spdlog::info("Sample button clicked"); };
     registry.addComponent<UIButtonComponent>(buttonEntity, std::move(button));
 
-    spdlog::info("create UI elements");
-
     float lastTime{ static_cast<float>(glfwGetTime()) };
 
-    spdlog::info("starting main loop");
     while(!window.shouldClose())
     {
         const float now{ static_cast<float>(glfwGetTime()) };
