@@ -21,6 +21,10 @@ void ButtonSystem::update(ComponentRegistry& registry, float dt, const glm::vec2
     for(std::size_t i{ 0 }; i < buttons.size(); ++i)
     {
         const auto entity{ buttons.entityAtIndex(i) };
+
+        if(!transforms.contains(entity) || !sprites.contains(entity) || !buttons.contains(entity))
+            continue;
+
         const auto& transform{ transforms.get(entity) };
         auto& button{ buttons.get(entity) };
         auto& sprite{ sprites.get(entity) };
@@ -31,8 +35,7 @@ void ButtonSystem::update(ComponentRegistry& registry, float dt, const glm::vec2
         const glm::vec2& min{ transform.worldPosition };
         const glm::vec2 max{ transform.worldPosition + transform.size };
 
-        if(mousePos.x >= min.x && mousePos.x <= max.x && mousePos.y >= min.y
-           && mousePos.y <= max.y) // Mouse is in button AABB
+        if(mousePos.x >= min.x && mousePos.x <= max.x && mousePos.y >= min.y && mousePos.y <= max.y)
         {
             if(mousePressed && button.cooldownTimer <= 0.f)
             {
