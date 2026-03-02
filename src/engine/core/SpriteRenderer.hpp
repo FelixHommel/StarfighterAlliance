@@ -76,6 +76,7 @@ private:
 
     std::shared_ptr<Shader> m_shader;
     unsigned int m_quadVAO{ 0 };
+    unsigned int m_fallbackTexture{ 0 };
 };
 
 } // namespace sfa
