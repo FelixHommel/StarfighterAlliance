@@ -5,6 +5,8 @@
 
 #include <glm/glm.hpp>
 
+#include <string>
+
 namespace sfa
 {
 

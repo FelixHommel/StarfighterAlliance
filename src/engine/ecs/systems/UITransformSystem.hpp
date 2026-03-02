@@ -1,7 +1,9 @@
 #ifndef SFA_SRC_ENGINE_ECS_SYSTEMS_UI_TRANSFORM_SYSTEM_HPP
 #define SFA_SRC_ENGINE_ECS_SYSTEMS_UI_TRANSFORM_SYSTEM_HPP
 
+#include "ecs/ComponentArray.hpp"
 #include "ecs/ComponentRegistry.hpp"
+#include "ecs/ECSUtility.hpp"
 #include "ecs/components/UIHierarchyComponent.hpp"
 #include "ecs/components/UITransformComponent.hpp"
 
