@@ -64,8 +64,8 @@ int main()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    const auto spriteVertSrc{ loadTextFile(SFA_ROOT "resources/shaders/sprite.vert") };
-    const auto spriteFragSrc{ loadTextFile(SFA_ROOT "resources/shaders/sprite.frag") };
+    const auto spriteVertSrc{ loadTextFile(SFA_ROOT "resources/shaders/button.vert") };
+    const auto spriteFragSrc{ loadTextFile(SFA_ROOT "resources/shaders/button.frag") };
     const auto textVertSrc{ loadTextFile(SFA_ROOT "resources/shaders/text.vert") };
     const auto textFragSrc{ loadTextFile(SFA_ROOT "resources/shaders/text.frag") };
 
@@ -80,8 +80,9 @@ int main()
     ComponentRegistry registry;
 
     constexpr EntityID rootEntity{ 1 };
-    constexpr EntityID buttonEntity1{ 2 };
-    constexpr EntityID buttonEntity2{ 3 };
+    constexpr EntityID playButtonEntity{ 2 };
+    constexpr EntityID quitButtonEntity{ 3 };
+
 
     registry.addComponent<UITransformComponent>(
         rootEntity,
@@ -89,55 +90,60 @@ int main()
     );
     registry.addComponent<UIHierarchyComponent>(
         rootEntity,
-        { .parent = NULL_ENTITY, .children = { buttonEntity1, buttonEntity2 } }
+        { .parent = NULL_ENTITY, .children = { playButtonEntity, quitButtonEntity } }
     );
     registry.addComponent<UILayoutComponent>(
         rootEntity,
-        { .type = UILayoutComponent::Type::Vertical, .spacing = 200.f, .padding = { 250.f, 280.f } }
+        { .type = UILayoutComponent::Type::Vertical, .spacing = 30.f, .padding = { 250.f, 220.f } }
     );
 
     registry.addComponent<UITransformComponent>(
-        buttonEntity1,
+        playButtonEntity,
         { .localPosition = { 0.f, 0.f }, .worldPosition = { 0.f, 0.f }, .size = { 240.f, 80.f } }
     );
+    registry.addComponent<UIHierarchyComponent>(playButtonEntity, { .parent = rootEntity, .children = {} });
     registry.addComponent<UILayoutElementComponent>(
-        buttonEntity1,
+        playButtonEntity,
         { .preferredSize = { 240.f, 80.f }, .flexGrow = 0.f }
     );
     registry.addComponent<SpriteComponent>(
-        buttonEntity1,
-        { .texture = nullptr, .size = { 240.f, 80.f }, .color = { 0.2f, 0.45f, 0.95f }, .renderLayer = 0 }
+        playButtonEntity,
+        { .texture = nullptr, .size = { 240.f, 80.f }, .color = { 0.f, 1.f, 0.f }, .renderLayer = 0 }
     );
     registry.addComponent<TextComponent>(
-        buttonEntity1,
-        { .content = "PLAY", .offset = glm::vec2(0.f), .scale = 1.f, .color = glm::vec3(0.f), .renderLayer = 1 }
+        playButtonEntity,
+        { .content = "PLAY", .offset = { 0.f, 0.f }, .scale = 1.f, .color = { 1.f, 1.f, 1.f }, .centerInTransform = true, .renderLayer = 1 }
     );
+
+    UIButtonComponent playButton;
+    playButton.standardColor = { 0.f, 0.f, 1.f };
+    playButton.pressCooldownMax = 0.2f;
+    playButton.onClick = [] { spdlog::info("PLAY pressed"); };
+    registry.addComponent<UIButtonComponent>(playButtonEntity, playButton);
 
     registry.addComponent<UITransformComponent>(
-        buttonEntity2,
+        quitButtonEntity,
         { .localPosition = { 0.f, 0.f }, .worldPosition = { 0.f, 0.f }, .size = { 240.f, 80.f } }
     );
+    registry.addComponent<UIHierarchyComponent>(quitButtonEntity, { .parent = rootEntity, .children = {} });
     registry.addComponent<UILayoutElementComponent>(
-        buttonEntity2,
+        quitButtonEntity,
         { .preferredSize = { 240.f, 80.f }, .flexGrow = 0.f }
     );
     registry.addComponent<SpriteComponent>(
-        buttonEntity2,
-        { .texture = nullptr, .size = { 240.f, 80.f }, .color = { 0.2f, 0.45f, 0.95f }, .renderLayer = 0 }
+        quitButtonEntity,
+        { .texture = nullptr, .size = { 240.f, 80.f }, .color = { 1.f, 0.f, 0.f }, .renderLayer = 0 }
     );
     registry.addComponent<TextComponent>(
-        buttonEntity2,
-        { .content = "QUIT", .offset = glm::vec2(0.f), .scale = 1.f, .color = glm::vec3(0.f), .renderLayer = 1 }
+        quitButtonEntity,
+        { .content = "QUIT", .offset = { 0.f, 0.f }, .scale = 1.f, .color = { 1.f, 1.f, 1.f }, .centerInTransform = true, .renderLayer = 1 }
     );
 
-    UIButtonComponent button;
-    button.standardColor = { 0.2f, 0.45f, 0.95f };
-    button.pressCooldownMax = 0.2f;
-    button.onClick = [] { spdlog::info("Sample button clicked"); };
-    registry.addComponent<UIButtonComponent>(buttonEntity1, button);
-
-    button.onClick = [&window]() { window.setShouldClose(); };
-    registry.addComponent<UIButtonComponent>(buttonEntity2, button);
+    UIButtonComponent quitButton;
+    quitButton.standardColor = { 0.f, 0.f, 1.f };
+    quitButton.pressCooldownMax = 0.2f;
+    quitButton.onClick = [] { spdlog::info("QUIT pressed"); };
+    registry.addComponent<UIButtonComponent>(quitButtonEntity, quitButton);
 
     float lastTime{ static_cast<float>(glfwGetTime()) };
 
@@ -154,7 +160,7 @@ int main()
 
         const bool mousePressed{ input->isMousePressed(MouseButton::Left) == InputAction::Press };
 
-        glClearColor(1.f, 1.f, 1.f, 1.f);
+        glClearColor(0.08f, 0.08f, 0.12f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         LayoutSystem::update(registry);
