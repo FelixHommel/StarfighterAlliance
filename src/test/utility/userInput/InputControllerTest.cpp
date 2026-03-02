@@ -101,9 +101,9 @@ TEST_F(InputControllerTest, CheckButtonStateOfPressedKey)
 /// of the mouse.
 TEST_F(InputControllerTest, CheckMouseMovementEvent)
 {
-    constexpr MousePosition newPosition{ .posX = 15.0, .posY = 51.0 };
+    constexpr glm::vec2 newPosition{ 15.0, 51.0 };
 
-    m_controller->registerEvent(MouseMoveEvent{ .posX = newPosition.posX, .posY = newPosition.posY });
+    m_controller->registerEvent(MouseMoveEvent{ .posX = newPosition.x, .posY = newPosition.y });
     m_controller->processEventQueue();
 
     EXPECT_EQ(newPosition, m_controller->mousePosition());
