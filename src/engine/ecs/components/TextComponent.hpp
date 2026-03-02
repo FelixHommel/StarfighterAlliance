@@ -22,6 +22,7 @@ struct TextComponent : public IComponent
     glm::vec2 offset{ glm::vec2(0.f) };
     float scale{ 1.f };
     glm::vec3 color{ glm::vec3(1.f) };
+    bool centerInTransform{ false };
     unsigned int renderLayer{ 0 };
 };
 
