@@ -22,9 +22,10 @@
 namespace sfa
 {
 
-UIRenderSystem::UIRenderSystem(std::shared_ptr<SpriteRenderer> spriteRenderer, std::shared_ptr<TextRenderer> textRenderer)
-    : m_spriteRenderer(std::move(spriteRenderer))
-    , m_textRenderer(std::move(textRenderer))
+UIRenderSystem::UIRenderSystem(
+    std::shared_ptr<SpriteRenderer> spriteRenderer, std::shared_ptr<TextRenderer> textRenderer
+)
+    : m_spriteRenderer(std::move(spriteRenderer)), m_textRenderer(std::move(textRenderer))
 {}
 
 void UIRenderSystem::render(ComponentRegistry& registry)

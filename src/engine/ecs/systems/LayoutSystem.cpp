@@ -76,7 +76,6 @@ void LayoutSystem::updateVerticalLayout(
         }
 
         totalPreferredHeight += preferredHeight;
-
     }
 
     if(layoutChildren.empty())

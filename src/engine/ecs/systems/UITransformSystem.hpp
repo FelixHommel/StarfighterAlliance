@@ -16,12 +16,16 @@ class UITransformSystem
 {
 public:
     /// \brief Update the positions of UI components.
-    /// 
+    ///
     /// \param registry the \ref ComponentRegistry to access the UI elements
     static void update(ComponentRegistry& registry);
 
 private:
-    static void propagate(EntityID entity, ComponentArray<UITransformComponent>& transforms, const ComponentArray<UIHierarchyComponent>& hierarchies);
+    static void propagate(
+        EntityID entity,
+        ComponentArray<UITransformComponent>& transforms,
+        const ComponentArray<UIHierarchyComponent>& hierarchies
+    );
 };
 
 } // namespace sfa

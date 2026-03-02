@@ -1,8 +1,8 @@
+#include "ecs/systems/UITransformSystem.hpp"
 #include "ecs/ComponentRegistry.hpp"
 #include "ecs/ECSUtility.hpp"
 #include "ecs/components/UIHierarchyComponent.hpp"
 #include "ecs/components/UITransformComponent.hpp"
-#include "ecs/systems/UITransformSystem.hpp"
 
 #include <gtest/gtest.h>
 
@@ -28,12 +28,10 @@ TEST(UITransformSystemTest, ChildWithoutHierarchyStillGetsWorldPositionFromParen
 
     registry.addComponent<UIHierarchyComponent>(::ROOT, { .parent = NULL_ENTITY, .children = { ::CHILD } });
     registry.addComponent<UITransformComponent>(
-        ::ROOT,
-        { .localPosition = ::ROOT_POSITION, .worldPosition = glm::vec2(0.f), .size = ::ROOT_SIZE }
+        ::ROOT, { .localPosition = ::ROOT_POSITION, .worldPosition = glm::vec2(0.f), .size = ::ROOT_SIZE }
     );
     registry.addComponent<UITransformComponent>(
-        ::CHILD,
-        { .localPosition = ::CHILD_POSITION, .worldPosition = glm::vec2(0.f), .size = ::CHILD_SIZE }
+        ::CHILD, { .localPosition = ::CHILD_POSITION, .worldPosition = glm::vec2(0.f), .size = ::CHILD_SIZE }
     );
 
     UITransformSystem::update(registry);

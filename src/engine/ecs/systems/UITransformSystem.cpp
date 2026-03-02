@@ -30,7 +30,11 @@ void UITransformSystem::update(ComponentRegistry& registry)
 /// \param entity the current entity that is processed
 /// \param transforms a \ref ComponentArray with all \ref UITransformComponent stored in it
 /// \param hierarchies q \ref ComponentArray with all \ref UIHierarchyComponent stored in it
-void UITransformSystem::propagate(EntityID entity, ComponentArray<UITransformComponent>& transforms, const ComponentArray<UIHierarchyComponent>& hierarchies)
+void UITransformSystem::propagate(
+    EntityID entity,
+    ComponentArray<UITransformComponent>& transforms,
+    const ComponentArray<UIHierarchyComponent>& hierarchies
+)
 {
     if(!hierarchies.contains(entity) || !transforms.contains(entity))
         return;

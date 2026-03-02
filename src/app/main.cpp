@@ -86,63 +86,111 @@ int main()
 
     registry.addComponent<UITransformComponent>(
         rootEntity,
-        { .localPosition = { 0.f, 0.f }, .worldPosition = { 0.f, 0.f }, .size = { WINDOW_WIDTH, WINDOW_HEIGHT } }
+        {
+            .localPosition = { 0.f,          0.f           },
+              .worldPosition = { 0.f,          0.f           },
+              .size = { WINDOW_WIDTH, WINDOW_HEIGHT }
+    }
     );
     registry.addComponent<UIHierarchyComponent>(
         rootEntity,
-        { .parent = NULL_ENTITY, .children = { playButtonEntity, quitButtonEntity } }
+        {
+            .parent = NULL_ENTITY, .children = { playButtonEntity, quitButtonEntity }
+    }
     );
     registry.addComponent<UILayoutComponent>(
         rootEntity,
-        { .type = UILayoutComponent::Type::Vertical, .spacing = 30.f, .padding = { 250.f, 220.f } }
+        {
+            .type = UILayoutComponent::Type::Vertical, .spacing = 30.f, .padding = { 250.f, 220.f }
+    }
     );
 
     registry.addComponent<UITransformComponent>(
         playButtonEntity,
-        { .localPosition = { 0.f, 0.f }, .worldPosition = { 0.f, 0.f }, .size = { 240.f, 80.f } }
+        {
+            .localPosition = { 0.f,   0.f  },
+              .worldPosition = { 0.f,   0.f  },
+              .size = { 240.f, 80.f }
+    }
     );
     registry.addComponent<UIHierarchyComponent>(playButtonEntity, { .parent = rootEntity, .children = {} });
     registry.addComponent<UILayoutElementComponent>(
         playButtonEntity,
-        { .preferredSize = { 240.f, 80.f }, .flexGrow = 0.f }
+        {
+            .preferredSize = { 240.f, 80.f },
+              .flexGrow = 0.f
+    }
     );
     registry.addComponent<SpriteComponent>(
         playButtonEntity,
-        { .texture = nullptr, .size = { 240.f, 80.f }, .color = { 0.f, 1.f, 0.f }, .renderLayer = 0 }
+        {
+            .texture = nullptr, .size = { 240.f, 80.f },
+                 .color = { 0.f, 1.f, 0.f },
+                 .renderLayer = 0
+    }
     );
     registry.addComponent<TextComponent>(
         playButtonEntity,
-        { .content = "PLAY", .offset = { 0.f, 0.f }, .scale = 1.f, .color = { 1.f, 1.f, 1.f }, .centerInTransform = true, .renderLayer = 1 }
+        {
+            .content = "PLAY",
+            .offset = { 0.f, 0.f },
+            .scale = 1.f,
+            .color = { 1.f, 1.f, 1.f },
+            .centerInTransform = true,
+            .renderLayer = 1
+    }
     );
 
     UIButtonComponent playButton;
     playButton.standardColor = { 0.f, 0.f, 1.f };
     playButton.pressCooldownMax = 0.2f;
-    playButton.onClick = [] { spdlog::info("PLAY pressed"); };
+    playButton.onClick = [] {
+        spdlog::info("PLAY pressed");
+    };
     registry.addComponent<UIButtonComponent>(playButtonEntity, playButton);
 
     registry.addComponent<UITransformComponent>(
         quitButtonEntity,
-        { .localPosition = { 0.f, 0.f }, .worldPosition = { 0.f, 0.f }, .size = { 240.f, 80.f } }
+        {
+            .localPosition = { 0.f,   0.f  },
+              .worldPosition = { 0.f,   0.f  },
+              .size = { 240.f, 80.f }
+    }
     );
     registry.addComponent<UIHierarchyComponent>(quitButtonEntity, { .parent = rootEntity, .children = {} });
     registry.addComponent<UILayoutElementComponent>(
         quitButtonEntity,
-        { .preferredSize = { 240.f, 80.f }, .flexGrow = 0.f }
+        {
+            .preferredSize = { 240.f, 80.f },
+              .flexGrow = 0.f
+    }
     );
     registry.addComponent<SpriteComponent>(
         quitButtonEntity,
-        { .texture = nullptr, .size = { 240.f, 80.f }, .color = { 1.f, 0.f, 0.f }, .renderLayer = 0 }
+        {
+            .texture = nullptr, .size = { 240.f, 80.f },
+                 .color = { 1.f, 0.f, 0.f },
+                 .renderLayer = 0
+    }
     );
     registry.addComponent<TextComponent>(
         quitButtonEntity,
-        { .content = "QUIT", .offset = { 0.f, 0.f }, .scale = 1.f, .color = { 1.f, 1.f, 1.f }, .centerInTransform = true, .renderLayer = 1 }
+        {
+            .content = "QUIT",
+            .offset = { 0.f, 0.f },
+            .scale = 1.f,
+            .color = { 1.f, 1.f, 1.f },
+            .centerInTransform = true,
+            .renderLayer = 1
+    }
     );
 
     UIButtonComponent quitButton;
     quitButton.standardColor = { 0.f, 0.f, 1.f };
     quitButton.pressCooldownMax = 0.2f;
-    quitButton.onClick = [] { spdlog::info("QUIT pressed"); };
+    quitButton.onClick = [] {
+        spdlog::info("QUIT pressed");
+    };
     registry.addComponent<UIButtonComponent>(quitButtonEntity, quitButton);
 
     float lastTime{ static_cast<float>(glfwGetTime()) };

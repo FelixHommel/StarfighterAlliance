@@ -1,9 +1,9 @@
+#include "ecs/systems/UITextFieldSystem.hpp"
 #include "ecs/ComponentRegistry.hpp"
 #include "ecs/ECSUtility.hpp"
 #include "ecs/components/TextComponent.hpp"
 #include "ecs/components/UITextFieldComponent.hpp"
 #include "ecs/components/UITransformComponent.hpp"
-#include "ecs/systems/UITextFieldSystem.hpp"
 
 #include <glm/glm.hpp>
 
@@ -41,7 +41,13 @@ TEST(UITextFieldSystemTest, FoxusAndTypingUpdatesTextAndCaret)
     );
     registry.addComponent<UITextFieldComponent>(
         FIELD_ENTITY,
-        { .value = "", .placeholder = "Type...", .focused = false, .showCaret = true, .caretPosition = 0, .blinkTimer = 0.f, .blinkInterval = BLINK_INTERVAL }
+        { .value = "",
+          .placeholder = "Type...",
+          .focused = false,
+          .showCaret = true,
+          .caretPosition = 0,
+          .blinkTimer = 0.f,
+          .blinkInterval = BLINK_INTERVAL }
     );
 
     UIInputState clickInside{};

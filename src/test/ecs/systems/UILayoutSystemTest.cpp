@@ -48,10 +48,14 @@ TEST(UILayoutSystemTest, VerticalLayoutDistributesFreeSpaceByFlexGrow)
 
     // NOTE: Add Root element properties
     registry.addComponent<UIHierarchyComponent>(
-        ::PARENT, { .parent = NULL_ENTITY, .children = { ::CHILD_A, ::CHILD_B } }
+        ::PARENT,
+        {
+            .parent = NULL_ENTITY, .children = { ::CHILD_A, ::CHILD_B }
+    }
     );
     registry.addComponent<UILayoutComponent>(
-        ::PARENT, { .type = UILayoutComponent::Type::Vertical, .spacing = ::LAYOUT_SPACING, .padding = ::LAYOUT_PADDING }
+        ::PARENT,
+        { .type = UILayoutComponent::Type::Vertical, .spacing = ::LAYOUT_SPACING, .padding = ::LAYOUT_PADDING }
     );
 
     // NOTE: Add Child element properties

@@ -182,7 +182,10 @@ TextBounds TextRenderer::measureBounds(const std::string& text, const glm::vec2&
     if(minX > maxX || minY > maxY)
         return {};
 
-    return { .min = { minX, minY }, .size = { maxX - minX, maxY - minY } };
+    return {
+        .min = { minX,        minY        },
+          .size = { maxX - minX, maxY - minY }
+    };
 }
 
 glm::vec2 TextRenderer::measure(const std::string& text, const glm::vec2& scale) const
