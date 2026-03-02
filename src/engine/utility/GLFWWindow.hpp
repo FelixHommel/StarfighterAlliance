@@ -60,6 +60,8 @@ public:
     /// \param height the new window height
     void onResize(int width, int height);
 
+    void setShouldClose() { glfwSetWindowShouldClose(m_window.get(), GLFW_TRUE); }
+
 private:
     struct WindowDeleter
     {
