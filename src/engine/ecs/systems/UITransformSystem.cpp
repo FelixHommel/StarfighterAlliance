@@ -45,7 +45,13 @@ void UITransformSystem::propagate(EntityID entity, ComponentArray<UITransformCom
 
     for(const auto& child : hierarchy.children)
     {
-        if(hierarchies.contains(child) && transforms.contains(child))
+        if(!transforms.contains(child))
+            continue;
+
+        auto& childTransform{ transforms.get(child) };
+        childTransform.worldPosition = transform.worldPosition + childTransform.localPosition;
+
+        if(hierarchies.contains(child))
             propagate(child, transforms, hierarchies);
     }
 }
