@@ -1,11 +1,21 @@
 #include "UIRenderSystem.hpp"
 
+#include "core/SpriteRenderer.hpp"
+#include "core/TextRenderer.hpp"
+#include "ecs/ComponentRegistry.hpp"
 #include "ecs/ECSUtility.hpp"
 #include "ecs/components/SpriteComponent.hpp"
 #include "ecs/components/TextComponent.hpp"
 #include "ecs/components/UITransformComponent.hpp"
 
+#include <glad/gl.h>
+#include <glm/ext/matrix_clip_space.hpp>
+#include <glm/glm.hpp>
+
 #include <algorithm>
+#include <array>
+#include <cstddef>
+#include <memory>
 #include <utility>
 #include <vector>
 
@@ -26,21 +36,47 @@ void UIRenderSystem::render(ComponentRegistry& registry)
     std::vector<EntityID> drawables;
     for(std::size_t i{ 0 }; i < transforms.size(); ++i)
     {
-        auto d{ transforms.entityAtIndex(i) };
-        if(transforms.contains(d) && sprites.contains(d))
-            drawables.emplace_back(std::move(d));
+        const auto entity{ transforms.entityAtIndex(i) };
+        if(transforms.contains(entity) && sprites.contains(entity))
+            drawables.push_back(entity);
     }
 
-    std::ranges::sort(drawables, [&sprites = sprites](EntityID lhs, EntityID rhs) {
-        return sprites.get(lhs).renderLayer < sprites.get(rhs).renderLayer;
+    std::ranges::sort(drawables, [&sprites, &texts](EntityID lhs, EntityID rhs) {
+        const auto lhsLayer{ sprites.contains(lhs) ? sprites.get(lhs).renderLayer : texts.get(lhs).renderLayer };
+        const auto rhsLayer{ sprites.contains(rhs) ? sprites.get(rhs).renderLayer : texts.get(rhs).renderLayer };
+
+        return lhsLayer < rhsLayer;
     });
 
-    for(auto d : drawables)
-    {
-        const auto& transform{ transforms.get(d) };
-        const auto& sprite{ sprites.get(d) };
+    // NOLINTNEXTLINE(readability-magic-numbers): 4 for viewport dimensions
+    std::array<int, 4> viewport{ 0, 0, 1, 1 };
+    glGetIntegerv(GL_VIEWPORT, viewport.data());
 
-        // TODO: complete rendering system
+    const float width{ static_cast<float>(viewport[2]) };
+    const float height{ static_cast<float>(viewport[3]) };
+    const glm::mat4 projection{ glm::ortho(0.f, width, height, 0.f, -1.f, 1.f) };
+
+    m_spriteRenderer->beginFrame(projection);
+    m_textRenderer->beginFrame(projection);
+
+    for(const auto entity : drawables)
+    {
+        const auto& transform{ transforms.get(entity) };
+
+        if(sprites.contains(entity))
+        {
+            const auto& sprite{ sprites.get(entity) };
+
+            m_spriteRenderer->draw(sprite.texture, transform.worldPosition, transform.size, 1.f, sprite.color);
+        }
+
+        if(texts.contains(entity))
+        {
+            const auto& text{ texts.get(entity) };
+            const glm::vec2 textPosition{ transform.worldPosition + text.offset };
+
+            m_textRenderer->render(text.content, textPosition, glm::vec2(text.scale), text.color);
+        }
     }
 }
 
