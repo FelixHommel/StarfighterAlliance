@@ -15,6 +15,8 @@ add_library(${NAME}
     ./ecs/systems/MovementSystem.cpp
     ./ecs/systems/SpriteRenderSystem.cpp
     ./ecs/systems/TextRenderSystem.cpp
+    ./ecs/systems/UIRenderSystem.cpp
+    ./ecs/systems/UITextFieldSystem.cpp
     ./ecs/systems/UITransformSystem.cpp
     ./external/stb_image_impl.cpp
     ./utility/GLFWWindow.cpp
@@ -57,6 +59,7 @@ target_sources(${NAME}
             ./ecs/components/UIHierarchyComponent.hpp
             ./ecs/components/UILayoutComponent.hpp
             ./ecs/components/UILayoutElementComponent.hpp
+            ./ecs/components/UITextFieldComponent.hpp
             ./ecs/components/UITransformComponent.hpp
             ./ecs/components/VelocityComponent.hpp
             ./ecs/systems/ButtonSystem.hpp
@@ -64,6 +67,8 @@ target_sources(${NAME}
             ./ecs/systems/MovementSystem.hpp
             ./ecs/systems/SpriteRenderSystem.hpp
             ./ecs/systems/TextRenderSystem.hpp
+            ./ecs/systems/UIRenderSystem.hpp
+            ./ecs/systems/UITextFieldSystem.hpp
             ./ecs/systems/UITransformSystem.hpp
             ./utility/BlockingQueue.hpp
             ./utility/ThreadPool.hpp
