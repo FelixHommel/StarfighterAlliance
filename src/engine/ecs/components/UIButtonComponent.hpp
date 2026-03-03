@@ -28,12 +28,12 @@ struct UIButtonComponent : public IComponent
         Pressed
     };
 
-    glm::vec3 standardColor;
+    glm::vec3 standardColor{ glm::vec3(1.f) };
     float hoverFactor{ DEFAULT_BUTTON_HOVER_FACTOR };
     float pressFactor{ DEFAULT_BUTTON_PRESS_FACTOR };
 
     std::function<void()> onClick;
-    float pressCooldownMax;
+    float pressCooldownMax{ 1.f };
     float cooldownTimer{ 0.f };
     ButtonState state{ ButtonState::Normal };
 
