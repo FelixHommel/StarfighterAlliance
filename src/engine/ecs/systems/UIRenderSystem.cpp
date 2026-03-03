@@ -7,13 +7,12 @@
 #include "ecs/components/SpriteComponent.hpp"
 #include "ecs/components/TextComponent.hpp"
 #include "ecs/components/UITransformComponent.hpp"
+#include "utility/GLFWWindow.hpp"
 
-#include <glad/gl.h>
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/glm.hpp>
 
 #include <algorithm>
-#include <array>
 #include <cstddef>
 #include <memory>
 #include <utility>
@@ -28,7 +27,7 @@ UIRenderSystem::UIRenderSystem(
     : m_spriteRenderer(std::move(spriteRenderer)), m_textRenderer(std::move(textRenderer))
 {}
 
-void UIRenderSystem::render(ComponentRegistry& registry)
+void UIRenderSystem::render(ComponentRegistry& registry, const Viewport& viewport)
 {
     const auto& transforms{ registry.getComponentArray<UITransformComponent>() };
     const auto& sprites{ registry.getComponentArray<SpriteComponent>() };
@@ -49,13 +48,7 @@ void UIRenderSystem::render(ComponentRegistry& registry)
         return lhsLayer < rhsLayer;
     });
 
-    // NOLINTNEXTLINE(readability-magic-numbers): 4 for viewport dimensions
-    std::array<int, 4> viewport{ 0, 0, 1, 1 };
-    glGetIntegerv(GL_VIEWPORT, viewport.data());
-
-    const float width{ static_cast<float>(viewport[2]) };
-    const float height{ static_cast<float>(viewport[3]) };
-    const glm::mat4 projection{ glm::ortho(0.f, width, height, 0.f, -1.f, 1.f) };
+    const glm::mat4 projection{ glm::ortho(0.f, static_cast<float>(viewport.width), static_cast<float>(viewport.height), 0.f, -1.f, 1.f) };
 
     m_spriteRenderer->beginFrame(projection);
     m_textRenderer->beginFrame(projection);

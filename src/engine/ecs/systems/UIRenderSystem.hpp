@@ -4,6 +4,7 @@
 #include "core/SpriteRenderer.hpp"
 #include "core/TextRenderer.hpp"
 #include "ecs/ComponentRegistry.hpp"
+#include "utility/GLFWWindow.hpp"
 
 #include <memory>
 
@@ -15,7 +16,7 @@ class UIRenderSystem
 public:
     UIRenderSystem(std::shared_ptr<SpriteRenderer> spriteRenderer, std::shared_ptr<TextRenderer> textRenderer);
 
-    void render(ComponentRegistry& registry);
+    void render(ComponentRegistry& registry, const Viewport& viewport);
 
 private:
     std::shared_ptr<SpriteRenderer> m_spriteRenderer;

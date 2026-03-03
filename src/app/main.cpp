@@ -214,7 +214,7 @@ int main()
         LayoutSystem::update(registry);
         UITransformSystem::update(registry);
         ButtonSystem::update(registry, dt, input->mousePosition(), mousePressed);
-        uiRenderer.render(registry);
+        uiRenderer.render(registry, window.viewport());
 
         glfwSwapBuffers(glfwGetCurrentContext());
         glfwPollEvents();
