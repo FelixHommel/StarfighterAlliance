@@ -38,7 +38,7 @@ void UIRenderSystem::render(ComponentRegistry& registry)
     for(std::size_t i{ 0 }; i < transforms.size(); ++i)
     {
         const auto entity{ transforms.entityAtIndex(i) };
-        if(transforms.contains(entity) && sprites.contains(entity))
+        if(transforms.contains(entity) && (sprites.contains(entity) || texts.contains(entity)))
             drawables.push_back(entity);
     }
 
