@@ -149,7 +149,7 @@ void LayoutSystem::updateHorizontalLayout(
     const float freeSpace{ std::max(0.f, usableWidth - totalPreferredWidth - totalSpacing) };
 
     float currentX{ layout.padding.x };
-    for(const auto child : hierarchy.children)
+    for(const auto child : layoutChildren)
     {
         auto& childTransform{ transforms.get(child) };
 
