@@ -19,6 +19,7 @@ add_library(${NAME}
     ./ecs/systems/UITransformSystem.cpp
     ./external/stb_image_impl.cpp
     ./screens/MenuScreen.cpp
+    ./screens/ScreenStack.cpp
     ./utility/GLFWWindow.cpp
     ./utility/ThreadPool.cpp
     ./utility/userInput/InputController.cpp
@@ -71,6 +72,8 @@ target_sources(${NAME}
             ./ecs/systems/UITransformSystem.hpp
             ./screens/IScreen.hpp
             ./screens/MenuScreen.hpp
+            ./screens/ScreenCommand.hpp
+            ./screens/ScreenStack.hpp
             ./utility/BlockingQueue.hpp
             ./utility/ThreadPool.hpp
             ./utility/details/Threading.hpp

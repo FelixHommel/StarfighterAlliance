@@ -16,6 +16,7 @@ add_executable(${NAME}
     ./ecs/systems/UITextFieldSystemTest.cpp
     ./ecs/systems/UITransformSystemTest.cpp
     ./testUtility/stb_image_write_impl.cpp
+    ./screens/ScreenStackTest.cpp
     ./utility/BlockingQueueTest.cpp
     ./utility/ThreadPoolTest.cpp
     ./utility/exceptions/ExceptionTest.cpp
@@ -30,6 +31,7 @@ target_sources(${NAME}
         FILES
             ./fixtures/OpenGLTestFixture.hpp
             ./mocks/MockResourceLoader.hpp
+            ./mocks/MockScreen.hpp
             ./testUtility/RandomNumberGenerator.hpp
             ./testUtility/ResourceGenerator.hpp
 )
