@@ -16,7 +16,7 @@ classDiagram
       +onEnter()* void
       +onExit()* void
 
-      +handleInput(InputEvent)* void
+      +handleInput(InputController)* void
       +update(float dt)* void
       +render(RenderContext)* void
 
@@ -25,12 +25,16 @@ classDiagram
 
     class ScreenStack{
       -Array~IScreen~ stack
+      -Queue~ScreenCommand~ pendingCommands
 
       +push(IScreen) void
       +pop() void
       +replace(IScreen) void
 
-      +handleInput(InputEvent) void
+      +enqueueCommand(ScreenCommand) void
+      +processCommands() void
+
+      +handleInput(InputController) void
       +update(float dt) void
       +render(RenderContext) void
     }
@@ -44,15 +48,21 @@ classDiagram
 
     class ScreenCommand{
       ScreenCommandType type
-      Optional~IScreen~ screen
+      IScreen screen
     }
+  }
 
+  namespace Core{
     class RenderContext{
       SpriteRenderer renderer
       TextRenderer textRenderer
 
       Viewport viewport
     }
+  }
+
+  namespace Utility{
+    class InputController
   }
 
   IScreen ..|> MenuScreen
@@ -62,6 +72,8 @@ classDiagram
 
   ScreenStack "1" o-- "*" IScreen
   ScreenStack ..> RenderContext
+  ScreenStack ..> InputController
+  ScreenStack ..> ScreenCommand
 
   ScreenCommand --> ScreenCommandType
 ```
