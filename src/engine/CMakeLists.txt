@@ -18,6 +18,7 @@ add_library(${NAME}
     ./ecs/systems/UIRenderSystem.cpp
     ./ecs/systems/UITransformSystem.cpp
     ./external/stb_image_impl.cpp
+    ./screens/MenuScreen.cpp
     ./utility/GLFWWindow.cpp
     ./utility/ThreadPool.cpp
     ./utility/userInput/InputController.cpp
@@ -28,6 +29,7 @@ target_sources(${NAME}
         FILE_SET HEADERS
         FILES
             ./core/ParticleGenerator.hpp
+            ./core/RenderContext.hpp
             ./core/Shader.hpp
             ./core/SpriteRenderer.hpp
             ./core/TextRenderer.hpp
@@ -67,6 +69,8 @@ target_sources(${NAME}
             ./ecs/systems/TextRenderSystem.hpp
             ./ecs/systems/UIRenderSystem.hpp
             ./ecs/systems/UITransformSystem.hpp
+            ./screens/IScreen.hpp
+            ./screens/MenuScreen.hpp
             ./utility/BlockingQueue.hpp
             ./utility/ThreadPool.hpp
             ./utility/details/Threading.hpp
