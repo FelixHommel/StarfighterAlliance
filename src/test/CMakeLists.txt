@@ -29,6 +29,7 @@ target_sources(${NAME}
         FILE_SET HEADERS
         FILES
             ./fixtures/OpenGLTestFixture.hpp
+            ./mocks/MockOverlayScreen.hpp
             ./mocks/MockResourceLoader.hpp
             ./mocks/MockScreen.hpp
             ./testUtility/RandomNumberGenerator.hpp
