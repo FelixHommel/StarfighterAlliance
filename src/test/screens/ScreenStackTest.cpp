@@ -156,5 +156,25 @@ TEST_F(ScreenStackTest, ScreenStackRendersAllRelevantScreens)
     m_stack->render({});
 }
 
+/// \brief Test that the \ref ScreenStack only updates the top most screen.
+///
+/// When there are multiple screens in the stack, the update only affects the top most screen even if that is an overlay.
+TEST_F(ScreenStackTest, ScreenStackUpdatesTopMostScreen)
+{
+    constexpr auto TEST_DT{ 0.01f };
+
+    auto screen{ std::make_unique<MockScreen>() };
+    auto overlay{ std::make_unique<MockOverlayScreen>() };
+
+    EXPECT_CALL(*screen.get(), update(::testing::_)).Times(::testing::Exactly(0));
+    EXPECT_CALL(*overlay.get(), update(::testing::_)).Times(::testing::Exactly(1));
+
+    m_stack->enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(screen) });
+    m_stack->enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(overlay) });
+    m_stack->processCommands();
+
+    m_stack->update(TEST_DT);
+}
+
 } // namespace sfa::testing
 
