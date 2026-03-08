@@ -49,7 +49,7 @@ TEST_F(ScreenStackTest, EnqueuePushCommand)
 {
     const auto oldSize{ m_stack->size() };
 
-    m_stack->enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::make_unique<MockScreen>([]{}, []{}) });
+    m_stack->enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::make_unique<MockScreen>() });
     m_stack->processCommands();
 
     EXPECT_EQ(oldSize + 1, m_stack->size());
@@ -61,7 +61,7 @@ TEST_F(ScreenStackTest, EnqueuePushCommand)
 /// needed anymore.
 TEST_F(ScreenStackTest, EnqueuePopCommand)
 {
-    m_stack->enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::make_unique<MockScreen>([]{}, []{}) });
+    m_stack->enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::make_unique<MockScreen>() });
     m_stack->processCommands();
     const auto oldSize{ m_stack->size() };
 
@@ -77,11 +77,11 @@ TEST_F(ScreenStackTest, EnqueuePopCommand)
 /// one is emplaced instantly.
 TEST_F(ScreenStackTest, EnqueueReplaceCommand)
 {
-    m_stack->enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::make_unique<MockScreen>([]{}, []{}) });
+    m_stack->enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::make_unique<MockScreen>() });
     m_stack->processCommands();
     const auto oldSize{ m_stack->size() };
 
-    m_stack->enqueueCommand({ .type = ScreenCommand::Type::Replace, .screen = std::make_unique<MockScreen>([]{}, []{}) });
+    m_stack->enqueueCommand({ .type = ScreenCommand::Type::Replace, .screen = std::make_unique<MockScreen>() });
     m_stack->processCommands();
 
     EXPECT_EQ(oldSize, m_stack->size());
@@ -95,7 +95,7 @@ TEST_F(ScreenStackTest, ScreenStackPushCallsOnEnterFunction)
     constexpr auto CALLBACK_VAR_INIT{ 0 };
     auto callbackVar{ CALLBACK_VAR_INIT };
 
-    m_stack->enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::make_unique<MockScreen>([&callbackVar]{ callbackVar++; }, []{}) });
+    m_stack->enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::make_unique<MockScreen>([&callbackVar]{ callbackVar++; }) });
     m_stack->processCommands();
 
     EXPECT_EQ(CALLBACK_VAR_INIT + 1, callbackVar);
@@ -137,10 +137,10 @@ TEST_F(ScreenStackTest, ScreenStackReplaceCallsOnEnterAndOnExitFunctions)
 /// non-overlay screen.
 TEST_F(ScreenStackTest, ScreenStackRendersAllRelevantScreens)
 {
-    auto firstScreen{ std::make_unique<MockScreen>([]{}, []{}) };
-    auto secondScreen{ std::make_unique<MockScreen>([]{}, []{}) };
-    auto firstOverlay{ std::make_unique<MockOverlayScreen>([]{}, []{}) };
-    auto secondOverlay{ std::make_unique<MockOverlayScreen>([]{}, []{}) };
+    auto firstScreen{ std::make_unique<MockScreen>() };
+    auto secondScreen{ std::make_unique<MockScreen>() };
+    auto firstOverlay{ std::make_unique<MockOverlayScreen>() };
+    auto secondOverlay{ std::make_unique<MockOverlayScreen>() };
 
     EXPECT_CALL(*firstScreen.get(), render(::testing::_)).Times(::testing::Exactly(0));
     EXPECT_CALL(*secondScreen.get(), render(::testing::_)).Times(::testing::Exactly(1));

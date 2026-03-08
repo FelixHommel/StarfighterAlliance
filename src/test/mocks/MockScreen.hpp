@@ -20,7 +20,7 @@ public:
     using OnEnterFunction = std::function<void(void)>;
     using OnExitFunction = std::function<void(void)>;
 
-    MockScreen(OnEnterFunction onEnter, OnExitFunction onExit) : m_onEnterFunction(std::move(onEnter)), m_onExitFunction(std::move(onExit)) {}
+    MockScreen(OnEnterFunction onEnter = []{}, OnExitFunction onExit = []{}) : m_onEnterFunction(std::move(onEnter)), m_onExitFunction(std::move(onExit)) {}
     ~MockScreen() override = default;
 
     MockScreen(const MockScreen&) = delete;
