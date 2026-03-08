@@ -11,7 +11,7 @@ classDiagram
     class EndScreen
 
     class IScreen{
-      <<Abstract>>
+      <<Interface>>
 
       +onEnter()* void
       +onExit()* void
@@ -50,6 +50,15 @@ classDiagram
       ScreenCommandType type
       IScreen screen
     }
+
+    class ScreenContext{
+      <<Interface>>
+
+      +pushScreen(IScreen) void
+      +replaceScreen(IScreen) void
+      +popScreen() void
+      +quitGame() void
+    }
   }
 
   namespace Core{
@@ -65,6 +74,26 @@ classDiagram
     class InputController
   }
 
+  namespace ECS{
+    class ECSRegistry
+    class Entity
+  }
+
+  namespace UI{
+    class UIButtonSystem
+    class UIButton{
+      -UICommand command
+    }
+    class UILayoutSystem
+    class UICommand{
+      <<Abstract>>
+      +execute(ScreenContext) void
+    }
+    class StartGameCommand
+    class QuitGameCommand
+    class OpenScreenCommand
+  }
+
   IScreen ..|> MenuScreen
   IScreen ..|> SpaceShipSelectionScreen
   IScreen ..|> GameScreen
@@ -74,8 +103,23 @@ classDiagram
   ScreenStack ..> RenderContext
   ScreenStack ..> InputController
   ScreenStack ..> ScreenCommand
+  ScreenStack ..|> ScreenContext
 
   ScreenCommand --> ScreenCommandType
+
+  ECSRegistry ..* IScreen
+  ECSRegistry --> UIButton
+  ECSRegistry --> UIButtonSystem
+  ECSRegistry --> UILayoutSystem
+
+  UICommand ..> ScreenContext
+  UICommand ..|> StartGameCommand
+  UICommand ..|> QuitGameCommand
+  UICommand ..|> OpenScreenCommand
+
+  UIButtonSystem ..> InputController
+
+  UIButton --> UICommand
 ```
 
 A top level orchestrator would then be able to manage the ```ScreenCommands``` to manipulate the ```ScreenStack```.
