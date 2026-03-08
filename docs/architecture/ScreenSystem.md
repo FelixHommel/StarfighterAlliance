@@ -27,20 +27,21 @@ classDiagram
       -Array~IScreen~ stack
       -Queue~ScreenCommand~ pendingCommands
 
-      +push(IScreen) void
-      +pop() void
-      +replace(IScreen) void
-
       +enqueueCommand(ScreenCommand) void
       +processCommands() void
 
       +handleInput(InputController) void
       +update(float dt) void
       +render(RenderContext) void
+
+      -push(IScreen) void
+      -pop() void
+      -replace(IScreen) void
     }
 
     class ScreenCommandType{
       <<Enumeration>>
+
       Push
       Pop
       Replace
@@ -54,10 +55,9 @@ classDiagram
     class ScreenContext{
       <<Interface>>
 
-      +pushScreen(IScreen) void
-      +replaceScreen(IScreen) void
-      +popScreen() void
-      +quitGame() void
+      +push(IScreen)* void
+      +pop()* void
+      +replace(IScreen)* void
     }
   }
 
@@ -77,16 +77,17 @@ classDiagram
   namespace ECS{
     class ECSRegistry
     class Entity
-  }
 
-  namespace UI{
     class UIButtonSystem
     class UIButton{
       -UICommand command
     }
     class UILayoutSystem
+  }
+  namespace ButtonUtility{
     class UICommand{
       <<Abstract>>
+
       +execute(ScreenContext) void
     }
     class StartGameCommand
@@ -94,10 +95,10 @@ classDiagram
     class OpenScreenCommand
   }
 
-  IScreen ..|> MenuScreen
-  IScreen ..|> SpaceShipSelectionScreen
-  IScreen ..|> GameScreen
-  IScreen ..|> EndScreen
+  IScreen <|.. MenuScreen
+  IScreen <|.. SpaceShipSelectionScreen
+  IScreen <|.. GameScreen
+  IScreen <|.. EndScreen
 
   ScreenStack "1" o-- "*" IScreen
   ScreenStack ..> RenderContext
@@ -113,9 +114,9 @@ classDiagram
   ECSRegistry --> UILayoutSystem
 
   UICommand ..> ScreenContext
-  UICommand ..|> StartGameCommand
-  UICommand ..|> QuitGameCommand
-  UICommand ..|> OpenScreenCommand
+  UICommand <|.. StartGameCommand
+  UICommand <|.. QuitGameCommand
+  UICommand <|.. OpenScreenCommand
 
   UIButtonSystem ..> InputController
 
