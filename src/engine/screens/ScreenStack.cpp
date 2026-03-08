@@ -2,8 +2,11 @@
 
 #include "core/RenderContext.hpp"
 #include "screens/IScreen.hpp"
+#include "screens/ScreenCommand.hpp"
 #include "utility/userInput/InputController.hpp"
 
+#include <cstddef>
+#include <memory>
 #include <utility>
 
 namespace sfa
@@ -65,18 +68,25 @@ void ScreenStack::render(const RenderContext& context)
         m_stack[i]->render(context);
 }
 
+/// \brief Push a new screen to the stack.
+///
+/// \param screen the new screen
 void ScreenStack::push(std::unique_ptr<IScreen> screen)
 {
     m_stack.emplace_back(std::move(screen));
     m_stack.back()->onEnter();
 }
 
+/// \brief Pop the top screen from the stack.
 void ScreenStack::pop()
 {
     m_stack.back()->onExit();
     m_stack.pop_back();
 }
 
+/// \brief Replace the top screen on the stack.
+///
+/// \param screen the new top screen
 void ScreenStack::replace(std::unique_ptr<IScreen> screen)
 {
     pop();
