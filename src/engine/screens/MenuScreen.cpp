@@ -1,5 +1,8 @@
 #include "MenuScreen.hpp"
 
+#include "core/RenderContext.hpp"
+#include "utility/userInput/InputController.hpp"
+
 namespace sfa
 {
 
