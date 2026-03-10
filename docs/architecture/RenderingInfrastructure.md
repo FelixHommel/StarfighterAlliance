@@ -77,216 +77,80 @@ text text using FreeType needs access to FreeType, and things that need Renderin
 suboptimal, is that they are not labeled with the things they are using and that there is no common interface to use
 the services they provide. What that means is that everyone that uses Rendering is directly depending on OpenGL and FreeType.
 
-## Proposal: Implement a Strategy-Pattern Based Solution (Per Drawable)
+## Alternative: Rendering and ECS Separation
 
-When using a strategy based solution, it would be possible to abandon the rigid rendering structure and replace them
-with simple drawing primitives. These drawing primitives are then responsible for providing the rendering strategy with
-what is needed to draw the primitive (This means i.e., a sprite provides a texture, rotation, position, ... to the strategy).
+Currently, the ECS and renderer are very intertwined. This is an issue because rendering and ECS systems are designed
+to do very different things. ECS systems are here to read component data, modify component data, and then write the
+modified component data. This is fundamentally different to the data flow used in rendering where the renderer is
+reading component data and then uses the data to produce an image that can be presented to the screen. To overcome this
+problem, I propose the following architecture:
 
 ```mermaid
 classDiagram
-  namespace Core_Rendering{
-    class IDrawingPrimitive{
-      <<Interface>>
-
-      +draw() void
-    }
-
-    class Sprite{
-      -Vec4 color
-      -Texture texture
-
-      +draw() void
-    }
-
-    class Text{
-      -String text
-      -Float size
-
-      +draw() void
-    }
-
-    class IDrawingStrategy~T~{
-      <<Interface>>
-
-      +draw(T)* void
-    }
-
-    class OpenGLSpriteStrategy{
-      +OpenGLSpriteStrategy(Shader)
-
-      +draw(Sprite) void
-    }
-
-    class FreeTypeTextStrategy{
-      +FreeTypeTextStrategy(Shader)
-
-      +draw(Text) void
-    }
+  namespace ECS{
+    class ECSRegistry
   }
 
-  OpenGLSpriteStrategy ..> Sprite
-  OpenGLSpriteStrategy --|> IDrawingStrategy
-
-  IDrawingStrategy <--* IDrawingPrimitive
-
-  IDrawingPrimitive <|-- Sprite
-  IDrawingPrimitive <|-- Text
-
-  FreeTypeTextStrategy --|> IDrawingStrategy
-  FreeTypeTextStrategy ..> Text
-```
-
-This system then could be implemented like this (semi-implementation, just for conceptual idea):
-
-```cpp
-class IDrawingPrimitive
-{
-public:
-    IDrawingPrimitive() = default;
-    virtual ~IDrawingPrimitive() = default;
-
-    virtual void draw() const = 0;
-};
-
-class Sprite : public IDrawingPrimitive
-{
-public:
-    explicit Sprite(glm::vec4 color, std::shared_ptr<DrawStrategy<Circle>> strat)
-        : m_strategy{ std::move(strat)
-        , m_color{ color }
-    {}
-
-    explicit Sprite(glm::vec4 color, std::shared_ptr<Shader> shader)
-        : m_strategy{ std::make_unique<OpenGLSpriteStrategy>(std::move(shader)) }
-        , m_color{ color }
-    {}
-
-    void draw() const override { m_strategy->draw(*this); }
-
-private:
-    std::unique_ptr<DrawStrategy<Sprite>> m_strategy;
-    glm::vec4 m_color;
-};
-
-template<typename T>
-class DrawStrategy
-{
-public:
-    virtual ~DrawStrategy() = default;
-
-    virtual void draw(const T&, /* potential other arguments */) const = 0;
-};
-
-class OpenGLSpriteStrategy : public DrawStrategy<Sprite>
-{
-public:
-    OpenGLSpriteStrategy(std::shared_ptr<Shader> shader, /* drawing related arguments */);
-
-    void draw(const Sprite& s, /* potential other arguments */) const override;
-
-private:
-    std::shared_ptr<Shader> m_shader;
-};
-```
-
-This system can be combined with free-functions that are used to setup the frame global state
-(i.e., setting projection matrix, transparency, stencil, ...) with functions like ```void beginOpenGLFrame(...)```
-
-That means that every primitive carries its own way of rendering with it as a data member while keeping the benefit of being lightweight.
-
-### Critical Considerations
-
-- Examine the overhead of creating an OpenGL buffer per sprite. That would be an implied restriction, when every sprite
-  has its own strategy, that would mean that the strategy would need to handle creating an OpenGL buffer for
-  the primitive. That is because every Sprite needs a quad to project the texture or color onto.
-
-  - Same problem with the Text primitive, possibly even worse if each strategy would need to load its own font and
-    create glyphs from that font
-
-- How can every used shader know about the current projection matrix when setting the frame global data?
-
-## Proposal: Implement a Command + Strategy Based Solution
-
-This approach would avoid the issues of the prior solution which had a strategy per drawable, that would've caused a
-violation of the SRP because a Sprite then would have been responsible for data maintenance and rendering.
-
-Here, render primitives become pure data containers that do not manage anything else than maintaining the data they contain.
-
-```mermaid
-classDiagram
-  namespace Core_Primitives{
+  namespace Rendering{
     class Mesh
-
-    class Text{
-      +String content
-      +Vec2 position
-      +Vec2 scale
-      +Vec4 color
-      +FreeTypeFont font
-    }
 
     class Sprite{
       +Texture texture
+      +Vec4 color
       +Vec2 position
       +Vec2 scale
       +Float rotation
+    }
+
+    class Text{
+      +String content
       +Vec4 color
-    }
-  }
-
-  namespace Core_Rendering{
-    class Glyph{
-      +Uint texture
-      +IVec2 size
-      +IVec2 bearing
-      +Uint advance
+      +Vec2 position
+      +Vec2 scale
+      +Float rotation
     }
 
-    class FreeTypeFont{
-      -Map~Char, Glyph~ glyphs
-
-      +loadFont(Path filepath) void
-      +glyph(Char) Glyph
-    }
-
-    class OpenGLTextRenderer{
-      -UInt vao
-      -UInt vbo
-
-      +draw(Text) void
-    }
-
-    class OpenGLRenderBackend{
-      -OpenGLTextRenderer textRenderer
-
-      +beginFrame(FrameData) void
-      +draw(Sprite) void
-      +draw(Text) void
-      +draw(Mesh) void
-    }
-
-    class IRenderBackend{
-      <<Interface>>
-
-      +beginFrame(FrameData)* void
-      +draw(Sprite)* void
-      +draw(Text)* void
-      +draw(Mesh)* void
-    }
-
-    class FrameData{
+    class FrameInfo{
       +Mat4x4 projection
       +Float dt
     }
+
+    class IRenderer{
+      +beginFrame(FrameInfo)* void
+      +render(Array~Renderable~)* void
+
+      -draw(Sprite)* void
+      -draw(Text)* void
+      -draw(Mesh)* void
+    }
+
+    class OpenGLRenderer{
+      -UInt VAO
+      -UInt VBO
+
+      +beginFrame(FrameInfo) void
+      +render(Array~Renderable~) void
+
+      -draw(Sprite) void
+      -draw(Text) void
+      -draw(Mesh) void
+    }
   }
 
-  Glyph ..* FreeTypeFont
+  class FontAtals{
+  }
 
-  IRenderBackend <.. FrameData
-  IRenderBackend <|.. OpenGLRenderBackend
+  IRenderer ..> Sprite
+  IRenderer ..> Text
+  IRenderer ..> Mesh
+  IRenderer ..> FrameInfo
 
-  OpenGLRenderBackend *.. OpenGLTextRenderer
-
-  OpenGLTextRenderer ..> FreeTypeFont
+  OpenGLRenderer ..|> IRenderer
 ```
+
+In this design ```OpenGLRenderer``` would be responsible for creating one quad and registering a VAO and VBO for it.
+This quad can then be used across all sprite draws since it is only needed to project a color or texture onto it.
+For meshes (only relevant in the future) it is slightly different, those would have to be brought by the ```Mesh```
+primitive since it is not feasible nor realistic to load meshes each frame. It might be fine to couple
+```OpenGLRenderer``` with ```FreeType```, I am currently not sure if it is needed nor beneficial to abstract
+text rendering at this point. The introduction of a font atlas however is reasonable and should be done.
