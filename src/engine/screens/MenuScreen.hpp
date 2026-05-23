@@ -21,7 +21,7 @@ public:
     using OnEnterFunction = std::function<void(void)>;
     using OnExitFunction = std::function<void(void)>;
 
-    MenuScreen(OnEnterFunction onEnter, OnExitFunction onExit);
+    MenuScreen(IWindow& window, OnEnterFunction onEnter, OnExitFunction onExit);
     ~MenuScreen() override = default;
 
     MenuScreen(const MenuScreen&) = delete;
@@ -38,10 +38,15 @@ public:
     bool isOverlay() override { return false; }
 
 private:
+    IWindow& m_window;
     OnEnterFunction m_onEnterFunction;
     OnExitFunction m_onExitFunction;
 
     ComponentRegistry m_registry;
+
+    void createRootPanelUI();
+    void createPlayButtonUI();
+    void createQuitButtonUI();
 };
 
 } // namespace sfa

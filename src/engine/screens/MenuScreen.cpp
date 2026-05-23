@@ -30,7 +30,7 @@ constexpr auto LAYOUT_PADDING{ glm::vec2(250.f, 220.f) };
 
 constexpr auto BUTTON_SIZE{ glm::vec2(240.f, 80.f) };
 constexpr auto BUTTON_STANDARD_COLOR{ glm::vec3(0.f, 0.f, 1.f) };
-constexpr auto PBUTTON_PRESS_COOLDOWN{ 0.2f };
+constexpr auto BUTTON_PRESS_COOLDOWN{ 0.2f };
 
 constexpr auto PLAY_BUTTON_COLOR{ glm::vec3(0.f, 1.f, 0.f) };
 constexpr auto QUIT_BUTTON_COLOR{ glm::vec3(1.f, 0.f, 0.f) };
@@ -40,24 +40,66 @@ constexpr auto QUIT_BUTTON_COLOR{ glm::vec3(1.f, 0.f, 0.f) };
 namespace sfa
 {
 
-MenuScreen::MenuScreen(OnEnterFunction onEnter, OnExitFunction onExit)
-    : m_onEnterFunction(onEnter), m_onExitFunction(onExit)
+MenuScreen::MenuScreen(IWindow& window, OnEnterFunction onEnter, OnExitFunction onExit)
+    : m_window(window), m_onEnterFunction(onEnter), m_onExitFunction(onExit)
+{
+    createRootPanelUI();
+    createPlayButtonUI();
+    createQuitButtonUI();
+}
+
+void MenuScreen::onEnter()
+{
+    if(m_onEnterFunction)
+        m_onEnterFunction();
+}
+
+void MenuScreen::onExit()
+{
+    if(m_onExitFunction)
+        m_onExitFunction();
+}
+
+void MenuScreen::update(float dt, const InputController& controller)
+{
+    LayoutSystem::update(m_registry);
+    UITransformSystem::update(m_registry);
+    ButtonSystem::update(
+        m_registry, dt, controller.mousePosition(), controller.isMousePressed(MouseButton::Left) == InputAction::Press
+    );
+}
+
+void MenuScreen::render(const RenderContext& context)
+{
+    context.uiRenderer.render(m_registry, context.window.viewport());
+}
+
+/// \brief Create the root UI panel
+void MenuScreen::createRootPanelUI()
 {
     m_registry.addComponent<UITransformComponent>(
-        ::root, { .localPosition = glm::vec2(0.f), .worldPosition = glm::vec2(0.f), .size = {} }
-        // TODO: How do I get Window size here for the size?
+        ::root,
+        {
+            .localPosition = glm::vec2(0.f),
+            .worldPosition = glm::vec2(0.f),
+            .size = static_cast<glm::vec2>(m_window.viewport()),
+        }
     );
     m_registry.addComponent<UIHierarchyComponent>(
         ::root,
         {
             .parent = NULL_ENTITY,
-            .children = { ::quitButton, ::playButton },
+            .children = { ::playButton, ::quitButton },
     }
     );
     m_registry.addComponent<UILayoutComponent>(
         ::root, { .type = UILayoutComponent::Type::Vertical, .spacing = ::LAYOUT_SPACING, .padding = ::LAYOUT_PADDING }
     );
+}
 
+/// \brief Create the play button to start the game
+void MenuScreen::createPlayButtonUI()
+{
     m_registry.addComponent<UITransformComponent>(
         ::playButton, { .localPosition = glm::vec2(0.f), .worldPosition = glm::vec2(0.f), .size = ::BUTTON_SIZE }
     );
@@ -79,16 +121,19 @@ MenuScreen::MenuScreen(OnEnterFunction onEnter, OnExitFunction onExit)
             .renderLayer = 1,
         }
     );
-
     m_registry.addComponent<UIButtonComponent>(
         ::playButton,
         {
             .standardColor = ::BUTTON_STANDARD_COLOR,
             .onClick = [] { spdlog::info("Play pressed"); },
-            .pressCooldownMax = ::PBUTTON_PRESS_COOLDOWN,
+            .pressCooldownMax = ::BUTTON_PRESS_COOLDOWN,
         }
     );
+}
 
+/// \brief Create the quit button to close the game
+void MenuScreen::createQuitButtonUI()
+{
     m_registry.addComponent<UITransformComponent>(
         ::quitButton, { .localPosition = glm::vec2(0.f), .worldPosition = glm::vec2(0.f), .size = ::BUTTON_SIZE }
     );
@@ -116,42 +161,18 @@ MenuScreen::MenuScreen(OnEnterFunction onEnter, OnExitFunction onExit)
             .renderLayer = 1,
         }
     );
-
-    UIButtonComponent quitButton;
     m_registry.addComponent<UIButtonComponent>(
         ::quitButton,
         {
             .standardColor = ::BUTTON_STANDARD_COLOR,
-            .onClick = [] { spdlog::info("QUIT pressed"); },
-            .pressCooldownMax = ::PBUTTON_PRESS_COOLDOWN,
+            .onClick =
+                [&window = m_window] {
+                    spdlog::info("QUIT pressed");
+                    window.setShouldClose();
+                },
+            .pressCooldownMax = ::BUTTON_PRESS_COOLDOWN,
         }
     );
-}
-
-void MenuScreen::onEnter()
-{
-    if(m_onEnterFunction)
-        m_onEnterFunction();
-}
-
-void MenuScreen::onExit()
-{
-    if(m_onExitFunction)
-        m_onExitFunction();
-}
-
-void MenuScreen::update(float dt, const InputController& controller)
-{
-    LayoutSystem::update(m_registry);
-    UITransformSystem::update(m_registry);
-    ButtonSystem::update(
-        m_registry, dt, controller.mousePosition(), controller.isMousePressed(MouseButton::Left) == InputAction::Press
-    );
-}
-
-void MenuScreen::render(const RenderContext& context)
-{
-    context.uiRenderer.render(m_registry, context.window.viewport());
 }
 
 } // namespace sfa
