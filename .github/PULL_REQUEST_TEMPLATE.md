@@ -18,8 +18,7 @@
 
 ## Checklist
 
-- [ ] Vulkan validation layers pass without new errors
-- [ ] Tested on supported hardware
+- [ ] Tested on available hardware
 - [ ] Code builds and runs successfully
 - [ ] Documentation/comments updated as needed
 
@@ -39,7 +38,7 @@
 
 ## Affected Areas
 
-<!-- List which systems or subsystems this PR affects, e.g., Swapchain, Descriptor Sets, Render Graph -->
+<!-- List which systems or subsystems this PR affects, e.g., Rendering, Gameplay, ... -->
 
 ---
 
