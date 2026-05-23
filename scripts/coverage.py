@@ -81,6 +81,7 @@ def main() -> int:
             "*/vcpkg_installed/*",
             "*/src/test/*",
             "*/src/app/*",
+            "*/examples/*",
         ],
         help="Which directories to exclude from analysis",
     )
