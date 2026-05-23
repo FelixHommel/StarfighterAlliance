@@ -30,7 +30,7 @@ public:
     ScreenStackTest& operator=(ScreenStackTest&&) noexcept = delete;
 
 protected:
-    std::unique_ptr<ScreenStack> m_stack;
+    std::unique_ptr<ScreenStack> m_stack{ std::make_unique<ScreenStack>() };
 };
 
 /// \brief Test that the \ref ScreenStack is initially empty.
@@ -95,7 +95,9 @@ TEST_F(ScreenStackTest, ScreenStackPushCallsOnEnterFunction)
     constexpr auto CALLBACK_VAR_INIT{ 0 };
     auto callbackVar{ CALLBACK_VAR_INIT };
 
-    m_stack->enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::make_unique<MockScreen>([&callbackVar]{ callbackVar++; }) });
+    m_stack->enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::make_unique<MockScreen>([&callbackVar] {
+                                                                     callbackVar++;
+                                                                 }) });
     m_stack->processCommands();
 
     EXPECT_EQ(CALLBACK_VAR_INIT + 1, callbackVar);
@@ -109,7 +111,11 @@ TEST_F(ScreenStackTest, ScreenStackPopCallsOnExitFunction)
     constexpr auto CALLBACK_VAR_INIT{ 0 };
     auto callbackVar{ CALLBACK_VAR_INIT };
 
-    m_stack->enqueueCommand({ .type = ScreenCommand::Type::Pop, .screen = std::make_unique<MockScreen>([]{}, [&callbackVar]{ callbackVar--; }) });
+    m_stack->enqueueCommand(
+        { .type = ScreenCommand::Type::Push,
+          .screen = std::make_unique<MockScreen>([] {}, [&callbackVar] { callbackVar--; }) }
+    );
+    m_stack->enqueueCommand({ .type = ScreenCommand::Type::Pop, .screen = nullptr });
     m_stack->processCommands();
 
     EXPECT_EQ(CALLBACK_VAR_INIT - 1, callbackVar);
@@ -122,13 +128,23 @@ TEST_F(ScreenStackTest, ScreenStackPopCallsOnExitFunction)
 /// replaced and then should call the on enter function of the new screen that is being pushed.
 TEST_F(ScreenStackTest, ScreenStackReplaceCallsOnEnterAndOnExitFunctions)
 {
-    constexpr auto CALLBACK_VAR_INIT{ 0 };
-    auto callbackVar{ CALLBACK_VAR_INIT };
+    constexpr auto CALLBACK_VAR_INIT_FIRST_SCREEN{ 1 };
+    auto callbackVarFirstScreen{ CALLBACK_VAR_INIT_FIRST_SCREEN };
+    constexpr auto CALLBACK_VAR_INIT_SECOND_SCREEN{ 1 };
+    auto callbackVarSecondScreen{ CALLBACK_VAR_INIT_SECOND_SCREEN };
 
-    m_stack->enqueueCommand({ .type = ScreenCommand::Type::Replace, .screen = std::make_unique<MockScreen>([&callbackVar]{ callbackVar++; }, [&callbackVar]{ callbackVar--; }) });
+    m_stack->enqueueCommand(
+        { .type = ScreenCommand::Type::Push,
+          .screen = std::make_unique<MockScreen>([] {}, [&callbackVarFirstScreen] { callbackVarFirstScreen--; }) }
+    );
+    m_stack->enqueueCommand(
+        { .type = ScreenCommand::Type::Replace,
+          .screen = std::make_unique<MockScreen>([&callbackVarSecondScreen] { callbackVarSecondScreen++; }) }
+    );
     m_stack->processCommands();
 
-    EXPECT_EQ(CALLBACK_VAR_INIT, callbackVar);
+    EXPECT_EQ(CALLBACK_VAR_INIT_FIRST_SCREEN - 1, callbackVarFirstScreen);
+    EXPECT_EQ(CALLBACK_VAR_INIT_SECOND_SCREEN + 1, callbackVarSecondScreen);
 }
 
 /// \brief Test that the \ref ScreenStack correctly renders overlays and regular screens.
