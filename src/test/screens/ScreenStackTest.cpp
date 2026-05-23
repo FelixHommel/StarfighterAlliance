@@ -179,17 +179,19 @@ TEST_F(ScreenStackTest, ScreenStackUpdatesTopMostScreen)
 {
     constexpr auto TEST_DT{ 0.01f };
 
+    InputController controller{};
+
     auto screen{ std::make_unique<MockScreen>() };
     auto overlay{ std::make_unique<MockOverlayScreen>() };
 
-    EXPECT_CALL(*screen.get(), update(::testing::_)).Times(::testing::Exactly(0));
-    EXPECT_CALL(*overlay.get(), update(::testing::_)).Times(::testing::Exactly(1));
+    EXPECT_CALL(*screen.get(), update(::testing::_, ::testing::_)).Times(::testing::Exactly(0));
+    EXPECT_CALL(*overlay.get(), update(::testing::_, ::testing::_)).Times(::testing::Exactly(1));
 
     m_stack->enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(screen) });
     m_stack->enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(overlay) });
     m_stack->processCommands();
 
-    m_stack->update(TEST_DT);
+    m_stack->update(TEST_DT, controller);
 }
 
 } // namespace sfa::testing

@@ -25,8 +25,7 @@ public:
     virtual void onEnter() = 0;
     virtual void onExit() = 0;
 
-    virtual void handleInput(const InputController& controller) = 0;
-    virtual void update(float dt) = 0;
+    virtual void update(float dt, const InputController& controller) = 0;
     virtual void render(const RenderContext& context) = 0;
 
     virtual bool isOverlay() = 0;

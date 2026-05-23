@@ -38,14 +38,11 @@ public:
     /// \brief Process the enqueued commands.
     void processCommands();
 
-    /// \brief Propagate the inputs to the screens.
-    ///
-    /// \param controller the \ref InputController providing input states
-    void handleInput(const InputController& controller);
     /// \brief Update the screen at the top of the stack.
     ///
     /// \param dt delta time
-    void update(float dt);
+    /// \param controller the \ref InputController providing input states
+    void update(float dt, const InputController& controller);
     /// \brief Render all the relevant screens.
     ///
     /// Relevant in this context means all screens from the top of the stack down to the first non-overlay screen.

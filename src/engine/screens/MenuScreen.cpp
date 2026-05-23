@@ -23,11 +23,7 @@ void MenuScreen::onExit()
         m_onExitFunction();
 }
 
-void MenuScreen::handleInput(const InputController& controller)
-{
-}
-
-void MenuScreen::update(float dt)
+void MenuScreen::update(float dt, const InputController& controller)
 {
 }
 

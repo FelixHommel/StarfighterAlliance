@@ -40,17 +40,10 @@ void ScreenStack::processCommands()
     }
 }
 
-void ScreenStack::handleInput(const InputController& controller)
-{
-    // TODO: Respect the fact where the top of the stack might be one or multiple overlay screens
-    if(!m_stack.empty())
-        m_stack.back()->handleInput(controller);
-}
-
-void ScreenStack::update(float dt)
+void ScreenStack::update(float dt, const InputController& controller)
 {
     if(!m_stack.empty())
-        m_stack.back()->update(dt);
+        m_stack.back()->update(dt, controller);
 }
 
 void ScreenStack::render(const RenderContext& context)

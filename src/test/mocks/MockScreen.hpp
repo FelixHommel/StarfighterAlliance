@@ -20,7 +20,11 @@ public:
     using OnEnterFunction = std::function<void(void)>;
     using OnExitFunction = std::function<void(void)>;
 
-    MockScreen(OnEnterFunction onEnter = []{}, OnExitFunction onExit = []{}) : m_onEnterFunction(std::move(onEnter)), m_onExitFunction(std::move(onExit)) {}
+    MockScreen(
+        OnEnterFunction onEnter = [] {}, OnExitFunction onExit = [] {}
+    )
+        : m_onEnterFunction(std::move(onEnter)), m_onExitFunction(std::move(onExit))
+    {}
     ~MockScreen() override = default;
 
     MockScreen(const MockScreen&) = delete;
@@ -28,11 +32,18 @@ public:
     MockScreen(MockScreen&&) noexcept = delete;
     MockScreen& operator=(MockScreen&&) noexcept = delete;
 
-    void onEnter() override{ if(m_onEnterFunction) m_onEnterFunction();}
-    void onExit() override{ if(m_onExitFunction) m_onExitFunction(); }
+    void onEnter() override
+    {
+        if(m_onEnterFunction)
+            m_onEnterFunction();
+    }
+    void onExit() override
+    {
+        if(m_onExitFunction)
+            m_onExitFunction();
+    }
 
-    MOCK_METHOD(void, handleInput, (const InputController& controller), (override));
-    MOCK_METHOD(void, update, (float dt), (override));
+    MOCK_METHOD(void, update, (float dt, const InputController& controller), (override));
     MOCK_METHOD(void, render, (const RenderContext& context), (override));
 
     bool isOverlay() override { return false; }

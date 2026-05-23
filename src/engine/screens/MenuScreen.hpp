@@ -31,8 +31,7 @@ public:
     void onEnter() override;
     void onExit() override;
 
-    void handleInput(const InputController& controller) override;
-    void update(float dt) override;
+    void update(float dt, const InputController& controller) override;
     void render(const RenderContext& context) override;
 
     bool isOverlay() override { return false; }
