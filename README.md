@@ -16,7 +16,7 @@ will be shown to the player after a game ended.
 
 ## Features
 
-- Works on Linux (tested on Ubuntu 24.04.01)
+- Works on Linux, Windows, and macOS (tested on Ubuntu 24.04.01, CI runs on all three)
 - Good graphics
 - Different spaceships in different colors
 - Various forms of enemies
@@ -28,28 +28,46 @@ will be shown to the player after a game ended.
 > Items are not in any particular order
 
 - [x] Re-enable tests
-  - Fix tests
-  - Figure out gmock issue
-  - Classes for each test type
+  - [x] Fix tests
+  - [x] Figure out gmock issue
+  - [x] Classes for each test type
 - [x] Fix All warnings
   - Turn on Warnings as errors
 - [x] Convert comments to Doxygen
 - [x] Namespaces for everything
 - [x] Clean up architecture
-  - JSONReader class complete overhaul
-  - Better/Different solution for ResourceManager?
-    - Multithreaded resource loading
+  - [x] JSONReader class complete overhaul
+  - [ ] Better/Different solution for ResourceManager?
+    - [ ] Multithreaded resource loading
 - [ ] Resolve the color picking service issue (Server is offline)
-  - Provide simple custom server to self host
-  - Make color random
-  - Make color pickable
+  - [ ] Provide simple custom server to self host
+  - [ ] Make color random
+  - [ ] Make color pickable
 
 ## Notes on Tests in CI
 
-The Windows CI environment is not able to run tets that require OpenGL. Because of that, tests that require OpenGL are
+The Windows CI environment is not able to run tests that require OpenGL. Because of that, tests that require OpenGL are
 labeled as such and can be filtered out by ctest.
 
 ## Building
+
+### With CMake Workflow
+
+1. Run workflow
+    ```bash
+    cmake --workflow --preset <platform>-<type>
+    ```
+
+    where ```<platform>``` can be any of ```gcc```, ```clang```, and ```windows``` and ```<type>``` can be either ```release```,
+    or ```debug```.
+
+3. Run the Application
+
+    ```bash
+    ./build/<type>/src/app/StarfighterAlliance
+    ```
+
+### Manually
 
 1. Configure CMake
 
@@ -68,6 +86,14 @@ labeled as such and can be filtered out by ctest.
     ```bash
     ./build/release/src/app/StarfighterAlliance
     ```
+
+## Examples
+
+Examples can be built by enabling ```SFA_BUILD_EXAMPLES``` in the CMake configure step by adding ```-DSFA_BUILD_EXAMPLES=ON```.
+
+> On CMake Preset ```Debug``` builds, examples are enabled by default.
+
+Once built, the example can be found in ```build/examples/```.
 
 ## Acknowledgments / Credits
 
