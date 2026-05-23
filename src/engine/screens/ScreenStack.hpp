@@ -23,7 +23,12 @@ namespace sfa
 class ScreenStack
 {
 public:
+    /// \brief Construct an empty \ref ScreenStack
     ScreenStack() = default;
+    /// \brief Construct a \ref ScreenStack with one initial screen already on the stack
+    ///
+    /// \param screen the initial screen
+    explicit ScreenStack(std::unique_ptr<IScreen> screen);
     ~ScreenStack() = default;
 
     ScreenStack(const ScreenStack&) = delete;

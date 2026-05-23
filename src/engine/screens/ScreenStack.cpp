@@ -7,10 +7,16 @@
 
 #include <cstddef>
 #include <memory>
+#include <spdlog/spdlog.h>
 #include <utility>
 
 namespace sfa
 {
+
+ScreenStack::ScreenStack(std::unique_ptr<IScreen> screen)
+{
+    push(std::move(screen));
+}
 
 void ScreenStack::enqueueCommand(ScreenCommand command)
 {
@@ -68,13 +74,18 @@ void ScreenStack::push(std::unique_ptr<IScreen> screen)
 {
     m_stack.emplace_back(std::move(screen));
     m_stack.back()->onEnter();
+    spdlog::info("Pushed new screen");
 }
 
 /// \brief Pop the top screen from the stack.
 void ScreenStack::pop()
 {
+    if(m_stack.empty())
+        return;
+
     m_stack.back()->onExit();
     m_stack.pop_back();
+    spdlog::info("Poped screen");
 }
 
 /// \brief Replace the top screen on the stack.
