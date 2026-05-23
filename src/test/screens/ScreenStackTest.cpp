@@ -43,6 +43,13 @@ TEST_F(ScreenStackTest, DefaultConstructionMakesEmptyStack)
     EXPECT_EQ(0, m_stack->size());
 }
 
+TEST_F(ScreenStackTest, ParameterConstructorAddsInitialScreen)
+{
+    ScreenStack stack{ std::make_unique<MockScreen>() };
+
+    EXPECT_EQ(1, stack.size());
+}
+
 /// \brief Test that the \ref ScreenStack can process a push \ref ScreenCommand.
 ///
 /// When a push command was queued and processed the size should increase by one, indicating that a new screen was
@@ -97,9 +104,12 @@ TEST_F(ScreenStackTest, ScreenStackPushCallsOnEnterFunction)
     constexpr auto CALLBACK_VAR_INIT{ 0 };
     auto callbackVar{ CALLBACK_VAR_INIT };
 
-    m_stack->enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::make_unique<MockScreen>([&callbackVar] {
-                                                                     callbackVar++;
-                                                                 }) });
+    m_stack->enqueueCommand(
+        {
+            .type = ScreenCommand::Type::Push,
+            .screen = std::make_unique<MockScreen>([&callbackVar] { callbackVar++; }),
+        }
+    );
     m_stack->processCommands();
 
     EXPECT_EQ(CALLBACK_VAR_INIT + 1, callbackVar);
@@ -114,8 +124,10 @@ TEST_F(ScreenStackTest, ScreenStackPopCallsOnExitFunction)
     auto callbackVar{ CALLBACK_VAR_INIT };
 
     m_stack->enqueueCommand(
-        { .type = ScreenCommand::Type::Push,
-          .screen = std::make_unique<MockScreen>([] {}, [&callbackVar] { callbackVar--; }) }
+        {
+            .type = ScreenCommand::Type::Push,
+            .screen = std::make_unique<MockScreen>([] {}, [&callbackVar] { callbackVar--; }),
+        }
     );
     m_stack->enqueueCommand({ .type = ScreenCommand::Type::Pop, .screen = nullptr });
     m_stack->processCommands();
@@ -136,17 +148,39 @@ TEST_F(ScreenStackTest, ScreenStackReplaceCallsOnEnterAndOnExitFunctions)
     auto callbackVarSecondScreen{ CALLBACK_VAR_INIT_SECOND_SCREEN };
 
     m_stack->enqueueCommand(
-        { .type = ScreenCommand::Type::Push,
-          .screen = std::make_unique<MockScreen>([] {}, [&callbackVarFirstScreen] { callbackVarFirstScreen--; }) }
+        {
+            .type = ScreenCommand::Type::Push,
+            .screen = std::make_unique<MockScreen>([] {}, [&callbackVarFirstScreen] { callbackVarFirstScreen--; }),
+        }
     );
     m_stack->enqueueCommand(
-        { .type = ScreenCommand::Type::Replace,
-          .screen = std::make_unique<MockScreen>([&callbackVarSecondScreen] { callbackVarSecondScreen++; }) }
+        {
+            .type = ScreenCommand::Type::Replace,
+            .screen = std::make_unique<MockScreen>([&callbackVarSecondScreen] { callbackVarSecondScreen++; }),
+        }
     );
     m_stack->processCommands();
 
     EXPECT_EQ(CALLBACK_VAR_INIT_FIRST_SCREEN - 1, callbackVarFirstScreen);
     EXPECT_EQ(CALLBACK_VAR_INIT_SECOND_SCREEN + 1, callbackVarSecondScreen);
+}
+
+/// \brief Test that the \ref ScreenStack renders one singular screen correctly
+///
+/// When there is only one screen in the stack, it should be rendered
+TEST_F(ScreenStackTest, ScreenStackRendersOneScreen)
+{
+    UIRenderSystem uiRenderer(nullptr, nullptr);
+    MockWindow window{};
+
+    auto screen{ std::make_unique<MockScreen>() };
+
+    EXPECT_CALL(*screen.get(), render(::testing::_)).Times(::testing::Exactly(1));
+
+    m_stack->enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(screen) });
+    m_stack->processCommands();
+
+    m_stack->render({ .uiRenderer = uiRenderer, .window = window });
 }
 
 /// \brief Test that the \ref ScreenStack correctly renders overlays and regular screens.
