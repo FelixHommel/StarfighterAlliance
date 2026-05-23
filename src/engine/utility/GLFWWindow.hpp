@@ -38,6 +38,9 @@ public:
     [[nodiscard]] Viewport viewport() const noexcept override { return { .width = m_width, .height = m_height }; }
     [[nodiscard]] bool shouldClose() const override { return glfwWindowShouldClose(m_window.get()) == GLFW_TRUE; }
 
+    /// \brief Signal the window that it should be closing
+    void setShouldClose() override { glfwSetWindowShouldClose(m_window.get(), GLFW_TRUE); }
+
     /// \brief Attach input controller and register the input controller callbacks with GLFW
     ///
     /// \param controller
@@ -48,9 +51,6 @@ public:
     /// \param width the new window width
     /// \param height the new window height
     void onResize(int width, int height);
-
-    /// \brief Signal the window that it should be closing
-    void setShouldClose() { glfwSetWindowShouldClose(m_window.get(), GLFW_TRUE); }
 
 private:
     struct WindowDeleter

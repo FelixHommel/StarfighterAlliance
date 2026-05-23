@@ -31,6 +31,8 @@ public:
     [[nodiscard]] virtual bool shouldClose() const = 0;
     [[nodiscard]] virtual Viewport viewport() const noexcept = 0;
 
+    virtual void setShouldClose() = 0;
+
     virtual void attachInputController(InputController* controller) = 0;
 };
 
