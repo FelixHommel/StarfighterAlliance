@@ -4,13 +4,79 @@
 #include "utility/userInput/InputController.hpp"
 #include "utility/userInput/InputEvent.hpp"
 
-#include <glad/gl.h>
-
 #include <GLFW/glfw3.h>
+#include <glad/gl.h>
+#include <spdlog/spdlog.h>
 
 #include <memory>
 #include <string>
-#include <utility>
+
+namespace
+{
+
+using namespace sfa;
+
+constexpr Key glfwToKey(int key)
+{
+    switch(key)
+    {
+    case GLFW_KEY_W:
+        return Key::W;
+    case GLFW_KEY_A:
+        return Key::A;
+    case GLFW_KEY_S:
+        return Key::S;
+    case GLFW_KEY_D:
+        return Key::D;
+    case GLFW_KEY_ESCAPE:
+        return Key::Esc;
+    default:
+        return Key::Unknown;
+    }
+}
+constexpr MouseButton glfwToButton(int button)
+{
+    switch(button)
+    {
+    case GLFW_MOUSE_BUTTON_LEFT:
+        return MouseButton::Left;
+    case GLFW_MOUSE_BUTTON_RIGHT:
+        return MouseButton::Right;
+    case GLFW_MOUSE_BUTTON_MIDDLE:
+        return MouseButton::Middle;
+    default:
+        return MouseButton::Unknown;
+    }
+}
+constexpr InputAction glfwToAction(int action)
+{
+    switch(action)
+    {
+    case GLFW_PRESS:
+        return InputAction::Press;
+    case GLFW_RELEASE:
+        return InputAction::Release;
+    default:
+        return InputAction::Unknown;
+    }
+}
+
+constexpr KeyboardInputEvent translateKeyEvent(int key, int action)
+{
+    return { .key = ::glfwToKey(key), .action = ::glfwToAction(action) };
+}
+
+constexpr MouseInputEvent translateMouseEvent(int button, int action)
+{
+    return { .button = ::glfwToButton(button), .action = ::glfwToAction(action) };
+}
+
+constexpr MouseMoveEvent translateMouseMoveEvent(double posX, double posY)
+{
+    return { .posX = posX, .posY = posY };
+}
+
+} // namespace
 
 namespace sfa
 {
@@ -59,6 +125,8 @@ GLFWWindow::GLFWWindow(const std::string& title, int width, int height)
         auto* self{ static_cast<GLFWWindow*>(glfwGetWindowUserPointer(window)) };
         self->onResize(width, height);
     });
+
+    spdlog::info("GLFWWindow created successfully");
 }
 
 GLFWWindow::~GLFWWindow()
@@ -92,21 +160,6 @@ void GLFWWindow::attachInputController(InputController* controller)
         auto* self{ static_cast<GLFWWindow*>(glfwGetWindowUserPointer(window)) };
         self->m_inputController->registerEvent(::translateMouseMoveEvent(posX, posY));
     });
-}
-
-constexpr KeyboardInputEvent GLFWWindow::translateKeyEvent(int key, int action)
-{
-    return { .key = GLFWWindow::glfwToKey(key), .action = GLFWWindow::glfwToAction(action) };
-}
-
-constexpr MouseInputEvent GLFWWindow::translateMouseEvent(int button, int action)
-{
-    return { .button = GLFWWindow::glfwToButton(button), .action = GLFWWindow::glfwToAction(action) };
-}
-
-constexpr MouseMoveEvent GLFWWindow::translateMouseMoveEvent(double posX, double posY)
-{
-    return { .posX = posX, .posY = posY };
 }
 
 } // namespace sfa
