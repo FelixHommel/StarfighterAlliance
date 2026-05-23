@@ -2,7 +2,8 @@ set(NAME "StarfighterAllianceTests")
 
 include(${PROJECT_SOURCE_DIR}/cmake/StaticAnalyzers.cmake)
 
-add_executable(${NAME}
+add_executable(
+    ${NAME}
     ./testMain.cpp
     ./core/ShaderTest.cpp
     ./core/TextureTest.cpp
@@ -24,29 +25,32 @@ add_executable(${NAME}
     ./utility/userInput/InputControllerTest.cpp
 )
 
-target_sources(${NAME}
+target_sources(
+    ${NAME}
     PRIVATE
         FILE_SET HEADERS
-        FILES
-            ./fixtures/OpenGLTestFixture.hpp
-            ./mocks/MockOverlayScreen.hpp
-            ./mocks/MockResourceLoader.hpp
-            ./mocks/MockScreen.hpp
-            ./testUtility/RandomNumberGenerator.hpp
-            ./testUtility/ResourceGenerator.hpp
+            FILES
+                ./fixtures/OpenGLTestFixture.hpp
+                ./mocks/MockOverlayScreen.hpp
+                ./mocks/MockResourceLoader.hpp
+                ./mocks/MockScreen.hpp
+                ./mocks/MockWindow.hpp
+                ./testUtility/RandomNumberGenerator.hpp
+                ./testUtility/ResourceGenerator.hpp
 )
 
 target_compile_features(${NAME} PRIVATE cxx_std_23)
-target_link_libraries(${NAME}
-    PRIVATE
-        project_warnings
-        GTest::gtest
-        GTest::gmock
-        StarfighterAllianceEngine
+target_link_libraries(
+    ${NAME}
+    PRIVATE project_warnings GTest::gtest GTest::gmock StarfighterAllianceEngine
 )
 
 include(GoogleTest)
 gtest_discover_tests(${NAME})
 
 # https://discourse.cmake.org/t/differences-in-set-property-vs-set-tests-properties-for-discovered-gtest-tests/8080
-set_property(DIRECTORY APPEND PROPERTY TEST_INCLUDE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/labelTests.cmake)
+set_property(
+    DIRECTORY
+    APPEND
+    PROPERTY TEST_INCLUDE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/labelTests.cmake
+)

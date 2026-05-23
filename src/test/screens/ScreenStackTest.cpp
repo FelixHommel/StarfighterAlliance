@@ -1,9 +1,11 @@
 #include "screens/ScreenStack.hpp"
-#include "core/RenderContext.hpp"
+#include "ecs/systems/UIRenderSystem.hpp"
 #include "screens/ScreenCommand.hpp"
 
 #include "mocks/MockOverlayScreen.hpp"
 #include "mocks/MockScreen.hpp"
+#include "mocks/MockWindow.hpp"
+#include "utility/userInput/InputController.hpp"
 
 #include "gmock/gmock.h"
 #include <gtest/gtest.h>
@@ -153,6 +155,9 @@ TEST_F(ScreenStackTest, ScreenStackReplaceCallsOnEnterAndOnExitFunctions)
 /// non-overlay screen.
 TEST_F(ScreenStackTest, ScreenStackRendersAllRelevantScreens)
 {
+    UIRenderSystem uiRenderer(nullptr, nullptr);
+    MockWindow window{};
+
     auto firstScreen{ std::make_unique<MockScreen>() };
     auto secondScreen{ std::make_unique<MockScreen>() };
     auto firstOverlay{ std::make_unique<MockOverlayScreen>() };
@@ -169,7 +174,7 @@ TEST_F(ScreenStackTest, ScreenStackRendersAllRelevantScreens)
     m_stack->enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(secondOverlay) });
     m_stack->processCommands();
 
-    m_stack->render({});
+    m_stack->render({ .uiRenderer = uiRenderer, .window = window });
 }
 
 /// \brief Test that the \ref ScreenStack only updates the top most screen.
