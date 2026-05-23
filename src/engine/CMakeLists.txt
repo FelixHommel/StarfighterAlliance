@@ -74,6 +74,7 @@ target_sources(
                 ./ecs/systems/UIRenderSystem.hpp
                 ./ecs/systems/UITransformSystem.hpp
                 ./screens/IScreen.hpp
+                ./screens/IScreenContext.hpp
                 ./screens/MenuScreen.hpp
                 ./screens/ScreenCommand.hpp
                 ./screens/ScreenStack.hpp

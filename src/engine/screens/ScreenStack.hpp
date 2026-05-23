@@ -3,6 +3,7 @@
 
 #include "core/RenderContext.hpp"
 #include "screens/IScreen.hpp"
+#include "screens/IScreenContext.hpp"
 #include "screens/ScreenCommand.hpp"
 #include "utility/userInput/InputController.hpp"
 
@@ -20,7 +21,7 @@ namespace sfa
 ///
 /// \author Felix Hommel
 /// \date 3/3/2026
-class ScreenStack
+class ScreenStack : public IScreenContext
 {
 public:
     /// \brief Construct an empty \ref ScreenStack
@@ -39,7 +40,7 @@ public:
     /// \brief Enqueue a new \ref ScreenCommand.
     ///
     /// \param command the \ref ScreenCommand detailing the action that should be taken
-    void enqueueCommand(ScreenCommand command);
+    void enqueueCommand(ScreenCommand command) override;
     /// \brief Process the enqueued commands.
     void processCommands();
 
