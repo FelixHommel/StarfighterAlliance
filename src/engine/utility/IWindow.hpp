@@ -3,6 +3,8 @@
 
 #include "utility/userInput/InputController.hpp"
 
+#include <glm/glm.hpp>
+
 namespace sfa
 {
 
@@ -14,6 +16,8 @@ struct Viewport
 {
     int width;
     int height;
+
+    explicit operator glm::vec2() const { return { width, height }; }
 };
 
 
