@@ -3,8 +3,6 @@
 
 #include "utility/userInput/InputController.hpp"
 
-#include <memory>
-
 namespace sfa
 {
 
@@ -21,7 +19,7 @@ public:
 
     [[nodiscard]] virtual bool shouldClose() const = 0;
 
-    virtual void attachInputController(std::shared_ptr<InputController> controller) = 0;
+    virtual void attachInputController(InputController* controller) = 0;
 };
 
 } // namespace sfa

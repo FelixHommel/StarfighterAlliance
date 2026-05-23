@@ -73,24 +73,24 @@ void GLFWWindow::onResize(int width, int height)
     glViewport(0, 0, m_width, m_height);
 }
 
-void GLFWWindow::attachInputController(std::shared_ptr<InputController> controller)
+void GLFWWindow::attachInputController(InputController* controller)
 {
     if(controller == nullptr)
         return;
 
-    m_inputController = std::move(controller);
+    m_inputController = controller;
 
     glfwSetKeyCallback(m_window.get(), [](GLFWwindow* window, int key, int /*scancode*/, int action, int /*mods*/) {
         auto* self{ static_cast<GLFWWindow*>(glfwGetWindowUserPointer(window)) };
-        self->m_inputController->registerEvent(GLFWWindow::translateKeyEvent(key, action));
+        self->m_inputController->registerEvent(::translateKeyEvent(key, action));
     });
     glfwSetMouseButtonCallback(m_window.get(), [](GLFWwindow* window, int button, int action, int /*mods*/) {
         auto* self{ static_cast<GLFWWindow*>(glfwGetWindowUserPointer(window)) };
-        self->m_inputController->registerEvent(GLFWWindow::translateMouseEvent(button, action));
+        self->m_inputController->registerEvent(::translateMouseEvent(button, action));
     });
     glfwSetCursorPosCallback(m_window.get(), [](GLFWwindow* window, double posX, double posY) {
         auto* self{ static_cast<GLFWWindow*>(glfwGetWindowUserPointer(window)) };
-        self->m_inputController->registerEvent(GLFWWindow::translateMouseMoveEvent(posX, posY));
+        self->m_inputController->registerEvent(::translateMouseMoveEvent(posX, posY));
     });
 }
 

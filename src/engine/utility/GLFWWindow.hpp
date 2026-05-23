@@ -52,7 +52,7 @@ public:
     /// \brief Attach input controller and register the input controller callbacks with GLFW
     ///
     /// \param controller
-    void attachInputController(std::shared_ptr<InputController> controller) override;
+    void attachInputController(InputController* controller) override;
 
     /// \brief Callback handler for window resize events
     ///
@@ -75,7 +75,7 @@ private:
     int m_width;
     int m_height;
 
-    std::shared_ptr<InputController> m_inputController{ nullptr };
+    InputController* m_inputController{ nullptr };
 
     static constexpr Key glfwToKey(int key)
     {
