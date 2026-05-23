@@ -23,6 +23,14 @@ namespace sfa
 class ScreenStack
 {
 public:
+    ScreenStack() = default;
+    ~ScreenStack() = default;
+
+    ScreenStack(const ScreenStack&) = delete;
+    ScreenStack& operator=(const ScreenStack&) = delete;
+    ScreenStack(ScreenStack&&) = delete;
+    ScreenStack& operator=(ScreenStack&&) = delete;
+
     /// \brief Enqueue a new \ref ScreenCommand.
     ///
     /// \param command the \ref ScreenCommand detailing the action that should be taken
