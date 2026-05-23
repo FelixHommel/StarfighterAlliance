@@ -4,6 +4,7 @@
 #include "core/RenderContext.hpp"
 #include "ecs/ComponentRegistry.hpp"
 #include "screens/IScreen.hpp"
+#include "screens/IScreenContext.hpp"
 #include "utility/userInput/InputController.hpp"
 
 #include <functional>
@@ -21,7 +22,7 @@ public:
     using OnEnterFunction = std::function<void(void)>;
     using OnExitFunction = std::function<void(void)>;
 
-    MenuScreen(IWindow& window, OnEnterFunction onEnter, OnExitFunction onExit);
+    MenuScreen(IScreenContext& context, IWindow& window);
     ~MenuScreen() override = default;
 
     MenuScreen(const MenuScreen&) = delete;
@@ -38,9 +39,10 @@ public:
     bool isOverlay() override { return false; }
 
 private:
+    IScreenContext& m_screenContext;
     IWindow& m_window;
-    OnEnterFunction m_onEnterFunction;
-    OnExitFunction m_onExitFunction;
+    OnEnterFunction m_onEnterFunction{ [] {} };
+    OnExitFunction m_onExitFunction{ [] {} };
 
     ComponentRegistry m_registry;
 

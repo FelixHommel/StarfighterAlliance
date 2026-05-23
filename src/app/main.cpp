@@ -78,7 +78,14 @@ int main()
     auto textRenderer{ std::make_shared<TextRenderer>(textShader) };
     textRenderer->load(SFA_ROOT "resources/fonts/prstart.ttf", 18);
     UIRenderSystem uiRenderer{ spriteRenderer, textRenderer };
-    ScreenStack screens{ std::make_unique<MenuScreen>(window, [] {}, [] {}) };
+    ScreenStack screens{};
+    screens.enqueueCommand(
+        {
+            .type = ScreenCommand::Type::Push,
+            .screen = std::make_unique<MenuScreen>(screens, window),
+        }
+    );
+    screens.processCommands();
 
     float lastTime{ static_cast<float>(glfwGetTime()) };
 

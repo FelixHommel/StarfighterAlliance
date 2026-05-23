@@ -12,6 +12,9 @@
 #include "ecs/systems/ButtonSystem.hpp"
 #include "ecs/systems/LayoutSystem.hpp"
 #include "ecs/systems/UITransformSystem.hpp"
+#include "screens/IScreenContext.hpp"
+#include "screens/ScreenCommand.hpp"
+#include "screens/SelectionScreen.hpp"
 #include "utility/userInput/InputController.hpp"
 #include "utility/userInput/InputEvent.hpp"
 
@@ -40,8 +43,8 @@ constexpr auto QUIT_BUTTON_COLOR{ glm::vec3(1.f, 0.f, 0.f) };
 namespace sfa
 {
 
-MenuScreen::MenuScreen(IWindow& window, OnEnterFunction onEnter, OnExitFunction onExit)
-    : m_window(window), m_onEnterFunction(onEnter), m_onExitFunction(onExit)
+MenuScreen::MenuScreen(IScreenContext& screenContext, IWindow& window)
+    : m_screenContext(screenContext), m_window(window)
 {
     createRootPanelUI();
     createPlayButtonUI();
@@ -125,7 +128,13 @@ void MenuScreen::createPlayButtonUI()
         ::playButton,
         {
             .standardColor = ::BUTTON_STANDARD_COLOR,
-            .onClick = [] { spdlog::info("Play pressed"); },
+            .onClick =
+                [&ctx = m_screenContext] {
+                    spdlog::info("Play pressed");
+                    ctx.enqueueCommand(
+                        { .type = ScreenCommand::Type::Push, .screen = std::make_unique<SelectionScreen>() }
+                    );
+                },
             .pressCooldownMax = ::BUTTON_PRESS_COOLDOWN,
         }
     );
