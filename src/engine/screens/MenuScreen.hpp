@@ -2,6 +2,7 @@
 #define SFA_SRC_ENGINE_SCREENS_MENU_SCREEN_HPP
 
 #include "core/RenderContext.hpp"
+#include "ecs/ComponentRegistry.hpp"
 #include "screens/IScreen.hpp"
 #include "utility/userInput/InputController.hpp"
 
@@ -25,8 +26,8 @@ public:
 
     MenuScreen(const MenuScreen&) = delete;
     MenuScreen& operator=(const MenuScreen&) = delete;
-    MenuScreen(MenuScreen&&) noexcept = default;
-    MenuScreen& operator=(MenuScreen&&) noexcept = default;
+    MenuScreen(MenuScreen&&) noexcept = delete;
+    MenuScreen& operator=(MenuScreen&&) noexcept = delete;
 
     void onEnter() override;
     void onExit() override;
@@ -39,6 +40,8 @@ public:
 private:
     OnEnterFunction m_onEnterFunction;
     OnExitFunction m_onExitFunction;
+
+    ComponentRegistry m_registry;
 };
 
 } // namespace sfa
