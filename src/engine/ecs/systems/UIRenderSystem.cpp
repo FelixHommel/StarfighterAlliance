@@ -48,7 +48,9 @@ void UIRenderSystem::render(ComponentRegistry& registry, const Viewport& viewpor
         return lhsLayer < rhsLayer;
     });
 
-    const glm::mat4 projection{ glm::ortho(0.f, static_cast<float>(viewport.width), static_cast<float>(viewport.height), 0.f, -1.f, 1.f) };
+    const glm::mat4 projection{
+        glm::ortho(0.f, static_cast<float>(viewport.width), static_cast<float>(viewport.height), 0.f, -1.f, 1.f)
+    };
 
     m_spriteRenderer->beginFrame(projection);
     m_textRenderer->beginFrame(projection);
