@@ -13,16 +13,6 @@
 namespace sfa
 {
 
-/// \brief Simple struct containing the dimensions of the window.
-///
-/// \author Felix Hommel
-/// \date 2/19/2026
-struct Viewport
-{
-    int width;
-    int height;
-};
-
 /// \brief Abstraction for GLFW window and context management.
 ///
 /// \author Felix Hommel
@@ -45,7 +35,7 @@ public:
     GLFWWindow(GLFWWindow&&) = delete;
     GLFWWindow& operator=(GLFWWindow&&) = delete;
 
-    [[nodiscard]] Viewport viewport() const noexcept { return { .width = m_width, .height = m_height }; }
+    [[nodiscard]] Viewport viewport() const noexcept override { return { .width = m_width, .height = m_height }; }
     [[nodiscard]] bool shouldClose() const override { return glfwWindowShouldClose(m_window.get()) == GLFW_TRUE; }
 
     /// \brief Attach input controller and register the input controller callbacks with GLFW
