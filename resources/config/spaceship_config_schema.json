@@ -1,0 +1,24 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Spaceship",
+    "description": "A StarfighterAlliance spaceship",
+    "type": "object",
+    "properties": {
+        "live": {
+            "description": "The health of the spaceship",
+            "type": "integer",
+            "exclusiveMinimum": 0
+        },
+        "speed": {
+            "description": "The speed of the spaceship",
+            "type": "integer",
+            "exclusiveMinimum": 0
+        },
+        "damage": {
+            "description": "The damage of the spaceship",
+            "type": "integer",
+            "exclusiveMinimum": 0
+        }
+    },
+    "required": [ "health", "speed", "damage" ]
+}
