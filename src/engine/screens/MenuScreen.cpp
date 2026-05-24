@@ -129,10 +129,10 @@ void MenuScreen::createPlayButtonUI()
         {
             .standardColor = ::BUTTON_STANDARD_COLOR,
             .onClick =
-                [&ctx = m_screenContext] {
+                [&ctx = m_screenContext, &window = m_window] {
                     spdlog::info("Play pressed");
                     ctx.enqueueCommand(
-                        { .type = ScreenCommand::Type::Push, .screen = std::make_unique<SelectionScreen>() }
+                        { .type = ScreenCommand::Type::Push, .screen = std::make_unique<SelectionScreen>(ctx, window) }
                     );
                 },
             .pressCooldownMax = ::BUTTON_PRESS_COOLDOWN,
