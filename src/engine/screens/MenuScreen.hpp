@@ -22,6 +22,10 @@ public:
     using OnEnterFunction = std::function<void(void)>;
     using OnExitFunction = std::function<void(void)>;
 
+    /// \brief Construct a new \ref MenuScreen
+    ///
+    /// \param context \ref IScreenContext that is used to help transition between screens
+    /// \param window \ref IWindow needed for window size and quitting
     MenuScreen(IScreenContext& context, IWindow& window);
     ~MenuScreen() override = default;
 
