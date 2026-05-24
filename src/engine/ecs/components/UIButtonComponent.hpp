@@ -34,7 +34,9 @@ struct UIButtonComponent : public IComponent
 
     std::function<void()> onClick;
     float pressCooldownMax{ 1.f };
-    float cooldownTimer{ 0.f };
+    float cooldownTimer{
+        pressCooldownMax
+    }; ///< Needs to be initialized with cooldown active to avoid accidental presses
     ButtonState state{ ButtonState::Normal };
 
 private:
