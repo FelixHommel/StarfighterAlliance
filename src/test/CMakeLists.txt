@@ -5,6 +5,7 @@ include(${PROJECT_SOURCE_DIR}/cmake/StaticAnalyzers.cmake)
 add_executable(
     ${NAME}
     ./testMain.cpp
+    ./concurrency/AsyncValueTest.cpp
     ./core/ShaderTest.cpp
     ./core/TextureTest.cpp
     ./core/resourceManagement/ResourceCacheTest.cpp

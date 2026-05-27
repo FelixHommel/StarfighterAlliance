@@ -32,6 +32,7 @@ target_sources(
     PRIVATE
         FILE_SET HEADERS
             FILES
+                ./concurrency/AsyncValue.hpp
                 ./core/ParticleGenerator.hpp
                 ./core/RenderContext.hpp
                 ./core/Shader.hpp
