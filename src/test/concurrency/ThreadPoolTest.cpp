@@ -1,4 +1,4 @@
-#include "utility/ThreadPool.hpp"
+#include "concurrency/ThreadPool.hpp"
 
 #include <gtest/gtest.h>
 

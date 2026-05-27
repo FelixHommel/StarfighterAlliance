@@ -3,6 +3,7 @@ include(${PROJECT_SOURCE_DIR}/cmake/StaticAnalyzers.cmake)
 
 add_library(
     ${NAME}
+    ./concurrency/ThreadPool.cpp
     ./core/ParticleGenerator.cpp
     ./core/Shader.cpp
     ./core/SpriteRenderer.cpp
@@ -22,7 +23,6 @@ add_library(
     ./screens/MenuScreen.cpp
     ./screens/ScreenStack.cpp
     ./utility/GLFWWindow.cpp
-    ./utility/ThreadPool.cpp
     ./utility/json/JsonDocument.cpp
     ./utility/userInput/InputController.cpp
 )
@@ -33,6 +33,11 @@ target_sources(
         FILE_SET HEADERS
             FILES
                 ./concurrency/AsyncValue.hpp
+                ./concurrency/BlockingQueue.hpp
+                ./concurrency/ThreadPool.hpp
+                ./concurrency/Threading.hpp
+                ./config/SpaceshipColor.hpp
+                ./config/SpaceshipType.hpp
                 ./core/ParticleGenerator.hpp
                 ./core/RenderContext.hpp
                 ./core/Shader.hpp
@@ -79,9 +84,6 @@ target_sources(
                 ./screens/MenuScreen.hpp
                 ./screens/ScreenCommand.hpp
                 ./screens/ScreenStack.hpp
-                ./utility/BlockingQueue.hpp
-                ./utility/ThreadPool.hpp
-                ./utility/details/Threading.hpp
                 ./utility/GLFWWindow.hpp
                 ./utility/IWindow.hpp
                 ./utility/exceptions/Exception.hpp

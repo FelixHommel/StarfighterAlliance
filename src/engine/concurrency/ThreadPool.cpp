@@ -1,6 +1,6 @@
 #include "ThreadPool.hpp"
 
-#include "utility/details/Threading.hpp"
+#include "concurrency/Threading.hpp"
 
 #include <spdlog/spdlog.h>
 

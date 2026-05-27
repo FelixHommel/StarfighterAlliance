@@ -1,8 +1,8 @@
-#ifndef SFA_SRC_ENGINE_UTILITY_THREAD_POOL_HPP
-#define SFA_SRC_ENGINE_UTILITY_THREAD_POOL_HPP
+#ifndef SFA_SRC_ENGINE_CONCURRENCY_THREAD_POOL_HPP
+#define SFA_SRC_ENGINE_CONCURRENCY_THREAD_POOL_HPP
 
+#include "concurrency/Threading.hpp"
 #include "core/Utility.hpp"
-#include "utility/details/Threading.hpp"
 
 #include <algorithm>
 #include <condition_variable>
@@ -107,5 +107,5 @@ private:
 
 } // namespace sfa
 
-#endif // !SFA_SRC_ENGINE_UTILITY_THREAD_POOL_HPP
+#endif // !SFA_SRC_ENGINE_CONCURRENCY_THREAD_POOL_HPP
 

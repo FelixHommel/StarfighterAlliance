@@ -1,6 +1,6 @@
-#include "utility/BlockingQueue.hpp"
+#include "concurrency/BlockingQueue.hpp"
 
-#include "utility/details/Threading.hpp"
+#include "concurrency/Threading.hpp"
 
 #include <gtest/gtest.h>
 

@@ -6,6 +6,8 @@ add_executable(
     ${NAME}
     ./testMain.cpp
     ./concurrency/AsyncValueTest.cpp
+    ./concurrency/BlockingQueueTest.cpp
+    ./concurrency/ThreadPoolTest.cpp
     ./core/ShaderTest.cpp
     ./core/TextureTest.cpp
     ./core/resourceManagement/ResourceCacheTest.cpp
@@ -18,8 +20,6 @@ add_executable(
     ./ecs/systems/UITransformSystemTest.cpp
     ./testUtility/stb_image_write_impl.cpp
     ./screens/ScreenStackTest.cpp
-    ./utility/BlockingQueueTest.cpp
-    ./utility/ThreadPoolTest.cpp
     ./utility/exceptions/ExceptionTest.cpp
     ./utility/exceptions/ResourceUnavailableExceptionTest.cpp
     ./utility/exceptions/WindowCreationExceptionTest.cpp

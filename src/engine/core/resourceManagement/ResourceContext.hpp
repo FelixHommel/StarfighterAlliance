@@ -1,13 +1,13 @@
 #ifndef SFA_SRC_ENGINE_CORE_RESOURCE_MANAGEMENT_RESOURCE_CONTEXT_HPP
 #define SFA_SRC_ENGINE_CORE_RESOURCE_MANAGEMENT_RESOURCE_CONTEXT_HPP
 
+#include "concurrency/BlockingQueue.hpp"
+#include "concurrency/ThreadPool.hpp"
 #include "core/Shader.hpp"
 #include "core/Texture.hpp"
 #include "core/resourceManagement/IResourceLoader.hpp"
 #include "core/resourceManagement/IntermediateResourceData.hpp"
 #include "core/resourceManagement/ResourceCache.hpp"
-#include "utility/BlockingQueue.hpp"
-#include "utility/ThreadPool.hpp"
 
 #include <algorithm>
 #include <atomic>
