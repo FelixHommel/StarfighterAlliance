@@ -2,6 +2,7 @@
 #define SFA_SRC_ENGINE_CORE_TEXTURE_HPP
 
 #include <glad/gl.h>
+#include <glm/glm.hpp>
 
 #include <cstddef>
 #include <span>
@@ -39,6 +40,7 @@ public:
     [[nodiscard]] unsigned int getID() const noexcept { return m_id; }
     [[nodiscard]] int width() const noexcept { return m_width; }
     [[nodiscard]] int height() const noexcept { return m_height; }
+    [[nodiscard]] glm::vec2 size() const noexcept { return { m_width, m_height }; }
 
     /// \brief Configure the texture as an RGBA texture.
     void setRGBA();
