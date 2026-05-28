@@ -56,6 +56,7 @@ target_sources(
                 ./ecs/ECSUtility.hpp
                 ./ecs/EntityManager.hpp
                 ./ecs/IComponentArray.hpp
+                ./ecs/UIHelper.hpp
                 ./ecs/components/BoxColliderComponent.hpp
                 ./ecs/components/CircleColliderComponent.hpp
                 ./ecs/components/DamageComponent.hpp
