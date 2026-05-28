@@ -44,8 +44,13 @@ public:
     /// \param filepath path to the JSON file
     void load(const std::filesystem::path& filepath);
 
+    /// \brief Validate the document against a schema
+    ///
+    /// \param schemaPath path to the schema file to validate against
+    bool validate(const std::filesystem::path& schemaPath);
+
 private:
-    nlohmann::json m_json;
+    nlohmann::json m_json{ nullptr };
 };
 
 } // namespace sfa
