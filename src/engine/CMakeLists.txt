@@ -80,6 +80,7 @@ target_sources(
                 ./ecs/systems/TextRenderSystem.hpp
                 ./ecs/systems/UIRenderSystem.hpp
                 ./ecs/systems/UITransformSystem.hpp
+                ./screens/GameSession.hpp
                 ./screens/IScreen.hpp
                 ./screens/IScreenContext.hpp
                 ./screens/MenuScreen.hpp
