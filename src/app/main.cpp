@@ -1,29 +1,17 @@
 #include "core/Shader.hpp"
 #include "core/SpriteRenderer.hpp"
 #include "core/TextRenderer.hpp"
-#include "ecs/ComponentRegistry.hpp"
-#include "ecs/ECSUtility.hpp"
-#include "ecs/components/SpriteComponent.hpp"
-#include "ecs/components/TextComponent.hpp"
-#include "ecs/components/UIButtonComponent.hpp"
-#include "ecs/components/UIHierarchyComponent.hpp"
-#include "ecs/components/UILayoutComponent.hpp"
-#include "ecs/components/UILayoutElementComponent.hpp"
-#include "ecs/components/UITransformComponent.hpp"
-#include "ecs/systems/ButtonSystem.hpp"
-#include "ecs/systems/LayoutSystem.hpp"
 #include "ecs/systems/UIRenderSystem.hpp"
-#include "ecs/systems/UITransformSystem.hpp"
+#include "screens/GameSession.hpp"
 #include "screens/MenuScreen.hpp"
+#include "screens/ScreenCommand.hpp"
 #include "screens/ScreenStack.hpp"
 #include "utility/GLFWWindow.hpp"
 #include "utility/userInput/InputController.hpp"
 #include "utility/userInput/InputEvent.hpp"
 
-#include <glad/gl.h>
-
 #include <GLFW/glfw3.h>
-#include <spdlog/spdlog.h>
+#include <glad/gl.h>
 
 #include <filesystem>
 #include <fstream>
@@ -79,10 +67,11 @@ int main()
     textRenderer->load(SFA_ROOT "resources/fonts/prstart.ttf", 18);
     UIRenderSystem uiRenderer{ spriteRenderer, textRenderer };
     ScreenStack screens{};
+    GameSession session{};
     screens.enqueueCommand(
         {
             .type = ScreenCommand::Type::Push,
-            .screen = std::make_unique<MenuScreen>(screens, window),
+            .screen = std::make_unique<MenuScreen>(screens, window, session),
         }
     );
     screens.processCommands();
@@ -105,7 +94,7 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
 
         screens.update(dt, input);
-        screens.render({ .uiRenderer = uiRenderer, .window = window });
+        screens.render({ .spriteRenderer = spriteRenderer.get(), .uiRenderer = uiRenderer, .window = window });
 
         glfwSwapBuffers(glfwGetCurrentContext());
         glfwPollEvents();

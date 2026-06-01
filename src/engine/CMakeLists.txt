@@ -22,6 +22,7 @@ add_library(
     ./external/stb_image_impl.cpp
     ./screens/MenuScreen.cpp
     ./screens/ScreenStack.cpp
+    ./screens/SelectionScreen.cpp
     ./utility/GLFWWindow.cpp
     ./utility/json/JsonDocument.cpp
     ./utility/userInput/InputController.cpp
@@ -86,6 +87,7 @@ target_sources(
                 ./screens/MenuScreen.hpp
                 ./screens/ScreenCommand.hpp
                 ./screens/ScreenStack.hpp
+                ./screens/SelectionScreen.hpp
                 ./utility/GLFWWindow.hpp
                 ./utility/IWindow.hpp
                 ./utility/exceptions/Exception.hpp
