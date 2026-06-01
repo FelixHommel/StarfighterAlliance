@@ -75,6 +75,26 @@ TEST_F(ResourceContextTest, LoadShaderSuccess)
     EXPECT_EQ(1, context.pendingUploadTasks());
 }
 
+TEST_F(ResourceContextTest, LoadShaderBlockingSuccess)
+{
+    auto mock{ std::make_unique<MockResourceLoader>() };
+    MockResourceLoader* pMock{ mock.get() };
+    ResourceContext context{ std::move(mock) };
+
+    const ShaderSourceData expectedData{ .vertexSource = "vertex shader source code",
+                                         .fragmentSource = "fragment shader source code" };
+
+    const std::filesystem::path p("");
+    EXPECT_CALL(*pMock, loadShader(p, p, p)).WillOnce(::testing::Return(LoadResult{ expectedData }));
+
+    context.requestResourceBlocking(
+        ResourceContext::ShaderLoadRequest{ .name = "shader", .vert = "", .frag = "", .geom = "" }
+    );
+
+    EXPECT_EQ(context.totalResources(), 1);
+    EXPECT_NO_THROW({ [[maybe_unused]] const auto x{ context.getShader("shader") }; });
+}
+
 /// \brief Request the loading of a texture resource.
 ///
 /// When a texture resource is requested, the processed texture data is stored in the upload queue of the
@@ -100,6 +120,28 @@ TEST_F(ResourceContextTest, LoadTextureSuccess)
 
     EXPECT_TRUE(context.hasPendingUploads());
     EXPECT_EQ(1, context.pendingUploadTasks());
+}
+
+TEST_F(ResourceContextTest, LoadTextureBlockingSuccess)
+{
+    auto mock{ std::make_unique<MockResourceLoader>() };
+    MockResourceLoader* pMock{ mock.get() };
+    ResourceContext context{ std::move(mock) };
+
+    const TextureRawData expectedData{
+        .width = 1,
+        .height = 1,
+        .channels = 4,
+        .pixels = { std::byte(255), std::byte(255), std::byte(255), std::byte(255) }
+    };
+
+    const std::filesystem::path p("");
+    EXPECT_CALL(*pMock, loadTexture(p)).WillOnce(::testing::Return(LoadResult{ expectedData }));
+
+    context.requestResourceBlocking(ResourceContext::TextureLoadRequest{ .name = "texture", .filepath = "" });
+
+    EXPECT_EQ(context.totalResources(), 1);
+    EXPECT_NO_THROW({ [[maybe_unused]] const auto x{ context.getTexture("texture") }; });
 }
 
 /// \brief Load multiple resources at the same time.
