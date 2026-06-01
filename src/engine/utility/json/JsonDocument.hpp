@@ -47,6 +47,8 @@ public:
     /// \brief Validate the document against a schema
     ///
     /// \param schemaPath path to the schema file to validate against
+    ///
+    /// \returns \p true if the document validated against the schema, \p false otherwise
     bool validate(const std::filesystem::path& schemaPath);
 
 private:
