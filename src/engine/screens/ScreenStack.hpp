@@ -7,6 +7,7 @@
 #include "screens/ScreenCommand.hpp"
 #include "utility/userInput/InputController.hpp"
 
+#include <cstddef>
 #include <memory>
 #include <queue>
 #include <vector>
@@ -30,7 +31,7 @@ public:
     ///
     /// \param screen the initial screen
     explicit ScreenStack(std::unique_ptr<IScreen> screen);
-    ~ScreenStack() = default;
+    ~ScreenStack() override = default;
 
     ScreenStack(const ScreenStack&) = delete;
     ScreenStack& operator=(const ScreenStack&) = delete;

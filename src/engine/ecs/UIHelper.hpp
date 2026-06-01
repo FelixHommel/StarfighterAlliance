@@ -2,6 +2,7 @@
 #define SFA_SRC_ENGINE_ECS_UI_HELPER_HPP
 
 #include "ecs/ComponentRegistry.hpp"
+#include "ecs/ECSUtility.hpp"
 #include "ecs/components/SpriteComponent.hpp"
 #include "ecs/components/TextComponent.hpp"
 #include "ecs/components/UIButtonComponent.hpp"
@@ -10,6 +11,10 @@
 #include "ecs/components/UITransformComponent.hpp"
 
 #include <glm/glm.hpp>
+
+#include <functional>
+#include <string>
+#include <utility>
 
 namespace
 {

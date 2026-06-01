@@ -7,6 +7,7 @@
 #include "ecs/components/SpriteComponent.hpp"
 #include "ecs/components/TextComponent.hpp"
 #include "ecs/components/UITransformComponent.hpp"
+#include "utility/IWindow.hpp"
 
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/glm.hpp>

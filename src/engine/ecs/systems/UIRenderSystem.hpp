@@ -4,7 +4,7 @@
 #include "core/SpriteRenderer.hpp"
 #include "core/TextRenderer.hpp"
 #include "ecs/ComponentRegistry.hpp"
-#include "utility/GLFWWindow.hpp"
+#include "utility/IWindow.hpp"
 
 #include <memory>
 

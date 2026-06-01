@@ -7,6 +7,7 @@
 #include "screens/GameSession.hpp"
 #include "screens/IScreen.hpp"
 #include "screens/IScreenContext.hpp"
+#include "utility/IWindow.hpp"
 #include "utility/userInput/InputController.hpp"
 
 #include <functional>

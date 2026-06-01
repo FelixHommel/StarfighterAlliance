@@ -18,11 +18,14 @@
 #include "screens/IScreenContext.hpp"
 #include "screens/ScreenCommand.hpp"
 #include "screens/SelectionScreen.hpp"
+#include "utility/IWindow.hpp"
 #include "utility/userInput/InputController.hpp"
 #include "utility/userInput/InputEvent.hpp"
 
 #include <glm/glm.hpp>
 #include <spdlog/spdlog.h>
+
+#include <memory>
 
 namespace
 {

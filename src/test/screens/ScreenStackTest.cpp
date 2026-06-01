@@ -1,5 +1,4 @@
 #include "screens/ScreenStack.hpp"
-#include "core/SpriteRenderer.hpp"
 #include "ecs/systems/UIRenderSystem.hpp"
 #include "screens/ScreenCommand.hpp"
 

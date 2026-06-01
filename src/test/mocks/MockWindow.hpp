@@ -2,6 +2,7 @@
 #define SFA_SRC_TEST_MOCKS_MOCK_WINDOW
 
 #include "utility/IWindow.hpp"
+#include "utility/userInput/InputController.hpp"
 
 namespace sfa::testing
 {

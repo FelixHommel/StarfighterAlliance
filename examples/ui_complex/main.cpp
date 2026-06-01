@@ -32,6 +32,7 @@
 #include <string>
 #include <utility>
 
+// NOLINTBEGIN(bugprone-*, readability-*):
 namespace
 {
 
@@ -112,7 +113,6 @@ void addButton(
 
 } // namespace
 
-// NOLINTBEGIN(bugprone-*, readability-*):
 int main()
 {
     using namespace sfa;
