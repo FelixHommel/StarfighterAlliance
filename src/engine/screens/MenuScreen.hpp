@@ -2,7 +2,9 @@
 #define SFA_SRC_ENGINE_SCREENS_MENU_SCREEN_HPP
 
 #include "core/RenderContext.hpp"
+#include "core/resourceManagement/ResourceContext.hpp"
 #include "ecs/ComponentRegistry.hpp"
+#include "screens/GameSession.hpp"
 #include "screens/IScreen.hpp"
 #include "screens/IScreenContext.hpp"
 #include "utility/userInput/InputController.hpp"
@@ -26,7 +28,8 @@ public:
     ///
     /// \param context \ref IScreenContext that is used to help transition between screens
     /// \param window \ref IWindow needed for window size and quitting
-    MenuScreen(IScreenContext& context, IWindow& window);
+    /// \param session \ref GameSession to update the session state
+    MenuScreen(IScreenContext& context, IWindow& window, GameSession& session);
     ~MenuScreen() override = default;
 
     MenuScreen(const MenuScreen&) = delete;
@@ -45,14 +48,18 @@ public:
 private:
     IScreenContext& m_screenContext;
     IWindow& m_window;
-    OnEnterFunction m_onEnterFunction{ [] {} };
+    GameSession& m_session;
+    OnEnterFunction m_onEnterFunction;
     OnExitFunction m_onExitFunction{ [] {} };
 
     ComponentRegistry m_registry;
+    ResourceContext resources; // FIXME: This should not be owned here
 
     void createRootPanelUI();
     void createPlayButtonUI();
     void createQuitButtonUI();
+
+    static void makeColorRequest(GameSession& session);
 };
 
 } // namespace sfa

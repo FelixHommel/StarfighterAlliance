@@ -1,5 +1,7 @@
 #include "MenuScreen.hpp"
 
+#include "concurrency/AsyncValue.hpp"
+#include "config/SpaceshipColor.hpp"
 #include "core/RenderContext.hpp"
 #include "ecs/ECSUtility.hpp"
 #include "ecs/components/SpriteComponent.hpp"
@@ -12,6 +14,7 @@
 #include "ecs/systems/ButtonSystem.hpp"
 #include "ecs/systems/LayoutSystem.hpp"
 #include "ecs/systems/UITransformSystem.hpp"
+#include "screens/GameSession.hpp"
 #include "screens/IScreenContext.hpp"
 #include "screens/ScreenCommand.hpp"
 #include "screens/SelectionScreen.hpp"
@@ -43,12 +46,17 @@ constexpr auto QUIT_BUTTON_COLOR{ glm::vec3(1.f, 0.f, 0.f) };
 namespace sfa
 {
 
-MenuScreen::MenuScreen(IScreenContext& screenContext, IWindow& window)
-    : m_screenContext(screenContext), m_window(window)
+MenuScreen::MenuScreen(IScreenContext& context, IWindow& window, GameSession& session)
+    : m_screenContext(context)
+    , m_window(window)
+    , m_session(session)
+    , m_onEnterFunction([&session = m_session]() { MenuScreen::makeColorRequest(session); })
 {
     createRootPanelUI();
     createPlayButtonUI();
     createQuitButtonUI();
+
+    // TODO: Send color request to the color server and save future in \p session
 }
 
 void MenuScreen::onEnter()
@@ -129,10 +137,13 @@ void MenuScreen::createPlayButtonUI()
         {
             .standardColor = ::BUTTON_STANDARD_COLOR,
             .onClick =
-                [&ctx = m_screenContext, &window = m_window] {
+                [&ctx = m_screenContext, &window = m_window, &session = m_session, &resources = resources] {
                     spdlog::info("Play pressed");
                     ctx.enqueueCommand(
-                        { .type = ScreenCommand::Type::Push, .screen = std::make_unique<SelectionScreen>(ctx, window) }
+                        {
+                            .type = ScreenCommand::Type::Push,
+                            .screen = std::make_unique<SelectionScreen>(ctx, session, window.viewport(), resources),
+                        }
                     );
                 },
             .pressCooldownMax = ::BUTTON_PRESS_COOLDOWN,
@@ -182,6 +193,13 @@ void MenuScreen::createQuitButtonUI()
             .pressCooldownMax = ::BUTTON_PRESS_COOLDOWN,
         }
     );
+}
+
+void MenuScreen::makeColorRequest(GameSession& session)
+{
+    // TODO: Implement actual request
+    if(false) // NOLINT
+        session.spaceshipConfig.color.set(SpaceshipColor::Green);
 }
 
 } // namespace sfa
