@@ -1,10 +1,13 @@
 #ifndef SFA_SRC_TEST_MOCKS_MOCK_SCREEN_HPP
 #define SFA_SRC_TEST_MOCKS_MOCK_SCREEN_HPP
 
+#include "core/RenderContext.hpp"
 #include "screens/IScreen.hpp"
+#include "utility/userInput/InputController.hpp"
 
 #include "gmock/gmock.h"
 
+#include <functional>
 #include <utility>
 
 namespace sfa::testing
