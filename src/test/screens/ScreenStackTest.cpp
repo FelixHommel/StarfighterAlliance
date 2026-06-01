@@ -1,4 +1,5 @@
 #include "screens/ScreenStack.hpp"
+#include "core/SpriteRenderer.hpp"
 #include "ecs/systems/UIRenderSystem.hpp"
 #include "screens/ScreenCommand.hpp"
 
@@ -180,7 +181,7 @@ TEST_F(ScreenStackTest, ScreenStackRendersOneScreen)
     m_stack->enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(screen) });
     m_stack->processCommands();
 
-    m_stack->render({ .uiRenderer = uiRenderer, .window = window });
+    m_stack->render({ .spriteRenderer = nullptr, .uiRenderer = uiRenderer, .window = window });
 }
 
 /// \brief Test that the \ref ScreenStack correctly renders overlays and regular screens.
@@ -208,7 +209,7 @@ TEST_F(ScreenStackTest, ScreenStackRendersAllRelevantScreens)
     m_stack->enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(secondOverlay) });
     m_stack->processCommands();
 
-    m_stack->render({ .uiRenderer = uiRenderer, .window = window });
+    m_stack->render({ .spriteRenderer = nullptr, .uiRenderer = uiRenderer, .window = window });
 }
 
 /// \brief Test that the \ref ScreenStack only updates the top most screen.
