@@ -50,13 +50,13 @@ public:
     /// Note that the actual coordinates of all the quads are the same. The position on the screen is computed with matrix
     /// transformations, which achieves the same visual results.
     ///
-    /// \param texture the texture of the quad
-    /// \param position the position of the quad on screen
-    /// \param size(optional) the size of the quad on screen
-    /// \param rotate(optional) the rotation of the quad
-    /// \param color(optional) the color of the quad. If a color and texture is supplied the two will be blended to produce the final look
+    /// \param pTexture the texture of the quad.
+    /// \param position the position of the quad on screen.
+    /// \param size(optional) the size of the quad on screen.
+    /// \param rotate(optional) the rotation of the quad.
+    /// \param color(optional) the color of the quad. If a color and texture is supplied the two will be blended to produce the final look.
     void draw(
-        std::shared_ptr<Texture2D> texture,
+        const Texture2D* pTexture,
         const glm::vec2& position,
         const glm::vec2& scale = DEFAULT_DRAW_SCALE,
         float rotate = DEFAULT_ROTATION,
