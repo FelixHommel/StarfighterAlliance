@@ -36,6 +36,11 @@ void ResourceContext::requestResource(const ResourceRequest& request)
     std::visit([this](const auto& req) { this->enqueueLoadTask(req); }, request);
 }
 
+void ResourceContext::requestResourceBlocking(const ResourceRequest& request)
+{
+    std::visit([this](const auto& req) { this->processLoadTaskBlocking(req); }, request);
+}
+
 void ResourceContext::processUploadQueue(std::size_t maxUploads)
 {
     std::size_t processed{ 0 };
@@ -88,12 +93,30 @@ void ResourceContext::enqueueLoadTask(const TextureLoadRequest& request)
     });
 }
 
+/// \brief Process a new \ref ShaderLoadRequest immediately.
+///
+/// \param request providing details about the shader that is to be loaded.
+void ResourceContext::processLoadTaskBlocking(const ShaderLoadRequest& request)
+{
+    processUploadTask(
+        { .key = request.name, .result = m_loader->loadShader(request.vert, request.frag, request.geom) }
+    );
+}
+
+/// \brief Process a new \ref TextureLoadRequest immediately.
+///
+/// \param request providing details about the texture that is to be loaded.
+void ResourceContext::processLoadTaskBlocking(const TextureLoadRequest& request)
+{
+    processUploadTask({ .key = request.name, .result = m_loader->loadTexture(request.filepath) });
+}
+
 /// \brief Upload a loaded resource to the GPU.
 ///
 /// \param task a \ref UploadTask containing the needed information to upload the resource.
 void ResourceContext::processUploadTask(const UploadTask& task)
 {
-    if(const auto t{ task.result }; t.has_value())
+    if(const auto& t{ task.result }; t.has_value())
         std::visit([this, &task](const auto& resourceData) { this->uploadToGPU(task.key, resourceData); }, t.value());
     else
     {

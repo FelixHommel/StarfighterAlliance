@@ -69,6 +69,13 @@ public:
     ///
     /// \param request providing details about the resource that is requested.
     void requestResource(const ResourceRequest& request);
+    /// \brief Request a new resource that is loaded immediately.
+    ///
+    /// \param request providing details about the resource that is requested.
+    ///
+    /// \note This method will block the main thread as long as the resource is being loaded.
+    void requestResourceBlocking(const ResourceRequest& request);
+
     /// \brief Process pending GPU uploads.
     ///
     /// This method should only be called by the main OpenGL thread, to not interfere with OpenGL context boundaries.
@@ -78,6 +85,8 @@ public:
 
     void waitForAllUploads();
 
+    [[nodiscard]] bool containsTexture(const std::string& key) const { return m_textureCache.contains(key); }
+    [[nodiscard]] bool containsShader(const std::string& key) const { return m_shaderCache.contains(key); }
     [[nodiscard]] std::shared_ptr<Shader> getShader(const std::string& key) const { return m_shaderCache.get(key); }
     [[nodiscard]] std::shared_ptr<Texture2D> getTexture(const std::string& key) const
     {
@@ -87,6 +96,7 @@ public:
     [[nodiscard]] std::size_t pendingUploadTasks() const { return m_uploadQueue.size(); }
     [[nodiscard]] std::size_t totalResources() const noexcept { return m_shaderCache.size() + m_textureCache.size(); }
 
+    /// \brief Delete all loaded resources
     void clear();
 
 private:
@@ -116,6 +126,9 @@ private:
 
     void enqueueLoadTask(const ShaderLoadRequest& request);
     void enqueueLoadTask(const TextureLoadRequest& request);
+
+    void processLoadTaskBlocking(const ShaderLoadRequest& request);
+    void processLoadTaskBlocking(const TextureLoadRequest& request);
 
     void processUploadTask(const UploadTask& task);
     void uploadToGPU(const std::string& key, const ShaderSourceData& data);
