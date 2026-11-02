@@ -107,11 +107,15 @@ if(MSVC)
     )
 endif()
 
+target_compile_options(
+    ${NAME}
+    INTERFACE $<$<COMPILE_LANGUAGE:CXX>:${PROJECT_WARNINGS}>
+)
+
 target_link_libraries(
     ${NAME}
     PUBLIC Glad2CMake::glad2cmake glfw glm::glm spdlog::spdlog
     PRIVATE
-        project_warnings
         OpenGL::GL
         SQLiteCpp
         Freetype::Freetype
