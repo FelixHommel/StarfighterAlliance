@@ -19,7 +19,6 @@
 #include "screens/ScreenCommand.hpp"
 #include "screens/SelectionScreen.hpp"
 #include "utility/IWindow.hpp"
-#include "utility/json/JsonDocument.hpp"
 #include "utility/userInput/InputController.hpp"
 #include "utility/userInput/InputEvent.hpp"
 
@@ -30,7 +29,6 @@
 #include <filesystem>
 #include <format>
 #include <memory>
-#include <string_view>
 #include <type_traits>
 #include <utility>
 
@@ -340,7 +338,9 @@ void SelectionScreen::loadSpaceshipData(ResourceContext& resources)
         if(resources.containsTexture(spaceshipName))
             continue;
 
-        JsonDocument d{ ::getSpaceshipConfigPath(type) };
+        // TODO: FIXME: Use new JSON functions
+
+        // JsonDocument d{ ::getSpaceshipConfigPath(type) };
 
         resources.requestResourceBlocking(
             ResourceContext::TextureLoadRequest{
@@ -349,22 +349,22 @@ void SelectionScreen::loadSpaceshipData(ResourceContext& resources)
             }
         );
 
-        const bool validationResult{ d.validate(::SPACESHIP_CONFIG_SCHEMA_PATH) };
-        if(!validationResult)
-        {
-            spdlog::warn(
-                "Spaceship config for '{}' failed to validate agsinst the schema located at '{}'. Using placeholder values.",
-                spaceshipName,
-                ::SPACESHIP_CONFIG_SCHEMA_PATH
-            );
-        }
-
-        m_spaceships.at(i) = std::make_unique<SpaceshipData>(
-            validationResult ? d.get<unsigned int>("health") : ::SPACESHIP_STAT_VALUE_FALLBACK,
-            validationResult ? d.get<unsigned int>("speed") : ::SPACESHIP_STAT_VALUE_FALLBACK,
-            validationResult ? d.get<unsigned int>("damage") : ::SPACESHIP_STAT_VALUE_FALLBACK,
-            std::move(spaceshipName)
-        );
+        // const bool validationResult{ d.validate(::SPACESHIP_CONFIG_SCHEMA_PATH) };
+        // if(!validationResult)
+        // {
+        //     spdlog::warn(
+        //         "Spaceship config for '{}' failed to validate agsinst the schema located at '{}'. Using placeholder values.",
+        //         spaceshipName,
+        //         ::SPACESHIP_CONFIG_SCHEMA_PATH
+        //     );
+        // }
+        //
+        // m_spaceships.at(i) = std::make_unique<SpaceshipData>(
+        //     validationResult ? d.get<unsigned int>("health") : ::SPACESHIP_STAT_VALUE_FALLBACK,
+        //     validationResult ? d.get<unsigned int>("speed") : ::SPACESHIP_STAT_VALUE_FALLBACK,
+        //     validationResult ? d.get<unsigned int>("damage") : ::SPACESHIP_STAT_VALUE_FALLBACK,
+        //     std::move(spaceshipName)
+        // );
     }
 }
 
