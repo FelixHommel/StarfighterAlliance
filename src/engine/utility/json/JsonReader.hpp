@@ -17,7 +17,7 @@ namespace sfa::json
 namespace validation
 {
 
-[[nodiscard]] std::expected<ValidationResult, ValidationError> isValid(
+[[nodiscard]] std::expected<ValidationResult, ValidationError> validate(
     const nlohmann::json& doc, const std::filesystem::path& schemaPath
 );
 

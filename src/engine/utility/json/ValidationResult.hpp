@@ -9,7 +9,7 @@ namespace sfa::json::validation
 struct ValidationResult
 {
     bool isValid{};
-    valijson::ValidationResults results;
+    valijson::ValidationResults validationErrors;
 };
 
 } // namespace sfa::json::validation

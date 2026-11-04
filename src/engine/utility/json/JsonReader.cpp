@@ -16,7 +16,10 @@
 #include <expected>
 #include <filesystem>
 #include <fstream>
+#include <iterator>
+#include <numeric>
 #include <optional>
+#include <string>
 #include <utility>
 
 namespace sfa::json
@@ -25,13 +28,20 @@ namespace sfa::json
 namespace validation
 {
 
-[[nodiscard]] std::expected<ValidationResult, ValidationError> isValid(
+[[nodiscard]] std::expected<ValidationResult, ValidationError> validate(
     const nlohmann::json& doc, const std::filesystem::path& schemaPath
 )
 {
     nlohmann::json schemaDoc{ nullptr };
-    if(!valijson::utils::loadDocument(schemaPath, schemaDoc))
+    try
+    {
+        if(!valijson::utils::loadDocument(schemaPath, schemaDoc))
+            return std::unexpected<ValidationError>({});
+    }
+    catch(...)
+    {
         return std::unexpected<ValidationError>({});
+    }
 
     valijson::Schema schema;
     valijson::SchemaParser parser;
@@ -76,9 +86,34 @@ namespace validation
 
     if(schema.has_value())
     {
-        if(const auto results{ validation::isValid(doc, *schema) }; results.has_value())
+        if(auto results{ validation::validate(doc, *schema) }; results.has_value())
+        {
             if(!(*results).isValid)
+            {
+                spdlog::error("Validation of file '{}' failed, the following issues were found:", path.string());
+
+                valijson::ValidationResults::Error error;
+                unsigned int errorNumber{ 1u };
+                while((*results).validationErrors.popError(error))
+                {
+                    spdlog::error(
+                        "Error #{} @ {}\n\t- {}",
+                        errorNumber++,
+                        std::accumulate(
+                            std::cbegin(error.context),
+                            std::cend(error.context),
+                            std::string(""),
+                            [](std::string lhs, std::string rhs) { return std::move(lhs) + "::" + std::move(rhs); }
+                        ),
+                        error.description
+                    );
+                }
+
                 return std::unexpected<JsonError>({ JsonError::Reason::ValidationFailed, path });
+            }
+        }
+        else
+            return std::unexpected<JsonError>({ JsonError::Reason::SchemaError, path, *schema });
     }
 
     return std::move(doc);
