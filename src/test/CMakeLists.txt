@@ -41,9 +41,13 @@ target_sources(
 )
 
 target_compile_features(${NAME} PRIVATE cxx_std_23)
+target_compile_options(
+    ${NAME}
+    INTERFACE $<$<COMPILE_LANGUAGE:CXX>:${PROJECT_WARNINGS}>
+)
 target_link_libraries(
     ${NAME}
-    PRIVATE project_warnings GTest::gtest GTest::gmock StarfighterAllianceEngine
+    PRIVATE GTest::gtest GTest::gmock StarfighterAllianceEngine
 )
 
 include(GoogleTest)
