@@ -24,6 +24,7 @@ add_library(
     ./screens/ScreenStack.cpp
     ./screens/SelectionScreen.cpp
     ./utility/GLFWWindow.cpp
+    ./utility/json/JsonReader.cpp
     ./utility/userInput/InputController.cpp
 )
 
@@ -92,6 +93,10 @@ target_sources(
                 ./utility/exceptions/Exception.hpp
                 ./utility/exceptions/ResourceUnavailableException.hpp
                 ./utility/exceptions/WindowCreationException.hpp
+                ./utility/json/JsonError.hpp
+                ./utility/json/JsonReader.hpp
+                ./utility/json/ValidationError.hpp
+                ./utility/json/ValidationResult.hpp
                 ./utility/userInput/InputController.hpp
                 ./utility/userInput/InputEvent.hpp
 )
