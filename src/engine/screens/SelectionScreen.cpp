@@ -19,16 +19,19 @@
 #include "screens/ScreenCommand.hpp"
 #include "screens/SelectionScreen.hpp"
 #include "utility/IWindow.hpp"
+#include "utility/json/JsonReader.hpp"
 #include "utility/userInput/InputController.hpp"
 #include "utility/userInput/InputEvent.hpp"
 
 #include <glm/glm.hpp>
+#include <nlohmann/json_fwd.hpp>
 #include <spdlog/spdlog.h>
 
 #include <cstddef>
 #include <filesystem>
 #include <format>
 #include <memory>
+#include <stdexcept>
 #include <type_traits>
 #include <utility>
 
@@ -62,7 +65,6 @@ constexpr auto SELECTION_BUTTON_SIZE{ glm::vec2(120.f, 70.f) };
 constexpr auto BOTTOM_BAR_BUTTON_SIZE{ glm::vec2(220.f, 70.f) };
 
 constexpr auto SPACESHIP_CONFIG_SCHEMA_PATH{ SFA_ROOT "resources/config/spaceship_config_schema.json" };
-constexpr auto SPACESHIP_STAT_VALUE_FALLBACK{ 0u };
 
 [[nodiscard]] constexpr std::filesystem::path getSpaceshipConfigPath(sfa::SpaceshipType type) noexcept
 {
@@ -332,39 +334,42 @@ void SelectionScreen::loadSpaceshipData(ResourceContext& resources)
 {
     for(std::underlying_type_t<SpaceshipType> i{ 0 }; i < std::to_underlying(SpaceshipType::SPACESHIP_TPYE_MAX); ++i)
     {
-        const auto type{ static_cast<SpaceshipType>(i) };
-        const auto spaceshipName{ std::format("{}_{}", type, m_session.spaceshipConfig.color.get()) };
+        const auto spaceshipType{ static_cast<SpaceshipType>(i) };
+        const auto spaceshipColor{ m_session.spaceshipConfig.color.get() };
+        const auto spaceshipName{ std::format("{}_{}", spaceshipType, spaceshipColor) };
 
         if(resources.containsTexture(spaceshipName))
             continue;
 
-        // TODO: FIXME: Use new JSON functions
-
-        // JsonDocument d{ ::getSpaceshipConfigPath(type) };
-
         resources.requestResourceBlocking(
             ResourceContext::TextureLoadRequest{
                 .name = spaceshipName,
-                .filepath = ::getSpaceshipTexturePath(type, m_session.spaceshipConfig.color.get()),
+                .filepath = ::getSpaceshipTexturePath(spaceshipType, spaceshipColor),
             }
         );
 
-        // const bool validationResult{ d.validate(::SPACESHIP_CONFIG_SCHEMA_PATH) };
-        // if(!validationResult)
-        // {
-        //     spdlog::warn(
-        //         "Spaceship config for '{}' failed to validate agsinst the schema located at '{}'. Using placeholder values.",
-        //         spaceshipName,
-        //         ::SPACESHIP_CONFIG_SCHEMA_PATH
-        //     );
-        // }
-        //
-        // m_spaceships.at(i) = std::make_unique<SpaceshipData>(
-        //     validationResult ? d.get<unsigned int>("health") : ::SPACESHIP_STAT_VALUE_FALLBACK,
-        //     validationResult ? d.get<unsigned int>("speed") : ::SPACESHIP_STAT_VALUE_FALLBACK,
-        //     validationResult ? d.get<unsigned int>("damage") : ::SPACESHIP_STAT_VALUE_FALLBACK,
-        //     std::move(spaceshipName)
-        // );
+        if(const auto parsedConfig{ json::parseJson(::getSpaceshipConfigPath(spaceshipType)) };
+           parsedConfig.has_value())
+        {
+            const auto config{ *parsedConfig };
+
+            m_spaceships.at(i) = std::make_unique<SpaceshipData>(
+                config["health"].get<unsigned int>(),
+                config["speed"].get<unsigned int>(),
+                config["damage"].get<unsigned int>(),
+                spaceshipName
+            );
+        }
+        else
+        {
+            spdlog::critical(
+                "Spaceship config for '{}' failed to validate agsinst the schema located at '{}'",
+                spaceshipName,
+                ::SPACESHIP_CONFIG_SCHEMA_PATH
+            );
+
+            throw std::runtime_error("Couldn't load spaceship config");
+        }
     }
 }
 
