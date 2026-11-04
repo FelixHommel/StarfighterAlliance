@@ -19,6 +19,7 @@ add_executable(
     ./ecs/systems/UILayoutSystemTest.cpp
     ./ecs/systems/UITransformSystemTest.cpp
     ./testUtility/stb_image_write_impl.cpp
+    ./testUtility/TemporaryDirectory.cpp
     ./screens/ScreenStackTest.cpp
     ./utility/exceptions/ExceptionTest.cpp
     ./utility/exceptions/ResourceUnavailableExceptionTest.cpp
@@ -38,6 +39,8 @@ target_sources(
                 ./mocks/MockWindow.hpp
                 ./testUtility/RandomNumberGenerator.hpp
                 ./testUtility/ResourceGenerator.hpp
+                ./testUtility/TemporaryDirectory.hpp
+                ./testUtility/TemporaryJsonFile.hpp
 )
 
 target_compile_features(${NAME} PRIVATE cxx_std_23)

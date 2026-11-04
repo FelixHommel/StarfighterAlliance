@@ -1,100 +1,28 @@
 #ifndef SFA_SRC_TEST_TEST_UTILITY_TEMPORARY_JSON_FILE_HPP
 #define SFA_SRC_TEST_TEST_UTILITY_TEMPORARY_JSON_FILE_HPP
 
+#include "testUtility/TemporaryDirectory.hpp"
+
 #include <gtest/gtest.h>
 
-#include <algorithm>
 #include <array>
-#include <atomic>
-#include <cctype>
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
 #include <filesystem>
 #include <fstream>
 #include <ios>
-#include <random>
-#include <sstream>
+#include <stdexcept>
 #include <string>
 #include <string_view>
-#include <system_error>
 
 namespace sfa::testing
 {
 
-class TemporaryDirectory
-{
-public:
-    explicit TemporaryDirectory(std::string_view name) : m_path{ createUniqueDirectory(name) } {}
-    ~TemporaryDirectory() = default;
-
-    TemporaryDirectory(const TemporaryDirectory&) = delete;
-    TemporaryDirectory& operator=(const TemporaryDirectory&) = delete;
-    TemporaryDirectory(TemporaryDirectory&&) = delete;
-    TemporaryDirectory& operator=(TemporaryDirectory&&) = delete;
-
-    [[nodiscard]] const std::filesystem::path& path() const noexcept { return m_path; }
-
-private:
-    std::filesystem::path m_path;
-
-    static std::string sanitizeName(std::string_view name)
-    {
-        std::string result;
-        result.reserve(std::min(name.size(), std::size_t{ 48 }));
-
-        for(const unsigned char c : name)
-        {
-            if(result.size() >= 48)
-                break;
-
-            result += static_cast<bool>(std::isalnum(c)) || c == '-' || c == '_' ? static_cast<char>(c) : '_';
-        }
-
-        return result.empty() ? "temporary" : result;
-    }
-
-    static std::filesystem::path createUniqueDirectory(std::string_view name)
-    {
-        static std::atomic<std::uint64_t> counter{};
-
-        const auto basePath{ std::filesystem::temp_directory_path() };
-        const auto prefix{ sanitizeName(name) };
-
-        std::random_device randomDevice;
-
-        for(;;)
-        {
-            const auto nonce{ (static_cast<std::uint64_t>(randomDevice()) << 32)
-                              ^ static_cast<std::uint64_t>(randomDevice()) };
-
-            std::ostringstream suffix;
-            suffix << std::hex << nonce << '_' << counter.fetch_add(1);
-
-            const auto path{ basePath / (prefix + '_' + suffix.str()) };
-
-            if(!std::filesystem::create_directory(path))
-                continue;
-
-            try
-            {
-                std::filesystem::permissions(
-                    path, std::filesystem::perms::owner_all, std::filesystem::perm_options::replace
-                );
-            }
-            catch(...)
-            {
-                std::error_code error;
-                std::filesystem::remove_all(path, error);
-
-                throw;
-            }
-
-            return path;
-        }
-    }
-};
-
+/// \brief Enum that represents the available JSON files.
+///
+/// \author Felix Hommel
+/// \date 11/04/2026
 enum class JsonFileType : std::uint8_t
 {
     ValidJson,
@@ -104,7 +32,40 @@ enum class JsonFileType : std::uint8_t
     NonSchemaConformJson,
 };
 
+/// brief Convert a \ref JsonFileType to its \ref std::string representation.
+///
+/// \param fileType The \ref JsonFileType that is converted
+///
+/// \returns string representation of \p fileType
+static constexpr std::string_view jsonFileTypeToString(JsonFileType fileType)
+{
+    switch(fileType)
+    {
+        using enum JsonFileType;
 
+    case ValidJson:
+        return "valid_json";
+    case ValidSchema:
+        return "valid_schema";
+    case MalformedJson:
+        return "malformed_json";
+    case MalformedSchema:
+        return "malformed_schema";
+    case NonSchemaConformJson:
+        return "non_schema_conform_json";
+    default:
+        return "";
+    }
+}
+
+namespace detail
+{
+
+/// \brief Check if a template parameter pack consists of only unique parameters.
+///
+/// \tparam FileTypes parameter pack of \ref JsonFileType
+///
+/// \returns *true* if \p FileTypes are unique, *false* otherwise
 template<JsonFileType... FileTypes>
 consteval bool areUniqueFileTypes()
 {
@@ -122,17 +83,26 @@ consteval bool areUniqueFileTypes()
     return true;
 }
 
+} // namespace detail
+
+/// \brief Create test JSON files in a temporary directory.
+///
+/// \tparam FileTypes Parameter pack of \ref JsonFileType. They are required to be unique.
+///
+/// \author Felix Hommel
+/// \date 11/04/2026
 template<JsonFileType... FileTypes>
-    requires(areUniqueFileTypes<FileTypes...>())
+    requires(detail::areUniqueFileTypes<FileTypes...>())
 class TemporaryJsonFile
 {
 public:
+    /// \brief Create a new temporary JSON directory from a gtest test.
     explicit TemporaryJsonFile(const ::testing::TestInfo* info)
         : TemporaryJsonFile(std::string(info->test_suite_name()) + "_" + std::string(info->name()))
     {}
-
+    /// \brief Create a new temporary JSON directory from a gtest test suite.
     explicit TemporaryJsonFile(const ::testing::TestSuite* info) : TemporaryJsonFile(info->name()) {}
-
+    /// \brief Create a new temporary JSON directory with a given name.
     explicit TemporaryJsonFile(std::string_view dirName) : m_tempDir{ dirName } { (createFile(FileTypes), ...); }
 
     ~TemporaryJsonFile() = default;
@@ -142,8 +112,18 @@ public:
     TemporaryJsonFile(TemporaryJsonFile&&) = delete;
     TemporaryJsonFile& operator=(TemporaryJsonFile&&) = delete;
 
+    /// \brief Get the path to a specific JSON file type.
+    ///
+    /// \param fileType The \ref JsonFileType for which the path is returned
+    ///
+    /// \returns The path to the JSON file with \p fileType
+    ///
+    /// \throws \ref std::invalid_argument if \p fileType is not specified in \p FileTypes
     [[nodiscard]] std::filesystem::path filePath(JsonFileType fileType) const
     {
+        if(!((fileType == FileTypes) || ...))
+            throw std::invalid_argument("JSON file type was not requested");
+
         return m_tempDir.path() / (jsonFileTypeToString(fileType).data() + std::string(".json"));
     }
 
@@ -153,7 +133,18 @@ private:
     TemporaryDirectory m_tempDir;
 
     static constexpr auto VALID_JSON{ R"({ "key1": "value", "key2": 1, "key3": 2.3 })" };
+    static constexpr auto VALID_SCHEMA{
+        R"({ "$schema": "https://json-schema.org/draft/2020-12/schema", "type": "object", "properties": { "key1": { "description": "First property", "type": "string" }, "key1": { "description": "First property", "type": "string" }, "key2": { "description": "Second property", "type": "integer" }, "key3": { "description": "Third property", "type": "number" } } })"
+    };
+    static constexpr auto MALFORMED_JSON{ R"({ "key1" "value", "key2": 1, "key3": 2.3 })" };
+    static constexpr auto MALFORMED_SCHEMA{
+        R"({ "$schema": "https://json-schema.org/draft/2020-12/schema", "type": "object", "properties": { "key1": { "description" "First property", "type": "string" }, "key1": { "description": "First property", "type": "string" }, "key2": { "description": "Second property", "type": "integer" }, "key3": { "description": "Third property", "type": "number" } } })"
+    };
+    static constexpr auto NON_SCHEMA_CONFORM_JSON{ R"({ "key1": "value", "key2": 1.0, "key3": 2.3 })" };
 
+    /// \brief Create a JSON file with the specified content.
+    ///
+    /// \param fileType The \ref JsonFileType that specifies what the file contains
     void createFile(JsonFileType fileType) const
     {
         std::ofstream output;
@@ -164,27 +155,11 @@ private:
         output.close();
     }
 
-    static constexpr std::string_view jsonFileTypeToString(JsonFileType fileType)
-    {
-        switch(fileType)
-        {
-            using enum JsonFileType;
-
-        case ValidJson:
-            return "valid_json";
-        case ValidSchema:
-            return "valid_schema";
-        case MalformedJson:
-            return "malformed_json";
-        case MalformedSchema:
-            return "malformed_schema";
-        case NonSchemaConformJson:
-            return "non_schema_conform_json";
-        default:
-            return {};
-        }
-    }
-
+    /// \brief mapping function assigning each \ref JsonFileType to the specific content of the file.
+    ///
+    /// \param fileType The \ref JsonFileType whose content is queried.
+    ///
+    /// \returns The content of \p fileType in string format
     static constexpr std::string_view jsonFileTypeToContent(JsonFileType fileType)
     {
         switch(fileType)
@@ -194,15 +169,15 @@ private:
         case ValidJson:
             return VALID_JSON;
         case ValidSchema:
-            return "valid_schema";
+            return VALID_SCHEMA;
         case MalformedJson:
-            return "malformed_json";
+            return MALFORMED_JSON;
         case MalformedSchema:
-            return "malformed_schema";
+            return MALFORMED_SCHEMA;
         case NonSchemaConformJson:
-            return "non_schema_conform_json";
+            return NON_SCHEMA_CONFORM_JSON;
         default:
-            return {};
+            return "{}";
         }
     }
 };
