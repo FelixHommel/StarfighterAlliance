@@ -24,6 +24,7 @@ add_executable(
     ./utility/exceptions/ExceptionTest.cpp
     ./utility/exceptions/ResourceUnavailableExceptionTest.cpp
     ./utility/exceptions/WindowCreationExceptionTest.cpp
+    ./utility/json/JsonReaderTest.cpp
     ./utility/userInput/InputControllerTest.cpp
 )
 
