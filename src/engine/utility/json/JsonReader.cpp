@@ -49,11 +49,9 @@ namespace validation
     valijson::ValidationResults results;
     valijson::adapters::NlohmannJsonAdapter targetAdapter{ doc };
     if(validator.validate(schema, targetAdapter, &results))
-        return ValidationResult{ .isValid = true, .results = {} };
+        return ValidationResult{ .isValid = true };
 
-    spdlog::error("Validation of JSON document failed.");
-
-    return ValidationResult{ .isValid = false, .results = std::move(results) };
+    return ValidationResult{ .isValid = false, .validationErrors = std::move(results) };
 }
 
 } // namespace validation
