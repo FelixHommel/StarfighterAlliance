@@ -5,7 +5,10 @@
 #include "config/SpaceshipColor.hpp"
 #include "config/SpaceshipType.hpp"
 
-namespace
+namespace sfa
+{
+
+namespace detail
 {
 
 /// \brief Information about the spaceship
@@ -18,10 +21,7 @@ struct SpaceshipConfiguration
     sfa::AsyncValue<sfa::SpaceshipColor> color{ sfa::SpaceshipColor::Red };
 };
 
-} // namespace
-
-namespace sfa
-{
+} // namespace detail
 
 /// \brief The \ref GameSession is managing data that is relevant across multiple screens
 ///
@@ -29,7 +29,7 @@ namespace sfa
 /// \date 5/24/2026
 struct GameSession
 {
-    ::SpaceshipConfiguration spaceshipConfig;
+    detail::SpaceshipConfiguration spaceshipConfig;
 };
 
 }; // namespace sfa
