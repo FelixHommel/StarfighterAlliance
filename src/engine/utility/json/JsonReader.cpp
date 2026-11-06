@@ -36,11 +36,11 @@ namespace validation
     try
     {
         if(!valijson::utils::loadDocument(schemaPath, schemaDoc))
-            return std::unexpected<ValidationError>({});
+            return std::unexpected<ValidationError>(ValidationError{ schemaPath });
     }
     catch(...)
     {
-        return std::unexpected<ValidationError>({});
+        return std::unexpected<ValidationError>(ValidationError{ schemaPath });
     }
 
     valijson::Schema schema;
@@ -52,7 +52,7 @@ namespace validation
     }
     catch(...)
     {
-        return std::unexpected<ValidationError>({});
+        return std::unexpected<ValidationError>(ValidationError{ schemaPath });
     }
 
     valijson::Validator validator{ valijson::Validator::kStrongTypes };
