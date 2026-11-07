@@ -158,7 +158,7 @@ void ResourceContext::uploadToGPU(const std::string& key, const ShaderSourceData
 ///
 /// \param key with which the texture can be accessed
 /// \param data \ref TextureRawData containing the pixel data for the texture
-void ResourceContext::uploadToGPU(const std::string& key, const TextureRawData& data)
+void ResourceContext::uploadToGPU(const std::string& key, const TextureSourceData& data)
 {
     try
     {

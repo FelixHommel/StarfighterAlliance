@@ -50,7 +50,10 @@ target_compile_options(
 )
 target_link_libraries(
     ${NAME}
-    PRIVATE Catch2::Catch2WithMain StarfighterAllianceEngine
+    PRIVATE
+        Catch2::Catch2WithMain
+        trompeloeil::trompeloeil
+        StarfighterAllianceEngine
 )
 
 include(Catch)

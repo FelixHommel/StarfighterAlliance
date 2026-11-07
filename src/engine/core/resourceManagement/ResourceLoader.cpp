@@ -96,7 +96,9 @@ LoadResult ResourceLoader::loadTexture(const std::filesystem::path& filepath)
     std::memcpy(pixels.data(), imageData, size);
     stbi_image_free(imageData);
 
-    TextureRawData textureData{ .width = width, .height = height, .channels = nrChannels, .pixels = std::move(pixels) };
+    TextureSourceData textureData{
+        .width = width, .height = height, .channels = nrChannels, .pixels = std::move(pixels)
+    };
 
     return ResourceData{ std::move(textureData) };
 }

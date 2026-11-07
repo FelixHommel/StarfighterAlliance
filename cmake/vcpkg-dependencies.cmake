@@ -15,4 +15,6 @@ find_package(spdlog CONFIG REQUIRED)
 find_package(SQLiteCpp CONFIG REQUIRED)
 find_package(Stb REQUIRED)
 
+find_package(trompeloeil CONFIG REQUIRED)
+
 find_package(valijson CONFIG REQUIRED)

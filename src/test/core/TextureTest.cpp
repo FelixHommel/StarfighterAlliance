@@ -9,6 +9,16 @@
 #include <cstddef>
 #include <utility>
 
+namespace
+{
+
+constexpr auto TEST_IMAGE_WIDTH{ 1 };
+constexpr auto TEST_IMAGE_HEIGHT{ 1 };
+constexpr auto TEST_IMAGE_CHANNELS{ 4 };
+constexpr std::array TEST_IMAGE_PIXELS{ std::byte(255), std::byte(255), std::byte(255), std::byte(255) };
+
+} // namespace
+
 namespace sfa::testing
 {
 
@@ -18,11 +28,6 @@ namespace sfa::testing
 /// \date 1/24/2026
 TEST_CASE("TextureTest", "[unit][core][opengl]")
 {
-    static constexpr auto TEST_IMAGE_WIDTH{ 1 };
-    static constexpr auto TEST_IMAGE_HEIGHT{ 1 };
-    static constexpr auto TEST_IMAGE_CHANNELS{ 4 };
-    static constexpr std::array TEST_IMAGE_PIXELS{ std::byte(255), std::byte(255), std::byte(255), std::byte(255) };
-
     OpenGLTestFixture context{};
 
     if(!context.setup())
@@ -35,7 +40,7 @@ TEST_CASE("TextureTest", "[unit][core][opengl]")
     {
         unsigned int textureID{};
         {
-            Texture2D texure(TEST_IMAGE_WIDTH, TEST_IMAGE_HEIGHT, TEST_IMAGE_CHANNELS, TEST_IMAGE_PIXELS);
+            Texture2D texure(::TEST_IMAGE_WIDTH, ::TEST_IMAGE_HEIGHT, ::TEST_IMAGE_CHANNELS, ::TEST_IMAGE_PIXELS);
             textureID = texure.getID();
 
             CHECK(textureID != 0);
@@ -50,7 +55,7 @@ TEST_CASE("TextureTest", "[unit][core][opengl]")
     /// Move constructing a \ref Texture should preserve the underlying texture ID.
     SECTION("Texture move constructor")
     {
-        Texture2D original(TEST_IMAGE_WIDTH, TEST_IMAGE_HEIGHT, TEST_IMAGE_CHANNELS, TEST_IMAGE_PIXELS);
+        Texture2D original(::TEST_IMAGE_WIDTH, ::TEST_IMAGE_HEIGHT, ::TEST_IMAGE_CHANNELS, ::TEST_IMAGE_PIXELS);
         const unsigned int originalID{ original.getID() };
         Texture2D moved{ std::move(original) };
 
@@ -63,9 +68,9 @@ TEST_CASE("TextureTest", "[unit][core][opengl]")
     /// Move assignment should preserve the move source's texture and clean up the texture the move target owned so far.
     SECTION("Texture move assignment")
     {
-        Texture2D texture1(TEST_IMAGE_WIDTH, TEST_IMAGE_HEIGHT, TEST_IMAGE_CHANNELS, TEST_IMAGE_PIXELS);
+        Texture2D texture1(::TEST_IMAGE_WIDTH, ::TEST_IMAGE_HEIGHT, ::TEST_IMAGE_CHANNELS, ::TEST_IMAGE_PIXELS);
         const unsigned int originalTexture1ID{ texture1.getID() };
-        Texture2D texture2(TEST_IMAGE_WIDTH, TEST_IMAGE_HEIGHT, TEST_IMAGE_CHANNELS, TEST_IMAGE_PIXELS);
+        Texture2D texture2(::TEST_IMAGE_WIDTH, ::TEST_IMAGE_HEIGHT, ::TEST_IMAGE_CHANNELS, ::TEST_IMAGE_PIXELS);
         const unsigned int originalTexture2ID{ texture2.getID() };
 
         texture2 = std::move(texture1);
@@ -80,7 +85,7 @@ TEST_CASE("TextureTest", "[unit][core][opengl]")
     /// When a texture is bound it should be bound by the OpenGL state.
     SECTION("Texture bind activates the texture")
     {
-        Texture2D texture(TEST_IMAGE_WIDTH, TEST_IMAGE_HEIGHT, TEST_IMAGE_CHANNELS, TEST_IMAGE_PIXELS);
+        Texture2D texture(::TEST_IMAGE_WIDTH, ::TEST_IMAGE_HEIGHT, ::TEST_IMAGE_CHANNELS, ::TEST_IMAGE_PIXELS);
         texture.bind();
 
         int boundTexture{ 0 };

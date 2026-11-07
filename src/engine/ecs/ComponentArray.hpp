@@ -4,12 +4,12 @@
 #include "ECSUtility.hpp"
 #include "IComponentArray.hpp"
 #include "components/IComponent.hpp"
-#include "core/Utility.hpp"
 
 #include <array>
 #include <cassert>
 #include <cstddef>
 #include <span>
+#include <stdexcept>
 #include <unordered_map>
 
 namespace sfa
@@ -41,7 +41,8 @@ public:
     /// \param component the new component
     void insert(EntityID entity, T component)
     {
-        SFA_ASSERT(!m_entityToIndex.contains(entity), "Component already exists");
+        if(m_entityToIndex.contains(entity))
+            throw std::runtime_error("Component already exists");
 
         const std::size_t newIndex{ m_actualSize++ };
         m_entityToIndex[entity] = newIndex;
@@ -54,7 +55,8 @@ public:
     /// \param entity the target entity
     void remove(EntityID entity)
     {
-        SFA_ASSERT(m_entityToIndex.contains(entity), "Component doesn't exist");
+        if(!m_entityToIndex.contains(entity))
+            throw std::runtime_error("Component doesn't exist");
 
         // NOTE: Swap with last element to maintain density
         const std::size_t indexOfRemoved{ m_entityToIndex[entity] };
@@ -78,7 +80,8 @@ public:
     /// \returns reference to component of \p entity
     T& get(EntityID entity)
     {
-        SFA_ASSERT(m_entityToIndex.contains(entity), "Component doesn't exist");
+        if(!m_entityToIndex.contains(entity))
+            throw std::runtime_error("Component doesn't exist");
 
         return m_components[m_entityToIndex[entity]];
     }
@@ -90,7 +93,8 @@ public:
     /// \returns const-ref to component of \p entity
     const T& get(EntityID entity) const
     {
-        SFA_ASSERT(m_entityToIndex.contains(entity), "Component doesn't exist");
+        if(!m_entityToIndex.contains(entity))
+            throw std::runtime_error("Component doesn't exist");
 
         return m_components.at(m_entityToIndex.at(entity));
     }
@@ -109,7 +113,8 @@ public:
     /// \returns \ref EntityID that owns the component at \p index
     EntityID entityAtIndex(std::size_t index) const
     {
-        SFA_ASSERT(index <= m_actualSize, "Index is out of range");
+        if(index > m_actualSize)
+            throw std::runtime_error("Index is out of range");
 
         return m_indexToEntity.at(index);
     }

@@ -10,6 +10,7 @@
 #include <cassert>
 #include <cstddef>
 #include <memory>
+#include <stdexcept>
 #include <unordered_map>
 #include <utility>
 
@@ -40,7 +41,9 @@ public:
     void registerComponent()
     {
         ComponentTypeID typeID{ getComponentTypeID<T>() };
-        SFA_ASSERT(!m_components.contains(typeID), "Component already registered");
+
+        if(m_components.contains(typeID))
+            throw std::runtime_error("Component already registered");
 
         m_components[typeID] = std::make_unique<ComponentArray<T>>();
     }
@@ -70,8 +73,11 @@ public:
     template<Component T>
     void removeComponent(EntityID entity)
     {
-        SFA_ASSERT(isComponentRegistered<T>(), "Component is not registered");
-        SFA_ASSERT(contains<T>(entity), "The entity does not have the component");
+        if(!isComponentRegistered<T>())
+            throw std::runtime_error("Component is not registered");
+
+        if(!contains<T>(entity))
+            throw std::runtime_error("The entity does not have the component");
 
         getComponentArray<T>().remove(entity);
     }
@@ -86,8 +92,11 @@ public:
     template<Component T>
     T& getComponent(EntityID entity)
     {
-        SFA_ASSERT(isComponentRegistered<T>(), "Component is not registered");
-        SFA_ASSERT(contains<T>(entity), "The entity does not have the component");
+        if(!isComponentRegistered<T>())
+            throw std::runtime_error("Component is not registered");
+
+        if(!contains<T>(entity))
+            throw std::runtime_error("The entity does not have the component");
 
         return getComponentArray<T>().get(entity);
     }
@@ -102,8 +111,11 @@ public:
     template<Component T>
     const T& getComponent(EntityID entity) const
     {
-        SFA_ASSERT(isComponentRegistered<T>(), "Component is not registered");
-        SFA_ASSERT(contains<T>(entity), "The entity does not have the component");
+        if(!isComponentRegistered<T>())
+            throw std::runtime_error("Component is not registered");
+
+        if(!contains<T>(entity))
+            throw std::runtime_error("The entity does not have the component");
 
         return getComponentArray<T>().get(entity);
     }
@@ -118,7 +130,8 @@ public:
     template<Component T>
     bool contains(EntityID entity) const
     {
-        SFA_ASSERT(isComponentRegistered<T>(), "Component is not registered");
+        if(!isComponentRegistered<T>())
+            throw std::runtime_error("Component is not registered");
 
         return getComponentArray<T>().contains(entity);
     }
@@ -131,7 +144,8 @@ public:
     template<Component T>
     ComponentArray<T>& getComponentArray()
     {
-        SFA_ASSERT(isComponentRegistered<T>(), "Component is not registered");
+        if(isComponentRegistered<T>())
+            throw std::runtime_error("Component is not registered");
 
         return static_cast<ComponentArray<T>&>(*m_components[getComponentTypeID<T>()]);
     }
@@ -144,7 +158,8 @@ public:
     template<Component T>
     const ComponentArray<T>& getComponentArray() const
     {
-        SFA_ASSERT(isComponentRegistered<T>(), "Component is not registered");
+        if(isComponentRegistered<T>())
+            throw std::runtime_error("Component is not registered");
 
         return static_cast<const ComponentArray<T>&>(*m_components.at(getComponentTypeID<T>()));
     }
