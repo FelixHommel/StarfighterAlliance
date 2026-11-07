@@ -3,13 +3,11 @@
 
 #include "testUtility/TemporaryDirectory.hpp"
 
-#include <gtest/gtest.h>
 #include <stb_image_write.h>
 
 #include <array>
 #include <filesystem>
 #include <fstream>
-#include <string>
 #include <string_view>
 
 namespace sfa::testing
@@ -24,10 +22,6 @@ namespace sfa::testing
 class ResourceGenerator
 {
 public:
-    explicit ResourceGenerator(const ::testing::TestInfo* info)
-        : ResourceGenerator(std::string(info->test_suite_name()) + "_" + std::string(info->name()))
-    {}
-    explicit ResourceGenerator(const ::testing::TestSuite* info) : ResourceGenerator(info->name()) {}
     explicit ResourceGenerator(std::string_view dirName) : m_tempDir{ dirName }
     {
         createTestShader();

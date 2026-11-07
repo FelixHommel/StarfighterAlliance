@@ -3,8 +3,6 @@
 
 #include "testUtility/TemporaryDirectory.hpp"
 
-#include <gtest/gtest.h>
-
 #include <array>
 #include <cstddef>
 #include <cstdint>
@@ -96,12 +94,6 @@ template<JsonFileType... FileTypes>
 class TemporaryJsonFile
 {
 public:
-    /// \brief Create a new temporary JSON directory from a gtest test.
-    explicit TemporaryJsonFile(const ::testing::TestInfo* info)
-        : TemporaryJsonFile(std::string(info->test_suite_name()) + "_" + std::string(info->name()))
-    {}
-    /// \brief Create a new temporary JSON directory from a gtest test suite.
-    explicit TemporaryJsonFile(const ::testing::TestSuite* info) : TemporaryJsonFile(info->name()) {}
     /// \brief Create a new temporary JSON directory with a given name.
     explicit TemporaryJsonFile(std::string_view dirName) : m_tempDir{ dirName } { (createFile(FileTypes), ...); }
 

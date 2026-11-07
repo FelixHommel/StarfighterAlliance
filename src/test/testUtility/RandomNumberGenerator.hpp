@@ -40,6 +40,7 @@ namespace sfa::testing
 /// When the exclusion list is used, be careful to not exclude all possible values. This *can* cause an infinite loop.
 ///
 /// \tparam T can be any numerical type
+///
 /// \param min (optional) the minimum value the random number has to have
 /// \param max (optional) the maximum value the random number has to have
 /// \param exclusions (optional) exclude specific numbers. Careful when using with floating point values
@@ -84,6 +85,7 @@ T generateRandomValue(
 /// When the exclusion list is used, be careful to not exclude all possible values. This *can* cause an infinite loop.
 ///
 /// \tparam T can be any numerical type
+///
 /// \param n how many elements to create
 /// \param min (optional) the minimum value the random number has to have
 /// \param max (optional) the maximum value the random number has to have

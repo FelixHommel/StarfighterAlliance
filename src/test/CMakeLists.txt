@@ -4,7 +4,6 @@ include(${PROJECT_SOURCE_DIR}/cmake/StaticAnalyzers.cmake)
 
 add_executable(
     ${NAME}
-    ./testMain.cpp
     ./concurrency/AsyncValueTest.cpp
     ./concurrency/BlockingQueueTest.cpp
     ./concurrency/ThreadPoolTest.cpp
@@ -51,15 +50,9 @@ target_compile_options(
 )
 target_link_libraries(
     ${NAME}
-    PRIVATE GTest::gtest GTest::gmock StarfighterAllianceEngine
+    PRIVATE Catch2::Catch2WithMain StarfighterAllianceEngine
 )
 
-include(GoogleTest)
-gtest_discover_tests(${NAME})
-
-# https://discourse.cmake.org/t/differences-in-set-property-vs-set-tests-properties-for-discovered-gtest-tests/8080
-set_property(
-    DIRECTORY
-    APPEND
-    PROPERTY TEST_INCLUDE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/labelTests.cmake
-)
+include(Catch)
+include(CTest)
+catch_discover_tests(${NAME})
