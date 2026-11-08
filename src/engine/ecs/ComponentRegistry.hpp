@@ -144,7 +144,7 @@ public:
     template<Component T>
     ComponentArray<T>& getComponentArray()
     {
-        if(isComponentRegistered<T>())
+        if(!isComponentRegistered<T>())
             throw std::runtime_error("Component is not registered");
 
         return static_cast<ComponentArray<T>&>(*m_components[getComponentTypeID<T>()]);
@@ -158,7 +158,7 @@ public:
     template<Component T>
     const ComponentArray<T>& getComponentArray() const
     {
-        if(isComponentRegistered<T>())
+        if(!isComponentRegistered<T>())
             throw std::runtime_error("Component is not registered");
 
         return static_cast<const ComponentArray<T>&>(*m_components.at(getComponentTypeID<T>()));
