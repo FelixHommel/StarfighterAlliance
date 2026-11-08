@@ -12,7 +12,7 @@ namespace sfa::testing
 ///
 /// \author Felix Hommel
 /// \date 2/16/2026
-TEST_CASE("ResourceLoaderTest", "[unit][core]")
+TEST_CASE("ResourceLoaderTest", "[unit][core][filesystem]")
 {
     ResourceGenerator generator{ Catch::getResultCapture().getCurrentTestName() };
     ResourceLoader loader{};
