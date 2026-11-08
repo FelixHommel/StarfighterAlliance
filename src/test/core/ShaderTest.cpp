@@ -173,8 +173,6 @@ TEST_CASE("RAIIShaderTest", "[unit][core][opengl]")
         CHECK(static_cast<bool>(glIsProgram(originalShaderID)));
         CHECK(shader.getID() == originalShaderID);
     }
-
-    glContext.teardown();
 }
 
 /// \brief Test the features of the \ref Shader class.
@@ -365,8 +363,6 @@ TEST_CASE("ShaderTest", "[unit][core][opengl]")
         const glm::mat4 result{ glm::make_mat4(uniformValues.data()) };
         CHECK(result == mat);
     }
-
-    glContext.teardown();
 }
 
 } // namespace sfa::testing

@@ -115,8 +115,6 @@ TEST_CASE("TextureTest", "[unit][core][opengl]")
         CHECK(boundTexture != 0);
         CHECK(texture.getID() == boundTexture);
     }
-
-    context.teardown();
 }
 
 } // namespace sfa::testing

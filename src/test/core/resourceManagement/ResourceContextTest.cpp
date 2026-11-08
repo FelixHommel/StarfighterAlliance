@@ -149,8 +149,6 @@ TEST_CASE("ResourceContextMockTest", "[unit][core][opengl][concurrency]")
 
         CHECK(context.totalResources() == 0);
     }
-
-    glContext.teardown();
 }
 
 /// \brief Test the features of the \ref ResourceContext with real filesystem interaction.
@@ -185,8 +183,6 @@ TEST_CASE("ResourceContextIntegrationTest", "[.][integration][core][opengl][conc
         CHECK(context.totalResources() == 2);
         CHECK(!context.hasPendingUploads());
     }
-
-    glContext.teardown();
 }
 
 } // namespace sfa::testing

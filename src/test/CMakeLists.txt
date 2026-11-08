@@ -17,6 +17,7 @@ add_executable(
     ./ecs/ComponentRegistryTest.cpp
     ./ecs/systems/UILayoutSystemTest.cpp
     ./ecs/systems/UITransformSystemTest.cpp
+    ./testUtility/OpenGLTestContext.cpp
     ./testUtility/stb_image_write_impl.cpp
     ./testUtility/TemporaryDirectory.cpp
     ./screens/ScreenStackTest.cpp
