@@ -17,6 +17,9 @@ namespace sfa
 /// \date 1/27/2026
 TEST_CASE("EntityManagerTest", "[unit][ecs]")
 {
+    using Catch::Matchers::ContainsSubstring;
+    using Catch::Matchers::MessageMatches;
+
     EntityManager manager{};
 
     /// \brief Test the Construction of a \ref EntityManager.
@@ -44,9 +47,6 @@ TEST_CASE("EntityManagerTest", "[unit][ecs]")
     /// debug mode.
     SECTION("Create entity exceeds limit")
     {
-        using Catch::Matchers::ContainsSubstring;
-        using Catch::Matchers::MessageMatches;
-
         for(std::size_t i{ 0 }; i < EntityManager::maxEntities(); ++i)
             auto x{ manager.createEntity() };
 
@@ -73,9 +73,6 @@ TEST_CASE("EntityManagerTest", "[unit][ecs]")
     /// assertion when build in debug mode.
     SECTION("Destroy Non existing entitie")
     {
-        using Catch::Matchers::ContainsSubstring;
-        using Catch::Matchers::MessageMatches;
-
         CHECK_THROWS_MATCHES(
             manager.destroyEntity(1), std::runtime_error, MessageMatches(ContainsSubstring("Entity out of range"))
         );

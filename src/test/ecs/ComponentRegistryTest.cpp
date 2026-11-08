@@ -35,6 +35,9 @@ namespace sfa
 /// \date 1/28/2026
 TEST_CASE("ComponentRegistryTest", "[unit][ecs]")
 {
+    using Catch::Matchers::ContainsSubstring;
+    using Catch::Matchers::MessageMatches;
+
     ComponentRegistry registry;
 
     /// \brief Test the construction of \ref ComponentRegistry.
@@ -62,9 +65,6 @@ TEST_CASE("ComponentRegistryTest", "[unit][ecs]")
     /// when build in debug mode.
     SECTION("Attempt registering duplicate component")
     {
-        using Catch::Matchers::ContainsSubstring;
-        using Catch::Matchers::MessageMatches;
-
         registry.registerComponent<::TestComponent>();
 
         CHECK_THROWS_MATCHES(
@@ -120,9 +120,6 @@ TEST_CASE("ComponentRegistryTest", "[unit][ecs]")
     /// assertion when build in debug mode.
     SECTION("Remove not registered component")
     {
-        using Catch::Matchers::ContainsSubstring;
-        using Catch::Matchers::MessageMatches;
-
         CHECK_THROWS_MATCHES(
             registry.removeComponent<::TestComponent>(::TEST_ENTITY),
             std::runtime_error,
@@ -136,9 +133,6 @@ TEST_CASE("ComponentRegistryTest", "[unit][ecs]")
     /// the removeComponent() method should fail an assertion when build in debug mode.
     SECTION("Remove registered component from entity without component")
     {
-        using Catch::Matchers::ContainsSubstring;
-        using Catch::Matchers::MessageMatches;
-
         registry.registerComponent<::TestComponent>();
 
         CHECK_THROWS_MATCHES(
@@ -154,9 +148,6 @@ TEST_CASE("ComponentRegistryTest", "[unit][ecs]")
     /// debug mode.
     SECTION("Get not registered component")
     {
-        using Catch::Matchers::ContainsSubstring;
-        using Catch::Matchers::MessageMatches;
-
         CHECK_THROWS_MATCHES(
             registry.getComponent<::TestComponent>(::TEST_ENTITY),
             std::runtime_error,
@@ -170,9 +161,6 @@ TEST_CASE("ComponentRegistryTest", "[unit][ecs]")
     /// fail an assertion when build in debug mode.
     SECTION("Get component from entity without component")
     {
-        using Catch::Matchers::ContainsSubstring;
-        using Catch::Matchers::MessageMatches;
-
         registry.registerComponent<::TestComponent>();
 
         CHECK_THROWS_MATCHES(
@@ -200,9 +188,6 @@ TEST_CASE("ComponentRegistryTest", "[unit][ecs]")
     /// in debug mode.
     SECTION("Const get not registered component")
     {
-        using Catch::Matchers::ContainsSubstring;
-        using Catch::Matchers::MessageMatches;
-
         const auto& refManager{ registry };
 
         CHECK_THROWS_MATCHES(
@@ -218,9 +203,6 @@ TEST_CASE("ComponentRegistryTest", "[unit][ecs]")
     /// fail an assertion when build in debug mode.
     SECTION("Const get component from entity without component")
     {
-        using Catch::Matchers::ContainsSubstring;
-        using Catch::Matchers::MessageMatches;
-
         registry.registerComponent<::TestComponent>();
         const auto& refManager{ registry };
 
@@ -259,9 +241,6 @@ TEST_CASE("ComponentRegistryTest", "[unit][ecs]")
     // an assertion when build in debug mode.
     SECTION("Contains not registered component")
     {
-        using Catch::Matchers::ContainsSubstring;
-        using Catch::Matchers::MessageMatches;
-
         CHECK_THROWS_MATCHES(
             registry.contains<::TestComponent>(::TEST_ENTITY),
             std::runtime_error,
@@ -285,9 +264,6 @@ TEST_CASE("ComponentRegistryTest", "[unit][ecs]")
     /// should fail an assertion when build in debug mode.
     SECTION("Get component array for not registered component")
     {
-        using Catch::Matchers::ContainsSubstring;
-        using Catch::Matchers::MessageMatches;
-
         CHECK_THROWS_MATCHES(
             registry.getComponentArray<::TestComponent>(),
             std::runtime_error,
@@ -312,9 +288,6 @@ TEST_CASE("ComponentRegistryTest", "[unit][ecs]")
     /// method should fail an assertion when build in debug mode.
     SECTION("Const get component array for not registered component")
     {
-        using Catch::Matchers::ContainsSubstring;
-        using Catch::Matchers::MessageMatches;
-
         const auto& refManager{ registry };
 
         CHECK_THROWS_MATCHES(

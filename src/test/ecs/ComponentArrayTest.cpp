@@ -41,6 +41,9 @@ namespace sfa::testing
 /// \date 1/26/2026
 TEST_CASE("ComponentArrayTest", "[unit][ecs]")
 {
+    using Catch::Matchers::ContainsSubstring;
+    using Catch::Matchers::MessageMatches;
+
     ComponentArray<TestComponent> array;
 
     /// \brief Test the Construction of a new \ref ComponentArray.
@@ -72,9 +75,6 @@ TEST_CASE("ComponentArrayTest", "[unit][ecs]")
     /// debug mode.
     SECTION("Insert duplicate into array")
     {
-        using Catch::Matchers::ContainsSubstring;
-        using Catch::Matchers::MessageMatches;
-
         array.insert(TEST_ENTITY_1, {});
 
         CHECK_THROWS_MATCHES(
@@ -117,9 +117,6 @@ TEST_CASE("ComponentArrayTest", "[unit][ecs]")
     /// If a non existing component is removed the remove() method should fail an assertion when build in debug mode.
     SECTION("Remove non existing component")
     {
-        using Catch::Matchers::ContainsSubstring;
-        using Catch::Matchers::MessageMatches;
-
         CHECK_THROWS_MATCHES(
             array.remove(TEST_ENTITY_1),
             std::runtime_error,
@@ -188,9 +185,6 @@ TEST_CASE("ComponentArrayTest", "[unit][ecs]")
     /// when build in debug mode
     SECTION("Get entity at invalid index")
     {
-        using Catch::Matchers::ContainsSubstring;
-        using Catch::Matchers::MessageMatches;
-
         CHECK_THROWS_MATCHES(
             array.entityAtIndex(1), std::runtime_error, MessageMatches(ContainsSubstring("Index is out of range"))
         );
