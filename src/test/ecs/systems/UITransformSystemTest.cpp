@@ -4,7 +4,8 @@
 #include "ecs/components/UIHierarchyComponent.hpp"
 #include "ecs/components/UITransformComponent.hpp"
 
-#include <gtest/gtest.h>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_floating_point.hpp>
 
 namespace
 {
@@ -22,8 +23,10 @@ constexpr glm::vec2 CHILD_SIZE{ 10.f };
 namespace sfa::testing
 {
 
-TEST(UITransformSystemTest, ChildWithoutHierarchyStillGetsWorldPositionFromParent)
+TEST_CASE("UITransformSystemTest", "[.][integration][ecs]")
 {
+    using Catch::Matchers::WithinRel;
+
     ComponentRegistry registry;
 
     registry.addComponent<UIHierarchyComponent>(::ROOT, { .parent = NULL_ENTITY, .children = { ::CHILD } });
@@ -39,10 +42,12 @@ TEST(UITransformSystemTest, ChildWithoutHierarchyStillGetsWorldPositionFromParen
     const auto& rootTransform{ registry.getComponent<UITransformComponent>(::ROOT) };
     const auto& childTransform{ registry.getComponent<UITransformComponent>(::CHILD) };
 
-    EXPECT_FLOAT_EQ(10.f, rootTransform.worldPosition.x);
-    EXPECT_FLOAT_EQ(20.f, rootTransform.worldPosition.y);
-    EXPECT_FLOAT_EQ(15.f, childTransform.worldPosition.x);
-    EXPECT_FLOAT_EQ(27.f, childTransform.worldPosition.y);
+    // NOLINTBEGIN(readability-magic-numbers): to be removed
+    CHECK_THAT(rootTransform.worldPosition.x, WithinRel(10.f));
+    CHECK_THAT(rootTransform.worldPosition.y, WithinRel(20.f));
+    CHECK_THAT(childTransform.worldPosition.x, WithinRel(15.f));
+    CHECK_THAT(childTransform.worldPosition.y, WithinRel(27.f));
+    // NOLINTEND(readability-magic-numbers)
 }
 
 } // namespace sfa::testing

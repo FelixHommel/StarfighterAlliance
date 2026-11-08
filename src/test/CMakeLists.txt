@@ -32,11 +32,11 @@ target_sources(
     PRIVATE
         FILE_SET HEADERS
             FILES
-                ./fixtures/OpenGLTestFixture.hpp
                 ./mocks/MockOverlayScreen.hpp
                 ./mocks/MockResourceLoader.hpp
                 ./mocks/MockScreen.hpp
                 ./mocks/MockWindow.hpp
+                ./testUtility/OpenGLTestContext.hpp
                 ./testUtility/RandomNumberGenerator.hpp
                 ./testUtility/ResourceGenerator.hpp
                 ./testUtility/TemporaryDirectory.hpp

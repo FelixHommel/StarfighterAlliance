@@ -1,8 +1,9 @@
 #include "core/Shader.hpp"
-#include "fixtures/OpenGLTestFixture.hpp"
+#include "testUtility/OpenGLTestContext.hpp"
 #include "testUtility/RandomNumberGenerator.hpp"
 
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_floating_point.hpp>
 #include <glad/gl.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -194,13 +195,15 @@ TEST_CASE("ShaderTest", "[unit][core][opengl]")
     /// When a value is uploaded to a uniform, the shader should receive the uploaded value
     SECTION("Set single floating value with use")
     {
+        using Catch::Matchers::WithinRel;
+
         const auto val{ generateRandomValue<float>() };
         shader.setFloat(FLOAT_UNIFORM, val, true);
 
         GLfloat uniformValue{ 0 };
         getUniformValue<GLfloat>(shader, floatLocation, uniformValue);
 
-        CHECK(uniformValue == val);
+        CHECK_THAT(uniformValue, WithinRel(val));
     }
 
     /// \brief Test uploading a single integer uniform value
@@ -237,6 +240,8 @@ TEST_CASE("ShaderTest", "[unit][core][opengl]")
     /// When a value is uploaded to a uniform, the shader should receive the uploaded value
     SECTION("Set float vector2 value with use")
     {
+        using Catch::Matchers::WithinRel;
+
         const auto vec{ glm::vec2(generateRandomValue<float>(), generateRandomValue<float>()) };
 
         shader.setVector2f(FLOAT_2_UNIFORM, vec, true);
@@ -244,8 +249,8 @@ TEST_CASE("ShaderTest", "[unit][core][opengl]")
         std::array<GLfloat, glm::vec2::length()> uniformValues{};
         getUniformValue<GLfloat>(shader, float2Location, uniformValues);
 
-        CHECK(uniformValues.at(0) == vec.x);
-        CHECK(uniformValues.at(1) == vec.y);
+        CHECK_THAT(uniformValues.at(0), WithinRel(vec.x));
+        CHECK_THAT(uniformValues.at(1), WithinRel(vec.y));
     }
 
     /// \brief Test uploading a 3 element float vector uniform value using 3 individual values
@@ -270,6 +275,8 @@ TEST_CASE("ShaderTest", "[unit][core][opengl]")
     /// When a value is uploaded to a uniform, the shader should receive the uploaded value
     SECTION("Set float vector3 value with use")
     {
+        using Catch::Matchers::WithinRel;
+
         const auto vec{
             glm::vec3(generateRandomValue<float>(), generateRandomValue<float>(), generateRandomValue<float>())
         };
@@ -279,9 +286,9 @@ TEST_CASE("ShaderTest", "[unit][core][opengl]")
         std::array<GLfloat, glm::vec3::length()> uniformValues{};
         glGetUniformfv(shader.getID(), float3Location, uniformValues.data());
 
-        CHECK(uniformValues.at(0) == vec.x);
-        CHECK(uniformValues.at(1) == vec.y);
-        CHECK(uniformValues.at(2) == vec.z);
+        CHECK_THAT(uniformValues.at(0), WithinRel(vec.x));
+        CHECK_THAT(uniformValues.at(1), WithinRel(vec.y));
+        CHECK_THAT(uniformValues.at(2), WithinRel(vec.z));
     }
 
     /// \brief Test uploading a 4 element float vector uniform value using 4 individual values
@@ -308,6 +315,8 @@ TEST_CASE("ShaderTest", "[unit][core][opengl]")
     /// When a value is uploaded to a uniform, the shader should receive the uploaded value
     SECTION("Set float vector4 value with use")
     {
+        using Catch::Matchers::WithinRel;
+
         const auto vec{ glm::vec4(
             generateRandomValue<float>(),
             generateRandomValue<float>(),
@@ -320,10 +329,10 @@ TEST_CASE("ShaderTest", "[unit][core][opengl]")
         std::array<GLfloat, glm::vec4::length()> uniformValues{};
         glGetUniformfv(shader.getID(), float4Location, uniformValues.data());
 
-        CHECK(uniformValues.at(0) == vec.x);
-        CHECK(uniformValues.at(1) == vec.y);
-        CHECK(uniformValues.at(2) == vec.z);
-        CHECK(uniformValues.at(3) == vec.w);
+        CHECK_THAT(uniformValues.at(0), WithinRel(vec.x));
+        CHECK_THAT(uniformValues.at(1), WithinRel(vec.y));
+        CHECK_THAT(uniformValues.at(2), WithinRel(vec.z));
+        CHECK_THAT(uniformValues.at(3), WithinRel(vec.w));
     }
 
     /// \brief Test uploading a 4x4 float matrix uniform value

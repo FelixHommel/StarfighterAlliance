@@ -5,7 +5,9 @@
 
 #include <GLFW/glfw3.h>
 
-#include <iostream>
+#include <print>
+#include <string>
+#include <string_view>
 
 namespace sfa
 {
@@ -79,7 +81,7 @@ public:
                const GLchar* message,
                const void* /*user*/) {
                 if(severity == GL_DEBUG_SEVERITY_HIGH)
-                    std::cerr << "OpenGL error(" << type << "): " << message << '\n';
+                    std::println("OpenGL error({}): {}", type, message);
             },
             nullptr
         );
@@ -101,7 +103,7 @@ public:
         m_initialized = false;
     }
 
-    [[nodiscard]] const std::string& getSkipReason() const noexcept { return m_skippingReason; }
+    [[nodiscard]] std::string_view getSkipReason() const noexcept { return m_skippingReason; }
 
 private:
     static constexpr auto GL_CONTEXT_MAJ{ 3 };

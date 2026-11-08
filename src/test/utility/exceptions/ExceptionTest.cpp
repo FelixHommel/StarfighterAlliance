@@ -10,9 +10,6 @@ namespace
 {
 
 constexpr auto TEST_MESSAGE{ "TestMessage" };
-constexpr auto throwingStatement = [] {
-    throw sfa::Exception{ TEST_MESSAGE };
-};
 
 } // namespace
 
@@ -39,7 +36,9 @@ TEST_CASE("ExceptionTest", "[unit][utility]")
     /// When the exception is thrown, the message should contain the message the user specified
     SECTION("Exception message")
     {
-        CHECK_THROWS_MATCHES(::throwingStatement, Exception, MessageMatches(ContainsSubstring(::TEST_MESSAGE)));
+        CHECK_THROWS_MATCHES(
+            throw sfa::Exception{ TEST_MESSAGE }, Exception, MessageMatches(ContainsSubstring(::TEST_MESSAGE))
+        );
     }
 }
 

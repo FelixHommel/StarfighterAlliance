@@ -1,5 +1,5 @@
 #include "core/Texture.hpp"
-#include "fixtures/OpenGLTestFixture.hpp"
+#include "testUtility/OpenGLTestContext.hpp"
 
 #include <catch2/catch_message.hpp>
 #include <catch2/catch_test_macros.hpp>
