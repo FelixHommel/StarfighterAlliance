@@ -1,10 +1,9 @@
 #include "screens/ScreenStack.hpp"
 #include "ecs/systems/UIRenderSystem.hpp"
-#include "screens/ScreenCommand.hpp"
-
 #include "mocks/MockOverlayScreen.hpp"
 #include "mocks/MockScreen.hpp"
 #include "mocks/MockWindow.hpp"
+#include "screens/ScreenCommand.hpp"
 #include "utility/userInput/InputController.hpp"
 
 #include <catch2/catch_test_macros.hpp>
@@ -20,7 +19,7 @@ namespace sfa::testing
 ///
 /// \author Felix Hommel
 /// \date 3/4/2026
-TEST_CASE("ScreenStackTest")
+TEST_CASE("ScreenStackTest", "[unit][screens]")
 {
     ScreenStack m_stack{};
 
