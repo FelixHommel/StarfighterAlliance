@@ -106,7 +106,7 @@ namespace sfa::testing
 /// \date 11/8/2026
 TEST_CASE("RAIIShaderTest", "[unit][core][opengl]")
 {
-    OpenGLTestFixture glContext{};
+    OpenGLTestContext glContext{};
 
     if(!glContext.setup())
         SKIP(glContext.getSkipReason());
@@ -185,7 +185,7 @@ TEST_CASE("ShaderTest", "[unit][core][opengl]")
 {
     using Catch::Matchers::WithinRel;
 
-    OpenGLTestFixture glContext{};
+    OpenGLTestContext glContext{};
 
     if(!glContext.setup())
         SKIP(glContext.getSkipReason());

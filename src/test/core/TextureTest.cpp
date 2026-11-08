@@ -24,7 +24,7 @@ namespace sfa::testing
 
 TEST_CASE("RAIITextureTest", "[unit][core][opengl]")
 {
-    OpenGLTestFixture context{};
+    OpenGLTestContext context{};
 
     if(!context.setup())
         SKIP(context.getSkipReason());
@@ -85,7 +85,7 @@ TEST_CASE("RAIITextureTest", "[unit][core][opengl]")
 /// \date 1/24/2026
 TEST_CASE("TextureTest", "[unit][core][opengl]")
 {
-    OpenGLTestFixture context{};
+    OpenGLTestContext context{};
 
     if(!context.setup())
         SKIP(context.getSkipReason());

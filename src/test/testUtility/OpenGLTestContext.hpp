@@ -1,5 +1,5 @@
-#ifndef SFA_SRC_TEST_FIXTURES_OPENGL_TEST_FIXTURE_HPP
-#define SFA_SRC_TEST_FIXTURES_OPENGL_TEST_FIXTURE_HPP
+#ifndef SFA_SRC_TEST_TEST_UTILITY_OPENGL_TEST_CONTEXT_HPP
+#define SFA_SRC_TEST_TEST_UTILITY_OPENGL_TEST_CONTEXT_HPP
 
 #include <glad/gl.h>
 
@@ -9,7 +9,7 @@
 #include <string>
 #include <string_view>
 
-namespace sfa
+namespace sfa::testing
 {
 
 /// \brief Test fixture that sets up a simple Headless OpenGL 3.3 context.
@@ -18,16 +18,16 @@ namespace sfa
 ///
 /// \author Felix Hommel
 /// \date 1/24/2026
-class OpenGLTestFixture
+class OpenGLTestContext
 {
 public:
-    OpenGLTestFixture() = default;
-    ~OpenGLTestFixture() = default;
+    OpenGLTestContext() = default;
+    ~OpenGLTestContext() = default;
 
-    OpenGLTestFixture(const OpenGLTestFixture&) = delete;
-    OpenGLTestFixture(OpenGLTestFixture&&) = delete;
-    OpenGLTestFixture& operator=(const OpenGLTestFixture&) = delete;
-    OpenGLTestFixture& operator=(OpenGLTestFixture&&) = delete;
+    OpenGLTestContext(const OpenGLTestContext&) = delete;
+    OpenGLTestContext(OpenGLTestContext&&) = delete;
+    OpenGLTestContext& operator=(const OpenGLTestContext&) = delete;
+    OpenGLTestContext& operator=(OpenGLTestContext&&) = delete;
 
     bool setup()
     {
@@ -117,5 +117,5 @@ private:
 
 } // namespace sfa
 
-#endif // !SFA_SRC_TEST_FIXTURES_OPENGL_TEST_FIXTURE_HPP
+#endif // !SFA_SRC_TEST_TEST_UTILITY_OPENGL_TEST_CONTEXT_HPP
 

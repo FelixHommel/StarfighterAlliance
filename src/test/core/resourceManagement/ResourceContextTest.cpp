@@ -47,7 +47,7 @@ TEST_CASE("ResourceContextMockTest", "[unit][core][opengl][concurrency]")
     };
     const auto MOCK_FS_PATH{ std::filesystem::path("") };
 
-    OpenGLTestFixture glContext{};
+    OpenGLTestContext glContext{};
     if(!glContext.setup())
         SKIP(glContext.getSkipReason());
 
@@ -161,7 +161,7 @@ TEST_CASE("ResourceContextIntegrationTest", "[.][integration][core][opengl][conc
 {
     const ResourceGenerator generator{ Catch::getResultCapture().getCurrentTestName() };
 
-    OpenGLTestFixture glContext{};
+    OpenGLTestContext glContext{};
     if(!glContext.setup())
         SKIP(glContext.getSkipReason());
 
