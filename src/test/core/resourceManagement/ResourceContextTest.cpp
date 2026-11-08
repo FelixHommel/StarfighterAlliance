@@ -12,6 +12,7 @@
 
 #include <chrono>
 #include <cstddef>
+#include <memory>
 #include <thread>
 #include <utility>
 
@@ -56,11 +57,11 @@ TEST_CASE("ResourceContextTest", "[unit][core][opengl][concurrency]")
     /// \ref ResourceContext, waiting to be processed by the main thread.
     SECTION("Load shader success")
     {
-        auto mock{ std::make_unique<MockResourceLoader>() };
-        MockResourceLoader* pMock{ mock.get() };
-        ResourceContext context{ std::move(mock) };
+        auto mockLoader{ std::make_unique<MockResourceLoader>() };
+        MockResourceLoader* const pMockLoader{ mockLoader.get() };
+        ResourceContext context{ std::move(mockLoader) };
 
-        REQUIRE_CALL(*pMock, loadShader("", "", "")).RETURN(LoadResult{ EXPECTED_SHADER_DATA });
+        REQUIRE_CALL(*pMockLoader, loadShader("", "", "")).RETURN(LoadResult{ EXPECTED_SHADER_DATA });
 
         context.requestResource(
             ResourceContext::ShaderLoadRequest{ .name = ::SHADER_NAME, .vert = "", .frag = "", .geom = "" }
@@ -73,11 +74,11 @@ TEST_CASE("ResourceContextTest", "[unit][core][opengl][concurrency]")
 
     SECTION("Load shader blocking success")
     {
-        auto mock{ std::make_unique<MockResourceLoader>() };
-        MockResourceLoader* pMock{ mock.get() };
-        ResourceContext context{ std::move(mock) };
+        auto mockLoader{ std::make_unique<MockResourceLoader>() };
+        MockResourceLoader* const pMockLoader{ mockLoader.get() };
+        ResourceContext context{ std::move(mockLoader) };
 
-        REQUIRE_CALL(*pMock, loadShader("", "", "")).RETURN(LoadResult{ EXPECTED_SHADER_DATA });
+        REQUIRE_CALL(*pMockLoader, loadShader("", "", "")).RETURN(LoadResult{ EXPECTED_SHADER_DATA });
 
         context.requestResourceBlocking(
             ResourceContext::ShaderLoadRequest{ .name = ::SHADER_NAME, .vert = "", .frag = "", .geom = "" }
@@ -93,11 +94,11 @@ TEST_CASE("ResourceContextTest", "[unit][core][opengl][concurrency]")
     /// \ref ResourceContext, waiting to be processed by the main thread.
     SECTION("Load texture success")
     {
-        auto mock{ std::make_unique<MockResourceLoader>() };
-        MockResourceLoader* pMock{ mock.get() };
-        ResourceContext context{ std::move(mock) };
+        auto mockLoader{ std::make_unique<MockResourceLoader>() };
+        MockResourceLoader* const pMockLoader{ mockLoader.get() };
+        ResourceContext context{ std::move(mockLoader) };
 
-        REQUIRE_CALL(*pMock, loadTexture("")).RETURN(LoadResult{ EXPECTED_TEXTURE_DATA });
+        REQUIRE_CALL(*pMockLoader, loadTexture("")).RETURN(LoadResult{ EXPECTED_TEXTURE_DATA });
 
         context.requestResource(ResourceContext::TextureLoadRequest{ .name = ::TEXTURE_NAME, .filepath = "" });
         std::this_thread::sleep_for(::UPLOAD_DELAY);
@@ -108,11 +109,11 @@ TEST_CASE("ResourceContextTest", "[unit][core][opengl][concurrency]")
 
     SECTION("Load texture blocking success")
     {
-        auto mock{ std::make_unique<MockResourceLoader>() };
-        MockResourceLoader* pMock{ mock.get() };
-        ResourceContext context{ std::move(mock) };
+        auto mockLoader{ std::make_unique<MockResourceLoader>() };
+        MockResourceLoader* const pMockLoader{ mockLoader.get() };
+        ResourceContext context{ std::move(mockLoader) };
 
-        REQUIRE_CALL(*pMock, loadTexture("")).RETURN(LoadResult{ EXPECTED_TEXTURE_DATA });
+        REQUIRE_CALL(*pMockLoader, loadTexture("")).RETURN(LoadResult{ EXPECTED_TEXTURE_DATA });
 
         context.requestResourceBlocking(ResourceContext::TextureLoadRequest{ .name = ::TEXTURE_NAME, .filepath = "" });
 
