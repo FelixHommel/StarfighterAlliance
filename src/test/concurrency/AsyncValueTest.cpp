@@ -35,7 +35,7 @@ TEST_CASE("AsyncValueTest", "[unit][concurrency]")
         AsyncValue<int> value{};
         int referenceValue{};
 
-        CHECK(value.ready());
+        CHECK(!value.ready());
         CHECK(value.get() == referenceValue);
     }
 
@@ -47,7 +47,7 @@ TEST_CASE("AsyncValueTest", "[unit][concurrency]")
     {
         AsyncValue<int> value{ ::DEFAULT_INT_VALUE };
 
-        CHECK(value.ready());
+        CHECK(!value.ready());
         CHECK(value.get() == ::DEFAULT_INT_VALUE);
     }
 
@@ -72,7 +72,7 @@ TEST_CASE("AsyncValueTest", "[unit][concurrency]")
         AsyncValue<::AsyncValueTestEnum> value{};
         ::AsyncValueTestEnum referenceValue{};
 
-        CHECK(value.ready());
+        CHECK(!value.ready());
         CHECK(value.get() == referenceValue);
     }
 
@@ -84,7 +84,7 @@ TEST_CASE("AsyncValueTest", "[unit][concurrency]")
     {
         AsyncValue<::AsyncValueTestEnum> value{ ::DEFAULT_ENUM_VALUE };
 
-        CHECK(value.ready());
+        CHECK(!value.ready());
         CHECK(value.get() == ::DEFAULT_ENUM_VALUE);
     }
 
