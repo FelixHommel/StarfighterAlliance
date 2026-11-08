@@ -35,14 +35,14 @@ namespace sfa
 /// \date 1/28/2026
 TEST_CASE("ComponentRegistryTest", "[unit][ecs]")
 {
-    ComponentRegistry manager;
+    ComponentRegistry registry;
 
     /// \brief Test the construction of \ref ComponentRegistry.
     ///
     /// After a new \ref ComponentRegistry is constructed, it should not have any registered components.
     SECTION("Component registry construction")
     {
-        CHECK(manager.registeredComponents() == 0);
+        CHECK(registry.registeredComponents() == 0);
     }
 
     /// \brief Test the registration of new components to the \ref ComponentRegistry.
@@ -51,9 +51,9 @@ TEST_CASE("ComponentRegistryTest", "[unit][ecs]")
     /// increases the registered components by one.
     SECTION("Registering new component")
     {
-        manager.registerComponent<::TestComponent>();
+        registry.registerComponent<::TestComponent>();
 
-        CHECK(manager.registeredComponents() == 1);
+        CHECK(registry.registeredComponents() == 1);
     }
 
     /// \brief Test the behavior when trying to register a component that already was registered.
@@ -65,10 +65,10 @@ TEST_CASE("ComponentRegistryTest", "[unit][ecs]")
         using Catch::Matchers::ContainsSubstring;
         using Catch::Matchers::MessageMatches;
 
-        manager.registerComponent<::TestComponent>();
+        registry.registerComponent<::TestComponent>();
 
         CHECK_THROWS_MATCHES(
-            manager.registerComponent<::TestComponent>(),
+            registry.registerComponent<::TestComponent>(),
             std::runtime_error,
             MessageMatches(ContainsSubstring("Component already registered"))
         );
@@ -79,12 +79,12 @@ TEST_CASE("ComponentRegistryTest", "[unit][ecs]")
     /// When the component already has been registered the component can be added to the entity without registering it before.
     SECTION("Add registered component to entity")
     {
-        manager.registerComponent<::TestComponent>();
+        registry.registerComponent<::TestComponent>();
 
-        manager.addComponent<::TestComponent>(::TEST_ENTITY, {});
+        registry.addComponent<::TestComponent>(::TEST_ENTITY, {});
 
-        CHECK(manager.registeredComponents() == 1);
-        CHECK(manager.getComponent<::TestComponent>(::TEST_ENTITY).data == ::TEST_DATA);
+        CHECK(registry.registeredComponents() == 1);
+        CHECK(registry.getComponent<::TestComponent>(::TEST_ENTITY).data == ::TEST_DATA);
     }
 
     /// \brief Test adding of a not-registered component to an entity.
@@ -93,11 +93,11 @@ TEST_CASE("ComponentRegistryTest", "[unit][ecs]")
     /// it to the entity.
     SECTION("Add not registered component to entity")
     {
-        manager.addComponent<::TestComponent>(::TEST_ENTITY, {});
+        registry.addComponent<::TestComponent>(::TEST_ENTITY, {});
 
-        CHECK(manager.registeredComponents() == 1);
-        CHECK(manager.contains<::TestComponent>(::TEST_ENTITY));
-        CHECK(manager.getComponent<::TestComponent>(::TEST_ENTITY).data == ::TEST_DATA);
+        CHECK(registry.registeredComponents() == 1);
+        CHECK(registry.contains<::TestComponent>(::TEST_ENTITY));
+        CHECK(registry.getComponent<::TestComponent>(::TEST_ENTITY).data == ::TEST_DATA);
     }
 
     /// \brief Test the removal of components from entities.
@@ -106,12 +106,12 @@ TEST_CASE("ComponentRegistryTest", "[unit][ecs]")
     /// still be registered.
     SECTION("Remove registered component from entity")
     {
-        manager.addComponent<::TestComponent>(::TEST_ENTITY, {});
+        registry.addComponent<::TestComponent>(::TEST_ENTITY, {});
 
-        manager.removeComponent<::TestComponent>(::TEST_ENTITY);
+        registry.removeComponent<::TestComponent>(::TEST_ENTITY);
 
-        CHECK(manager.registeredComponents() == 1);
-        CHECK(!manager.contains<::TestComponent>(::TEST_ENTITY));
+        CHECK(registry.registeredComponents() == 1);
+        CHECK(!registry.contains<::TestComponent>(::TEST_ENTITY));
     }
 
     /// \brief Test the removal of a component that has not been registered.
@@ -124,7 +124,7 @@ TEST_CASE("ComponentRegistryTest", "[unit][ecs]")
         using Catch::Matchers::MessageMatches;
 
         CHECK_THROWS_MATCHES(
-            manager.removeComponent<::TestComponent>(::TEST_ENTITY),
+            registry.removeComponent<::TestComponent>(::TEST_ENTITY),
             std::runtime_error,
             MessageMatches(ContainsSubstring("Component is not registered"))
         );
@@ -139,10 +139,10 @@ TEST_CASE("ComponentRegistryTest", "[unit][ecs]")
         using Catch::Matchers::ContainsSubstring;
         using Catch::Matchers::MessageMatches;
 
-        manager.registerComponent<::TestComponent>();
+        registry.registerComponent<::TestComponent>();
 
         CHECK_THROWS_MATCHES(
-            manager.removeComponent<::TestComponent>(::TEST_ENTITY),
+            registry.removeComponent<::TestComponent>(::TEST_ENTITY),
             std::runtime_error,
             MessageMatches(ContainsSubstring("The entity does not have the component"))
         );
@@ -158,7 +158,7 @@ TEST_CASE("ComponentRegistryTest", "[unit][ecs]")
         using Catch::Matchers::MessageMatches;
 
         CHECK_THROWS_MATCHES(
-            manager.getComponent<::TestComponent>(::TEST_ENTITY),
+            registry.getComponent<::TestComponent>(::TEST_ENTITY),
             std::runtime_error,
             MessageMatches(ContainsSubstring("Component is not registered"))
         );
@@ -173,10 +173,10 @@ TEST_CASE("ComponentRegistryTest", "[unit][ecs]")
         using Catch::Matchers::ContainsSubstring;
         using Catch::Matchers::MessageMatches;
 
-        manager.registerComponent<::TestComponent>();
+        registry.registerComponent<::TestComponent>();
 
         CHECK_THROWS_MATCHES(
-            manager.getComponent<::TestComponent>(::TEST_ENTITY),
+            registry.getComponent<::TestComponent>(::TEST_ENTITY),
             std::runtime_error,
             MessageMatches(ContainsSubstring("The entity does not have the component"))
         );
@@ -188,8 +188,8 @@ TEST_CASE("ComponentRegistryTest", "[unit][ecs]")
     /// from an entity that has the component, it should return a const-ref to the component.
     SECTION("Const get component")
     {
-        manager.addComponent<::TestComponent>(::TEST_ENTITY, {});
-        const auto& refManager{ manager };
+        registry.addComponent<::TestComponent>(::TEST_ENTITY, {});
+        const auto& refManager{ registry };
 
         CHECK(refManager.getComponent<::TestComponent>(::TEST_ENTITY).data == ::TEST_DATA);
     }
@@ -203,7 +203,7 @@ TEST_CASE("ComponentRegistryTest", "[unit][ecs]")
         using Catch::Matchers::ContainsSubstring;
         using Catch::Matchers::MessageMatches;
 
-        const auto& refManager{ manager };
+        const auto& refManager{ registry };
 
         CHECK_THROWS_MATCHES(
             refManager.getComponent<::TestComponent>(::TEST_ENTITY),
@@ -221,8 +221,8 @@ TEST_CASE("ComponentRegistryTest", "[unit][ecs]")
         using Catch::Matchers::ContainsSubstring;
         using Catch::Matchers::MessageMatches;
 
-        manager.registerComponent<::TestComponent>();
-        const auto& refManager{ manager };
+        registry.registerComponent<::TestComponent>();
+        const auto& refManager{ registry };
 
         CHECK_THROWS_MATCHES(
             refManager.getComponent<::TestComponent>(::TEST_ENTITY),
@@ -237,9 +237,9 @@ TEST_CASE("ComponentRegistryTest", "[unit][ecs]")
     /// method should return true.
     SECTION("Contains component")
     {
-        manager.addComponent<::TestComponent>(::TEST_ENTITY, {});
+        registry.addComponent<::TestComponent>(::TEST_ENTITY, {});
 
-        CHECK(manager.contains<::TestComponent>(::TEST_ENTITY));
+        CHECK(registry.contains<::TestComponent>(::TEST_ENTITY));
     }
 
     /// \brief Test checking if an entity has a component.
@@ -248,9 +248,9 @@ TEST_CASE("ComponentRegistryTest", "[unit][ecs]")
     /// contains() method should return false.
     SECTION("Does not contain component")
     {
-        manager.registerComponent<::TestComponent>();
+        registry.registerComponent<::TestComponent>();
 
-        CHECK(!manager.contains<::TestComponent>(::TEST_ENTITY));
+        CHECK(!registry.contains<::TestComponent>(::TEST_ENTITY));
     }
 
     // \brief Test checking if an entity has a component that was never registered.
@@ -263,7 +263,7 @@ TEST_CASE("ComponentRegistryTest", "[unit][ecs]")
         using Catch::Matchers::MessageMatches;
 
         CHECK_THROWS_MATCHES(
-            manager.contains<::TestComponent>(::TEST_ENTITY),
+            registry.contains<::TestComponent>(::TEST_ENTITY),
             std::runtime_error,
             MessageMatches(ContainsSubstring("Component is not registered"))
         );
@@ -274,9 +274,9 @@ TEST_CASE("ComponentRegistryTest", "[unit][ecs]")
     /// The getComponentArray() method should return all components of a certain type.
     SECTION("Get component array")
     {
-        manager.addComponent<::TestComponent>(::TEST_ENTITY, {});
+        registry.addComponent<::TestComponent>(::TEST_ENTITY, {});
 
-        CHECK(manager.getComponentArray<::TestComponent>().size() == 1);
+        CHECK(registry.getComponentArray<::TestComponent>().size() == 1);
     }
 
     /// \brief Test trying to get the \ref ComponentArray of a component that was not registered.
@@ -289,7 +289,7 @@ TEST_CASE("ComponentRegistryTest", "[unit][ecs]")
         using Catch::Matchers::MessageMatches;
 
         CHECK_THROWS_MATCHES(
-            manager.getComponentArray<::TestComponent>(),
+            registry.getComponentArray<::TestComponent>(),
             std::runtime_error,
             MessageMatches(ContainsSubstring("Component is not registered"))
         );
@@ -300,8 +300,8 @@ TEST_CASE("ComponentRegistryTest", "[unit][ecs]")
     /// The getComponentArray() method should return a const ref to the \ref ComponentArray when called from a const context.
     SECTION("Const get component array")
     {
-        manager.addComponent<::TestComponent>(::TEST_ENTITY, {});
-        const auto& refManager{ manager };
+        registry.addComponent<::TestComponent>(::TEST_ENTITY, {});
+        const auto& refManager{ registry };
 
         CHECK(refManager.getComponentArray<::TestComponent>().size() == 1);
     }
@@ -315,7 +315,7 @@ TEST_CASE("ComponentRegistryTest", "[unit][ecs]")
         using Catch::Matchers::ContainsSubstring;
         using Catch::Matchers::MessageMatches;
 
-        const auto& refManager{ manager };
+        const auto& refManager{ registry };
 
         CHECK_THROWS_MATCHES(
             refManager.getComponentArray<::TestComponent>(),
@@ -330,11 +330,11 @@ TEST_CASE("ComponentRegistryTest", "[unit][ecs]")
     /// and all affected \ref ComponentArray should be decreased in size by one.
     SECTION("Remove all components of entity")
     {
-        manager.addComponent<::TestComponent>(::TEST_ENTITY, {});
+        registry.addComponent<::TestComponent>(::TEST_ENTITY, {});
 
-        manager.entityDestroyed(::TEST_ENTITY);
+        registry.entityDestroyed(::TEST_ENTITY);
 
-        CHECK(!manager.contains<::TestComponent>(::TEST_ENTITY));
+        CHECK(!registry.contains<::TestComponent>(::TEST_ENTITY));
     }
 
     /// \brief Test the removal of all components from an entity that has no components assigned to it.
@@ -342,11 +342,11 @@ TEST_CASE("ComponentRegistryTest", "[unit][ecs]")
     /// When the targeted component has no components assigned to it in the first place, nothing should change.
     SECTION("Remove all components of entity that has no components")
     {
-        manager.registerComponent<::TestComponent>();
+        registry.registerComponent<::TestComponent>();
 
-        manager.entityDestroyed(::TEST_ENTITY);
+        registry.entityDestroyed(::TEST_ENTITY);
 
-        CHECK(!manager.contains<::TestComponent>(::TEST_ENTITY));
+        CHECK(!registry.contains<::TestComponent>(::TEST_ENTITY));
     }
 }
 
