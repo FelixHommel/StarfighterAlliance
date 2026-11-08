@@ -1,7 +1,6 @@
 #include "core/Texture.hpp"
 #include "testUtility/OpenGLTestContext.hpp"
 
-#include <catch2/catch_message.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <glad/gl.h>
 
@@ -75,7 +74,7 @@ TEST_CASE("TextureTest", "[unit][core][opengl]")
 
         texture2 = std::move(texture1);
 
-        CHECK(static_cast<bool>(glIsTexture(originalTexture2ID)));
+        CHECK(!static_cast<bool>(glIsTexture(originalTexture2ID)));
         CHECK(texture2.getID() == originalTexture1ID);
         CHECK(static_cast<bool>(glIsTexture(texture2.getID())));
     }
@@ -91,7 +90,7 @@ TEST_CASE("TextureTest", "[unit][core][opengl]")
         int boundTexture{ 0 };
         glGetIntegerv(GL_TEXTURE_BINDING_2D, &boundTexture);
 
-        CHECK(boundTexture == 0);
+        CHECK(boundTexture != 0);
         CHECK(texture.getID() == boundTexture);
     }
 
