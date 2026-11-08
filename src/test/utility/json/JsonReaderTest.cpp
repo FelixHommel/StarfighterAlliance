@@ -2,9 +2,9 @@
 #include "testUtility/TemporaryJsonFile.hpp"
 
 #include <catch2/catch_test_macros.hpp>
-
 #include <catch2/interfaces/catch_interfaces_capture.hpp>
 #include <catch2/internal/catch_context.hpp>
+
 #include <filesystem>
 #include <random>
 #include <string>
@@ -56,7 +56,7 @@ TEST_CASE("JsonReaderTest", "[unit][utility][filesystem]")
 
         const auto parseResult{ json::parseJson(path) };
 
-        REQUIRE(parseResult.has_value());
+        REQUIRE(!parseResult.has_value());
 
         const auto error{ parseResult.error() };
 
@@ -96,7 +96,7 @@ TEST_CASE("JsonReaderTest", "[unit][utility][filesystem]")
 
         const auto parseResult{ json::parseJson(jsonPath, schemaPath) };
 
-        CHECK(parseResult.has_value());
+        REQUIRE(!parseResult.has_value());
 
         const auto error{ parseResult.error() };
 
