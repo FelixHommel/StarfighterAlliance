@@ -6,6 +6,8 @@
 #include <catch2/matchers/catch_matchers_exception.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 
+#include <memory>
+
 namespace
 {
 
@@ -32,6 +34,9 @@ namespace sfa::testing
 /// \date 2/16/2026
 TEST_CASE("ResourceCacheTest", "[unit][core]")
 {
+    using Catch::Matchers::ContainsSubstring;
+    using Catch::Matchers::MessageMatches;
+
     ResourceCache<TestResource> cache{};
 
     /// \brief Test inserting a new resource into the cache
@@ -76,9 +81,6 @@ TEST_CASE("ResourceCacheTest", "[unit][core]")
     /// When the resource wasn't stored prior to trying to get it, the get mthod should throw an exception.
     SECTION("Get non existing resource")
     {
-        using Catch::Matchers::ContainsSubstring;
-        using Catch::Matchers::MessageMatches;
-
         REQUIRE_THROWS_MATCHES(
             cache.get(::TEST_KEY), ResourceUnavailableException, MessageMatches(ContainsSubstring(""))
         );
@@ -103,9 +105,6 @@ TEST_CASE("ResourceCacheTest", "[unit][core]")
     /// When the resource wasn't stored prior to trying to get it, the get mthod should throw an exception.
     SECTION("Const-get non existing resource")
     {
-        using Catch::Matchers::ContainsSubstring;
-        using Catch::Matchers::MessageMatches;
-
         ResourceCache<TestResource> cache;
         const auto& constCache{ cache };
 
