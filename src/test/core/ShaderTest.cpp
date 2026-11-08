@@ -3,6 +3,7 @@
 #include "testUtility/RandomNumberGenerator.hpp"
 
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers.hpp>
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
 #include <glad/gl.h>
 #include <glm/glm.hpp>
@@ -14,12 +15,12 @@
 #include <type_traits>
 #include <utility>
 
-namespace sfa::testing
+namespace
 {
 
 template<typename T>
     requires std::is_floating_point_v<T> || std::is_integral_v<T>
-void getUniformValue(const Shader& shader, int location, T& out)
+void getUniformValue(const sfa::Shader& shader, int location, T& out)
 {
     if constexpr(std::is_same_v<T, GLfloat>)
         glGetUniformfv(shader.getID(), location, &out);
@@ -32,7 +33,8 @@ void getUniformValue(const Shader& shader, int location, T& out)
 }
 
 template<typename T>
-void getUniformValue(const Shader& shader, int location, std::span<T> out)
+    requires std::is_floating_point_v<T> || std::is_integral_v<T>
+void getUniformValue(const sfa::Shader& shader, int location, std::span<T> out)
 {
     if constexpr(std::is_same_v<T, GLfloat>)
         glGetUniformfv(shader.getID(), location, out.data());
@@ -44,13 +46,7 @@ void getUniformValue(const Shader& shader, int location, std::span<T> out)
         static_assert(!sizeof(T), "Unsupported uniform element type for glGetUniform");
 }
 
-/// \brief Test the features of the \ref Shader class.
-///
-/// \author Felix Hommel
-/// \date 1/24/2026
-TEST_CASE("ShaderTest", "[unit][core][opengl]")
-{
-    static constexpr auto VERTEX_SHADER_SRC{ R"(
+constexpr auto VERTEX_SHADER_SRC{ R"(
         #version 330 core
 
         uniform int intUniform;
@@ -71,14 +67,14 @@ TEST_CASE("ShaderTest", "[unit][core][opengl]")
         }
     )" };
 
-    static constexpr auto FRAGMENT_SHADER_SRC{ R"(
+constexpr auto FRAGMENT_SHADER_SRC{ R"(
         #version 330 core
         out vec4 FragColor;
 
         void main() { FragColor = vec4(1.0); }
     )" };
 
-    static constexpr auto GEOMETRY_SHADER_SRC{ R"(
+constexpr auto GEOMETRY_SHADER_SRC{ R"(
         #version 330 core
         layout(points) in;
         layout(line_strip, max_vertices = 2) out;
@@ -91,37 +87,39 @@ TEST_CASE("ShaderTest", "[unit][core][opengl]")
             EndPrimitive();
         }
     )" };
-    static constexpr auto INT_UNIFORM{ "intUniform" };
-    static constexpr auto FLOAT_UNIFORM{ "floatUniform" };
-    static constexpr auto FLOAT_2_UNIFORM{ "float2Uniform" };
-    static constexpr auto FLOAT_3_UNIFORM{ "float3Uniform" };
-    static constexpr auto FLOAT_4_UNIFORM{ "float4Uniform" };
-    static constexpr auto MATRIX_4_UNIFORM{ "mat4Uniform" };
 
+constexpr auto INT_UNIFORM{ "intUniform" };
+constexpr auto FLOAT_UNIFORM{ "floatUniform" };
+constexpr auto FLOAT_2_UNIFORM{ "float2Uniform" };
+constexpr auto FLOAT_3_UNIFORM{ "float3Uniform" };
+constexpr auto FLOAT_4_UNIFORM{ "float4Uniform" };
+constexpr auto MATRIX_4_UNIFORM{ "mat4Uniform" };
+
+} // namespace
+
+namespace sfa::testing
+{
+
+/// \brief Test the RAII semantics of the \ref Shader class.
+///
+/// \author Felix Hommel
+/// \date 11/8/2026
+TEST_CASE("RAIIShaderTest", "[unit][core][opengl]")
+{
     OpenGLTestFixture glContext{};
 
     if(!glContext.setup())
         SKIP(glContext.getSkipReason());
 
-    Shader shader{ VERTEX_SHADER_SRC, FRAGMENT_SHADER_SRC };
-
-    int intLocation{ glGetUniformLocation(shader.getID(), INT_UNIFORM) };
-    int floatLocation{ glGetUniformLocation(shader.getID(), FLOAT_UNIFORM) };
-    int float2Location{ glGetUniformLocation(shader.getID(), FLOAT_2_UNIFORM) };
-    int float3Location{ glGetUniformLocation(shader.getID(), FLOAT_3_UNIFORM) };
-    int float4Location{ glGetUniformLocation(shader.getID(), FLOAT_4_UNIFORM) };
-    int matrix4Location{ glGetUniformLocation(shader.getID(), MATRIX_4_UNIFORM) };
-
-
     /// \brief Test the \ref Shader RAII behavior.
     ///
     /// The constructor should create a valid OpenGL shader program and the destructor should delete the program.
-    SECTION("Shader RAII")
+    SECTION("destruction on scope exit")
     {
         unsigned int originalID{};
 
         {
-            const Shader original(VERTEX_SHADER_SRC, FRAGMENT_SHADER_SRC, GEOMETRY_SHADER_SRC);
+            const Shader original{ ::VERTEX_SHADER_SRC, ::FRAGMENT_SHADER_SRC, ::GEOMETRY_SHADER_SRC };
             originalID = original.getID();
 
             CHECK(originalID != 0);
@@ -134,11 +132,11 @@ TEST_CASE("ShaderTest", "[unit][core][opengl]")
     /// \brief Test the \ref Shader move constructor.
     ///
     /// Move constructing a \ref Shader should preserve the underlying shader program ID.
-    SECTION("Shader move constructor")
+    SECTION("move construction")
     {
-        Shader original(VERTEX_SHADER_SRC, FRAGMENT_SHADER_SRC);
-        const unsigned int originalID{ original.getID() };
-        Shader moved{ std::move(original) };
+        Shader original{ ::VERTEX_SHADER_SRC, ::FRAGMENT_SHADER_SRC };
+        const auto originalID{ original.getID() };
+        const Shader moved{ std::move(original) };
 
         CHECK(moved.getID() == originalID);
         CHECK(static_cast<bool>(glIsProgram(moved.getID())));
@@ -148,33 +146,55 @@ TEST_CASE("ShaderTest", "[unit][core][opengl]")
     ///
     /// Move assignment should preserve the move source's shader program and clean up the resource held in the move target
     /// before assigning the move source to it.
-    SECTION("Shader move assignment")
+    SECTION("move assignment")
     {
-        Shader shader1(VERTEX_SHADER_SRC, FRAGMENT_SHADER_SRC);
-        const unsigned int originalShader1ID{ shader1.getID() };
-        Shader shader2(VERTEX_SHADER_SRC, FRAGMENT_SHADER_SRC);
-        const unsigned int originalShader2ID{ shader2.getID() };
+        Shader first{ ::VERTEX_SHADER_SRC, ::FRAGMENT_SHADER_SRC };
+        const auto originalShader1ID{ first.getID() };
+        Shader second{ ::VERTEX_SHADER_SRC, ::FRAGMENT_SHADER_SRC };
+        const auto originalShader2ID{ second.getID() };
 
-        shader2 = std::move(shader1);
+        second = std::move(first);
 
         CHECK(!static_cast<bool>(glIsProgram(originalShader2ID)));
-        CHECK(shader2.getID() == originalShader1ID);
-        CHECK(static_cast<bool>(glIsProgram(shader2.getID())));
+        CHECK(second.getID() == originalShader1ID);
+        CHECK(static_cast<bool>(glIsProgram(second.getID())));
     }
 
     /// \brief Test the \ref Shader move assignment when assigning to the same object.
     ///
     /// When the move target is the same as the move source, nothing should change.
-    SECTION("Shader move assignment on same shader")
+    SECTION("move assignment on same object")
     {
-        Shader shader(VERTEX_SHADER_SRC, FRAGMENT_SHADER_SRC);
-        const unsigned int originalShaderID{ shader.getID() };
+        Shader shader{ ::VERTEX_SHADER_SRC, ::FRAGMENT_SHADER_SRC };
+        const auto originalShaderID{ shader.getID() };
 
         shader = std::move(shader);
 
         CHECK(static_cast<bool>(glIsProgram(originalShaderID)));
         CHECK(shader.getID() == originalShaderID);
     }
+
+    glContext.teardown();
+}
+
+/// \brief Test the features of the \ref Shader class.
+///
+/// \author Felix Hommel
+/// \date 1/24/2026
+TEST_CASE("ShaderTest", "[unit][core][opengl]")
+{
+    using Catch::Matchers::WithinRel;
+
+    OpenGLTestFixture glContext{};
+
+    if(!glContext.setup())
+        SKIP(glContext.getSkipReason());
+
+    const Shader shader{ ::VERTEX_SHADER_SRC, ::FRAGMENT_SHADER_SRC };
+
+    const auto float2Location{ glGetUniformLocation(shader.getID(), ::FLOAT_2_UNIFORM) };
+    const auto float3Location{ glGetUniformLocation(shader.getID(), ::FLOAT_3_UNIFORM) };
+    const auto float4Location{ glGetUniformLocation(shader.getID(), ::FLOAT_4_UNIFORM) };
 
     /// \brief Test the \ref Shader use method.
     ///
@@ -195,13 +215,12 @@ TEST_CASE("ShaderTest", "[unit][core][opengl]")
     /// When a value is uploaded to a uniform, the shader should receive the uploaded value
     SECTION("Set single floating value with use")
     {
-        using Catch::Matchers::WithinRel;
-
+        const auto floatLocation{ glGetUniformLocation(shader.getID(), ::FLOAT_UNIFORM) };
         const auto val{ generateRandomValue<float>() };
-        shader.setFloat(FLOAT_UNIFORM, val, true);
+        shader.setFloat(::FLOAT_UNIFORM, val, true);
 
         GLfloat uniformValue{ 0 };
-        getUniformValue<GLfloat>(shader, floatLocation, uniformValue);
+        ::getUniformValue<GLfloat>(shader, floatLocation, uniformValue);
 
         CHECK_THAT(uniformValue, WithinRel(val));
     }
@@ -211,11 +230,12 @@ TEST_CASE("ShaderTest", "[unit][core][opengl]")
     /// When a value is uploaded to a uniform, the shader should receive the uploaded value
     SECTION("Set single integer value with use")
     {
+        const auto intLocation{ glGetUniformLocation(shader.getID(), ::INT_UNIFORM) };
         const auto val{ generateRandomValue<int>() };
-        shader.setInteger(INT_UNIFORM, val, true);
+        shader.setInteger(::INT_UNIFORM, val, true);
 
         GLint uniformValue{ 0 };
-        getUniformValue<GLint>(shader, intLocation, uniformValue);
+        ::getUniformValue<GLint>(shader, intLocation, uniformValue);
 
         CHECK(uniformValue == val);
     }
@@ -227,10 +247,10 @@ TEST_CASE("ShaderTest", "[unit][core][opengl]")
     {
         const std::array original{ generateRandomValue<float>(), generateRandomValue<float>() };
 
-        shader.setVector2f(FLOAT_2_UNIFORM, original[0], original[1], true);
+        shader.setVector2f(::FLOAT_2_UNIFORM, original[0], original[1], true);
 
         std::array<GLfloat, original.size()> uniformValues{};
-        getUniformValue<GLfloat>(shader, float2Location, uniformValues);
+        ::getUniformValue<GLfloat>(shader, float2Location, uniformValues);
 
         CHECK(uniformValues == original);
     }
@@ -240,14 +260,12 @@ TEST_CASE("ShaderTest", "[unit][core][opengl]")
     /// When a value is uploaded to a uniform, the shader should receive the uploaded value
     SECTION("Set float vector2 value with use")
     {
-        using Catch::Matchers::WithinRel;
-
         const auto vec{ glm::vec2(generateRandomValue<float>(), generateRandomValue<float>()) };
 
-        shader.setVector2f(FLOAT_2_UNIFORM, vec, true);
+        shader.setVector2f(::FLOAT_2_UNIFORM, vec, true);
 
         std::array<GLfloat, glm::vec2::length()> uniformValues{};
-        getUniformValue<GLfloat>(shader, float2Location, uniformValues);
+        ::getUniformValue<GLfloat>(shader, float2Location, uniformValues);
 
         CHECK_THAT(uniformValues.at(0), WithinRel(vec.x));
         CHECK_THAT(uniformValues.at(1), WithinRel(vec.y));
@@ -262,7 +280,7 @@ TEST_CASE("ShaderTest", "[unit][core][opengl]")
                                    generateRandomValue<float>(),
                                    generateRandomValue<float>() };
 
-        shader.setVector3f(FLOAT_3_UNIFORM, original[0], original[1], original[2], true);
+        shader.setVector3f(::FLOAT_3_UNIFORM, original[0], original[1], original[2], true);
 
         std::array<GLfloat, original.size()> uniformValues{};
         glGetUniformfv(shader.getID(), float3Location, uniformValues.data());
@@ -275,13 +293,11 @@ TEST_CASE("ShaderTest", "[unit][core][opengl]")
     /// When a value is uploaded to a uniform, the shader should receive the uploaded value
     SECTION("Set float vector3 value with use")
     {
-        using Catch::Matchers::WithinRel;
-
         const auto vec{
             glm::vec3(generateRandomValue<float>(), generateRandomValue<float>(), generateRandomValue<float>())
         };
 
-        shader.setVector3f(FLOAT_3_UNIFORM, vec, true);
+        shader.setVector3f(::FLOAT_3_UNIFORM, vec, true);
 
         std::array<GLfloat, glm::vec3::length()> uniformValues{};
         glGetUniformfv(shader.getID(), float3Location, uniformValues.data());
@@ -302,7 +318,7 @@ TEST_CASE("ShaderTest", "[unit][core][opengl]")
                                    generateRandomValue<float>() };
 
         // NOLINTNEXTLINE(readability-magic-numbers): 3 used as array index
-        shader.setVector4f(FLOAT_4_UNIFORM, original[0], original[1], original[2], original[3], true);
+        shader.setVector4f(::FLOAT_4_UNIFORM, original[0], original[1], original[2], original[3], true);
 
         std::array<GLfloat, original.size()> uniformValues{};
         glGetUniformfv(shader.getID(), float4Location, uniformValues.data());
@@ -315,8 +331,6 @@ TEST_CASE("ShaderTest", "[unit][core][opengl]")
     /// When a value is uploaded to a uniform, the shader should receive the uploaded value
     SECTION("Set float vector4 value with use")
     {
-        using Catch::Matchers::WithinRel;
-
         const auto vec{ glm::vec4(
             generateRandomValue<float>(),
             generateRandomValue<float>(),
@@ -324,7 +338,7 @@ TEST_CASE("ShaderTest", "[unit][core][opengl]")
             generateRandomValue<float>()
         ) };
 
-        shader.setVector4f(FLOAT_4_UNIFORM, vec, true);
+        shader.setVector4f(::FLOAT_4_UNIFORM, vec, true);
 
         std::array<GLfloat, glm::vec4::length()> uniformValues{};
         glGetUniformfv(shader.getID(), float4Location, uniformValues.data());
@@ -340,12 +354,13 @@ TEST_CASE("ShaderTest", "[unit][core][opengl]")
     /// When a value is uploaded to a uniform, the shader should receive the uploaded value
     SECTION("Set matrix4 value with use")
     {
+        const auto matrix4Location{ glGetUniformLocation(shader.getID(), ::MATRIX_4_UNIFORM) };
         const auto mat{ glm::mat4(generateRandomValue<float>()) };
 
-        shader.setMatrix4(MATRIX_4_UNIFORM, mat, true);
+        shader.setMatrix4(::MATRIX_4_UNIFORM, mat, true);
 
         std::array<GLfloat, static_cast<std::size_t>(glm::mat4::length() * glm::mat4::length())> uniformValues{};
-        getUniformValue<GLfloat>(shader, matrix4Location, uniformValues);
+        ::getUniformValue<GLfloat>(shader, matrix4Location, uniformValues);
 
         const glm::mat4 result{ glm::make_mat4(uniformValues.data()) };
         CHECK(result == mat);
