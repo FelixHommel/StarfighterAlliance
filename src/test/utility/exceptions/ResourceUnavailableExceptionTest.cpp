@@ -1,6 +1,7 @@
 #include "utility/exceptions/ResourceUnavailableException.hpp"
 
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers.hpp>
 #include <catch2/matchers/catch_matchers_exception.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 
@@ -9,9 +10,6 @@ namespace
 
 constexpr auto TEST_MESSAGE{ "TestMessage" };
 constexpr auto TEST_KEY{ "Key" };
-constexpr auto throwingStatement = [] {
-    throw sfa::ResourceUnavailableException{ TEST_MESSAGE, TEST_KEY };
-};
 
 } // namespace
 
@@ -36,10 +34,12 @@ TEST_CASE("ResourceUnavailableExceptionTest", "[unit][utility]")
     /// \brief Test that the exception contains the user message when it is thrown.
     ///
     /// When the exception is thrown, the message should contain the message the user specified
-    SECTION("Exception messgae")
+    SECTION("Exception message")
     {
+        constexpr auto throwingFn{ [] { throw ResourceUnavailableException{ ::TEST_MESSAGE, ::TEST_KEY }; } };
+
         CHECK_THROWS_MATCHES(
-            ::throwingStatement, ResourceUnavailableException, MessageMatches(ContainsSubstring(::TEST_MESSAGE))
+            throwingFn(), ResourceUnavailableException, MessageMatches(ContainsSubstring(::TEST_MESSAGE))
         );
     }
 }

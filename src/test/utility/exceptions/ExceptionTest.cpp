@@ -1,6 +1,7 @@
 #include "utility/exceptions/Exception.hpp"
 
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers.hpp>
 #include <catch2/matchers/catch_matchers_exception.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 
@@ -37,7 +38,7 @@ TEST_CASE("ExceptionTest", "[unit][utility]")
     SECTION("Exception message")
     {
         CHECK_THROWS_MATCHES(
-            throw sfa::Exception{ TEST_MESSAGE }, Exception, MessageMatches(ContainsSubstring(::TEST_MESSAGE))
+            throw Exception{ ::TEST_MESSAGE }, Exception, MessageMatches(ContainsSubstring(::TEST_MESSAGE))
         );
     }
 }

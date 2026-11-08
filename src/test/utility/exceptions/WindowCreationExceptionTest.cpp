@@ -1,6 +1,7 @@
 #include "utility/exceptions/WindowCreationException.hpp"
 
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers.hpp>
 #include <catch2/matchers/catch_matchers_exception.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 
@@ -8,9 +9,6 @@ namespace
 {
 
 constexpr auto TEST_MESSAGE{ "TestMessage" };
-constexpr auto throwingStatement = [] {
-    throw sfa::WindowCreationException{ TEST_MESSAGE };
-};
 
 } // namespace
 
@@ -37,9 +35,9 @@ TEST_CASE("WindowCreationExceptionTest", "[unit][utility]")
     /// When the exception is thrown, the message should contain the message the user specified
     SECTION("Exception messgae")
     {
-        CHECK_THROWS_MATCHES(
-            ::throwingStatement, WindowCreationException, MessageMatches(ContainsSubstring(::TEST_MESSAGE))
-        );
+        constexpr auto throwingFn{ [] { throw WindowCreationException{ ::TEST_MESSAGE }; } };
+
+        CHECK_THROWS_MATCHES(throwingFn(), WindowCreationException, MessageMatches(ContainsSubstring(::TEST_MESSAGE)));
     }
 }
 
