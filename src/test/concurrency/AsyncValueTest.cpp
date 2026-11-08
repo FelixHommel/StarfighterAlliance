@@ -13,8 +13,8 @@ enum class AsyncValueTestEnum : std::uint8_t
     Value2
 };
 
-constexpr int DEFAULT_INT_VALUE{ 124 };
-constexpr int SET_INT_VALUE{ 971 };
+constexpr auto DEFAULT_INT_VALUE{ 124 };
+constexpr auto SET_INT_VALUE{ 971 };
 
 constexpr auto DEFAULT_ENUM_VALUE{ AsyncValueTestEnum::Value1 };
 constexpr auto SET_ENUM_VALUE{ AsyncValueTestEnum::Value2 };
