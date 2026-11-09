@@ -56,10 +56,6 @@ private:
     ComponentRegistry m_registry;
     ResourceContext resources; // FIXME: This should not be owned here
 
-    void createRootPanelUI();
-    void createPlayButtonUI();
-    void createQuitButtonUI();
-
     static void makeColorRequest(GameSession& session);
 };
 

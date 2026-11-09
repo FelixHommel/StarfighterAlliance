@@ -2,7 +2,6 @@
 #define SFA_SRC_ENGINE_CORE_RENDER_CONTEXT_HPP
 
 #include "core/SpriteRenderer.hpp"
-#include "ecs/systems/UIRenderSystem.hpp"
 #include "utility/IWindow.hpp"
 
 namespace sfa
@@ -12,7 +11,6 @@ namespace sfa
 struct RenderContext
 {
     SpriteRenderer* spriteRenderer;
-    UIRenderSystem& uiRenderer;
     const IWindow& window;
 };
 // NOLINTEND(cppcoreguidelines-avoid-const-or-ref-data-members)

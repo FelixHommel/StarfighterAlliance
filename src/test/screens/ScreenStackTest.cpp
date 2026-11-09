@@ -1,5 +1,4 @@
 #include "screens/ScreenStack.hpp"
-#include "ecs/systems/UIRenderSystem.hpp"
 #include "screens/ScreenCommand.hpp"
 #include "testUtility//mocks/MockScreen.hpp"
 #include "testUtility/mocks/MockOverlayScreen.hpp"
@@ -158,7 +157,6 @@ TEST_CASE("ScreenStackTest", "[unit][screens]")
     /// When there is only one screen in the stack, it should be rendered
     SECTION("Screen stack renders one screen")
     {
-        UIRenderSystem uiRenderer(nullptr, nullptr);
         MockWindow window{};
 
         auto screen{ std::make_unique<MockScreen>() };
@@ -168,7 +166,7 @@ TEST_CASE("ScreenStackTest", "[unit][screens]")
         m_stack.enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(screen) });
         m_stack.processCommands();
 
-        m_stack.render({ .spriteRenderer = nullptr, .uiRenderer = uiRenderer, .window = window });
+        m_stack.render({ .spriteRenderer = nullptr, .window = window });
     }
 
     /// \brief Test that the \ref ScreenStack correctly renders overlays and regular screens.
@@ -177,7 +175,6 @@ TEST_CASE("ScreenStackTest", "[unit][screens]")
     /// non-overlay screen.
     SECTION("Screen stack renders all relevant screens")
     {
-        UIRenderSystem uiRenderer(nullptr, nullptr);
         MockWindow window{};
 
         auto firstScreen{ std::make_unique<MockScreen>() };
@@ -196,7 +193,7 @@ TEST_CASE("ScreenStackTest", "[unit][screens]")
         m_stack.enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(secondOverlay) });
         m_stack.processCommands();
 
-        m_stack.render({ .spriteRenderer = nullptr, .uiRenderer = uiRenderer, .window = window });
+        m_stack.render({ .spriteRenderer = nullptr, .window = window });
     }
 
     /// \brief Test that the \ref ScreenStack only updates the top most screen.

@@ -22,8 +22,3 @@ set_project_warnings(project_warnings)
 
 enable_testing()
 add_subdirectory(src)
-
-option(SFA_BUILD_EXAMPLES "Build examples" OFF)
-if(SFA_BUILD_EXAMPLES)
-    add_subdirectory(examples)
-endif()
