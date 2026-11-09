@@ -1,9 +1,9 @@
 #include "EntityManager.hpp"
 
-#include "core/Utility.hpp"
 #include "ecs/ECSUtility.hpp"
 
 #include <cassert>
+#include <stdexcept>
 
 namespace sfa
 {
@@ -17,7 +17,8 @@ EntityManager::EntityManager()
 
 EntityID EntityManager::createEntity()
 {
-    SFA_ASSERT(m_livingEntityCount < MAX_ENTITIES, "Too many entities");
+    if(m_livingEntityCount >= MAX_ENTITIES)
+        throw std::runtime_error("Too many entities");
 
     EntityID id{ m_availableEntities.front() };
     m_availableEntities.pop();
@@ -28,7 +29,8 @@ EntityID EntityManager::createEntity()
 
 void EntityManager::destroyEntity(EntityID entity)
 {
-    SFA_ASSERT(entity <= m_livingEntityCount, "Entity out of range");
+    if(entity > m_livingEntityCount)
+        throw std::runtime_error("Entity out of range");
 
     m_availableEntities.push(entity);
     --m_livingEntityCount;

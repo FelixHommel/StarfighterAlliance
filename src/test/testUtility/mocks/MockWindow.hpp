@@ -1,5 +1,5 @@
-#ifndef SFA_SRC_TEST_MOCKS_MOCK_WINDOW
-#define SFA_SRC_TEST_MOCKS_MOCK_WINDOW
+#ifndef SFA_SRC_TEST_TEST_UTILITY_MOCKS_MOCK_WINDOW
+#define SFA_SRC_TEST_TEST_UTILITY_MOCKS_MOCK_WINDOW
 
 #include "utility/IWindow.hpp"
 #include "utility/userInput/InputController.hpp"
@@ -36,4 +36,4 @@ private:
 
 } // namespace sfa::testing
 
-#endif // !SFA_SRC_TEST_MOCKS_MOCK_WINDOW
+#endif // !SFA_SRC_TEST_TEST_UTILITY_MOCKS_MOCK_WINDOW

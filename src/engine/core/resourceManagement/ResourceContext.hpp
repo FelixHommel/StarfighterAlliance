@@ -132,7 +132,7 @@ private:
 
     void processUploadTask(const UploadTask& task);
     void uploadToGPU(const std::string& key, const ShaderSourceData& data);
-    void uploadToGPU(const std::string& key, const TextureRawData& data);
+    void uploadToGPU(const std::string& key, const TextureSourceData& data);
 };
 
 } // namespace sfa

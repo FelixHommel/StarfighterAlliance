@@ -1,11 +1,9 @@
-#ifndef SFA_SRC_TEST_MOCKS_MOCK_OVERLAY_SCREEN_HPP
-#define SFA_SRC_TEST_MOCKS_MOCK_OVERLAY_SCREEN_HPP
+#ifndef SFA_SRC_TEST_TEST_UTILITY_MOCKS_MOCK_OVERLAY_SCREEN_HPP
+#define SFA_SRC_TEST_TEST_UTILITY_MOCKS_MOCK_OVERLAY_SCREEN_HPP
 
-#include "core/RenderContext.hpp"
 #include "screens/IScreen.hpp"
-#include "utility/userInput/InputController.hpp"
 
-#include <gmock/gmock.h>
+#include <trompeloeil/mock.hpp>
 
 #include <functional>
 #include <utility>
@@ -17,7 +15,7 @@ namespace sfa::testing
 ///
 /// \author Felix Hommel
 /// \date 3/1/2026
-class MockOverlayScreen : public IScreen
+class MockOverlayScreen : public trompeloeil::mock_interface<IScreen>
 {
 public:
     using OnEnterFunction = std::function<void(void)>;
@@ -46,8 +44,8 @@ public:
             m_onExitFunction();
     }
 
-    MOCK_METHOD(void, update, (float dt, const InputController& controller), (override));
-    MOCK_METHOD(void, render, (const RenderContext& context), (override));
+    IMPLEMENT_MOCK2(update);
+    IMPLEMENT_MOCK1(render);
 
     bool isOverlay() override { return true; }
 
@@ -58,5 +56,5 @@ private:
 
 } // namespace sfa::testing
 
-#endif // !SFA_SRC_TEST_MOCKS_MOCK_OVERLAY_SCREEN_HPP
+#endif // !SFA_SRC_TEST_TEST_UTILITY_MOCKS_MOCK_OVERLAY_SCREEN_HPP
 

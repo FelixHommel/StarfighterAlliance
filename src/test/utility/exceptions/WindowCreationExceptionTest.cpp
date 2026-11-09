@@ -1,39 +1,44 @@
 #include "utility/exceptions/WindowCreationException.hpp"
 
-#include <gmock/gmock.h>
-#include <gtest/gtest.h>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers.hpp>
+#include <catch2/matchers/catch_matchers_exception.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
 
 namespace
 {
 
 constexpr auto TEST_MESSAGE{ "TestMessage" };
-constexpr auto throwingStatement = [] {
-    throw sfa::WindowCreationException{ TEST_MESSAGE };
-};
 
 } // namespace
 
 namespace sfa::testing
 {
 
-/// \brief Test the most basic way to create an exception.
-///
-/// In this case the source location should be the exact line where, the exception was thrown, in the same function.
-TEST(WindowCreationExceptionTest, DefaultConstruction)
+TEST_CASE("WindowCreationExceptionTest", "[unit][utility]")
 {
-    WindowCreationException e{ ::TEST_MESSAGE };
+    using Catch::Matchers::ContainsSubstring;
+    using Catch::Matchers::MessageMatches;
 
-    EXPECT_STREQ(e.location().function_name(), std::source_location::current().function_name());
-}
+    /// \brief Test the most basic way to create an exception.
+    ///
+    /// In this case the source location should be the exact line where, the exception was thrown, in the same function.
+    SECTION("Default construction")
+    {
+        WindowCreationException e{ ::TEST_MESSAGE };
 
-/// \brief Test that the exception contains the user message when it is thrown.
-///
-/// When the exception is thrown, the message should contain the message the user specified
-TEST(WindowCreationExceptionTest, ExceptionMessgae)
-{
-    EXPECT_THAT(
-        ::throwingStatement, ::testing::ThrowsMessage<WindowCreationException>(::testing::HasSubstr(::TEST_MESSAGE))
-    );
+        CHECK_THAT(e.location().function_name(), ContainsSubstring(std::source_location::current().function_name()));
+    }
+
+    /// \brief Test that the exception contains the user message when it is thrown.
+    ///
+    /// When the exception is thrown, the message should contain the message the user specified
+    SECTION("Exception messgae")
+    {
+        constexpr auto throwingFn{ [] { throw WindowCreationException{ ::TEST_MESSAGE }; } };
+
+        CHECK_THROWS_MATCHES(throwingFn(), WindowCreationException, MessageMatches(ContainsSubstring(::TEST_MESSAGE)));
+    }
 }
 
 } // namespace sfa::testing

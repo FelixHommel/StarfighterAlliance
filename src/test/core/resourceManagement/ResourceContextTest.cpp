@@ -1,12 +1,13 @@
 #include "core/resourceManagement/ResourceContext.hpp"
-
 #include "core/resourceManagement/IntermediateResourceData.hpp"
-#include "fixtures/OpenGLTestFixture.hpp"
-#include "mocks/MockResourceLoader.hpp"
+#include "testUtility/OpenGLTestContext.hpp"
 #include "testUtility/ResourceGenerator.hpp"
+#include "testUtility/mocks/MockResourceLoader.hpp"
 
-#include "gmock/gmock.h"
-#include <gtest/gtest.h>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/interfaces/catch_interfaces_capture.hpp>
+#include <catch2/trompeloeil.hpp>
+#include <trompeloeil/mock.hpp>
 
 #include <chrono>
 #include <cstddef>
@@ -15,177 +16,173 @@
 #include <thread>
 #include <utility>
 
+namespace
+{
+
+constexpr auto COLOR_WHITE{ std::byte(255) };
+constexpr auto UPLOAD_DELAY{ std::chrono::milliseconds(1000) };
+constexpr auto SHADER_NAME{ "shader" };
+constexpr auto TEXTURE_NAME{ "texture" };
+
+} // namespace
+
 namespace sfa::testing
 {
 
-/// \brief Test the features of the \ref ResourceContext
+/// \brief Test the \ref ResourceContext with a \ref MockResourceLoader.
+///
+/// \author Felix Hommel
+/// \date 11/8/2026
+TEST_CASE("ResourceContextMockTest", "[unit][core][opengl][concurrency]")
+{
+    const ShaderSourceData EXPECTED_SHADER_DATA{
+        .vertexSource = "vertex shader source code",
+        .fragmentSource = "fragment shader source code",
+    };
+    const TextureSourceData EXPECTED_TEXTURE_DATA{
+        .width = 1,
+        .height = 1,
+        .channels = 4,
+        .pixels = { ::COLOR_WHITE, ::COLOR_WHITE, ::COLOR_WHITE, ::COLOR_WHITE },
+    };
+    const auto MOCK_FS_PATH{ std::filesystem::path("") };
+
+    OpenGLTestContext glContext{};
+    if(!glContext.setup())
+        SKIP(glContext.getSkipReason());
+
+    auto mockLoader{ std::make_unique<MockResourceLoader>() };
+    MockResourceLoader* const pMockLoader{ mockLoader.get() };
+    ResourceContext context{ std::move(mockLoader) };
+
+    /// \brief Request the loading of a shader resource.
+    ///
+    /// When a shader resource is requested, the processed shader source code is stored in the upload queue of the
+    /// \ref ResourceContext, waiting to be processed by the main thread.
+    SECTION("Load shader success")
+    {
+        REQUIRE_CALL(*pMockLoader, loadShader(MOCK_FS_PATH, MOCK_FS_PATH, MOCK_FS_PATH))
+            .RETURN(LoadResult{ EXPECTED_SHADER_DATA })
+            .TIMES(1);
+
+        context.requestResource(
+            ResourceContext::ShaderLoadRequest{
+                .name = ::SHADER_NAME, .vert = MOCK_FS_PATH, .frag = MOCK_FS_PATH, .geom = MOCK_FS_PATH }
+        );
+        std::this_thread::sleep_for(::UPLOAD_DELAY);
+
+        CHECK(context.hasPendingUploads());
+        CHECK(context.pendingUploadTasks() == 1);
+    }
+
+    /// \brief Request the loading of a shader resource and block until finish.
+    ///
+    /// When a shader resource is requested, the processed shader source code is stored in the upload queue of the
+    /// \ref ResourceContext, waiting to be processed by the main thread.
+    SECTION("Load shader blocking success")
+    {
+        REQUIRE_CALL(*pMockLoader, loadShader(MOCK_FS_PATH, MOCK_FS_PATH, MOCK_FS_PATH))
+            .RETURN(LoadResult{ EXPECTED_SHADER_DATA })
+            .TIMES(1);
+
+        context.requestResourceBlocking(
+            ResourceContext::ShaderLoadRequest{
+                .name = ::SHADER_NAME, .vert = MOCK_FS_PATH, .frag = MOCK_FS_PATH, .geom = MOCK_FS_PATH }
+        );
+
+        CHECK(context.totalResources() == 1);
+        CHECK_NOTHROW(context.getShader(::SHADER_NAME));
+    }
+
+    /// \brief Request the loading of a texture resource.
+    ///
+    /// When a texture resource is requested, the processed texture data is stored in the upload queue of the
+    /// \ref ResourceContext, waiting to be processed by the main thread.
+    SECTION("Load texture success")
+    {
+        REQUIRE_CALL(*pMockLoader, loadTexture(MOCK_FS_PATH)).RETURN(LoadResult{ EXPECTED_TEXTURE_DATA }).TIMES(1);
+
+        context.requestResource(
+            ResourceContext::TextureLoadRequest{ .name = ::TEXTURE_NAME, .filepath = MOCK_FS_PATH }
+        );
+        std::this_thread::sleep_for(::UPLOAD_DELAY);
+
+        CHECK(context.hasPendingUploads());
+        CHECK(context.pendingUploadTasks() == 1);
+    }
+
+    /// \brief Request the loading of a texture resource and block until finish.
+    ///
+    /// When a texture resource is requested, the processed texture data is stored in the upload queue of the
+    /// \ref ResourceContext, waiting to be processed by the main thread.
+    SECTION("Load texture blocking success")
+    {
+        REQUIRE_CALL(*pMockLoader, loadTexture(MOCK_FS_PATH)).RETURN(LoadResult{ EXPECTED_TEXTURE_DATA }).TIMES(1);
+
+        context.requestResourceBlocking(
+            ResourceContext::TextureLoadRequest{ .name = ::TEXTURE_NAME, .filepath = MOCK_FS_PATH }
+        );
+
+        CHECK(context.totalResources() == 1);
+        CHECK_NOTHROW(context.getTexture(::TEXTURE_NAME));
+    }
+
+    /// \brief Clear the resource cache.
+    ///
+    /// When the resource cache is cleared, all currently stored resources are destroyed.
+    SECTION("Clear resource context")
+    {
+        ALLOW_CALL(*pMockLoader, loadShader(MOCK_FS_PATH, MOCK_FS_PATH, MOCK_FS_PATH))
+            .RETURN(LoadResult{ EXPECTED_SHADER_DATA });
+        ALLOW_CALL(*pMockLoader, loadTexture(MOCK_FS_PATH)).RETURN(LoadResult{ EXPECTED_TEXTURE_DATA });
+
+        context.requestResourceBlocking(
+            ResourceContext::ShaderLoadRequest{ .name = ::SHADER_NAME, .vert = MOCK_FS_PATH, .frag = MOCK_FS_PATH }
+        );
+        context.requestResourceBlocking(
+            ResourceContext::TextureLoadRequest{ .name = ::TEXTURE_NAME, .filepath = MOCK_FS_PATH }
+        );
+
+        REQUIRE(context.totalResources() == 2);
+
+        context.clear();
+
+        CHECK(context.totalResources() == 0);
+    }
+}
+
+/// \brief Test the features of the \ref ResourceContext with real filesystem interaction.
 ///
 /// \author Felix Hommel
 /// \date 2/16/2026
-class ResourceContextTest : public ::testing::Test
+TEST_CASE("ResourceContextIntegrationTest", "[.][integration][core][opengl][concurrency][filesystem]")
 {
-public:
-    ResourceContextTest() = default;
-    ~ResourceContextTest() override = default;
+    const ResourceGenerator generator{ Catch::getResultCapture().getCurrentTestName() };
 
-    ResourceContextTest(const ResourceContextTest&) = delete;
-    ResourceContextTest& operator=(const ResourceContextTest&) = delete;
-    ResourceContextTest(ResourceContextTest&&) noexcept = delete;
-    ResourceContextTest& operator=(ResourceContextTest&&) noexcept = delete;
+    OpenGLTestContext glContext{};
+    if(!glContext.setup())
+        SKIP(glContext.getSkipReason());
 
-protected:
-    static constexpr auto UPLOAD_DELAY{ std::chrono::milliseconds(1000) };
+    ResourceContext context{};
 
-    std::unique_ptr<ResourceGenerator> m_generator{
-        std::make_unique<ResourceGenerator>(::testing::UnitTest::GetInstance()->current_test_info())
-    };
-
-    void SetUp() override
+    /// \brief Load multiple resources at the same time.
+    ///
+    /// When multiple resources are requested at the same time, the thread pool responsible for processing the initial
+    /// request should handle them in parallel. The main thread should block until all resources are uploaded to the GPU.
+    SECTION("Load multiple resources concurrently")
     {
-        if(!m_glContext->setup())
-            GTEST_SKIP() << m_glContext->getSkipReason();
+        context.requestResource(
+            ResourceContext::ShaderLoadRequest{
+                .name = ::SHADER_NAME, .vert = generator.vertPath(), .frag = generator.fragPath() }
+        );
+        context.requestResource(
+            ResourceContext::TextureLoadRequest{ .name = ::TEXTURE_NAME, .filepath = generator.texPath() }
+        );
+        context.waitForAllUploads();
+
+        CHECK(context.totalResources() == 2);
+        CHECK(!context.hasPendingUploads());
     }
-
-    void TearDown() override { m_glContext->teardown(); }
-
-private:
-    std::unique_ptr<OpenGLTestFixture> m_glContext{ std::make_unique<OpenGLTestFixture>() };
-};
-
-/// \brief Request the loading of a shader resource.
-///
-/// When a shader resource is requested, the processed shader source code is stored in the upload queue of the
-/// \ref ResourceContext, waiting to be processed by the main thread.
-TEST_F(ResourceContextTest, LoadShaderSuccess)
-{
-    auto mock{ std::make_unique<MockResourceLoader>() };
-    MockResourceLoader* pMock{ mock.get() };
-    ResourceContext context{ std::move(mock) };
-
-    const ShaderSourceData expectedData{ .vertexSource = "vertex shader source code",
-                                         .fragmentSource = "fragment shader source code" };
-
-    const std::filesystem::path p("");
-    EXPECT_CALL(*pMock, loadShader(p, p, p)).WillOnce(::testing::Return(LoadResult{ expectedData }));
-
-    context.requestResource(ResourceContext::ShaderLoadRequest{ .name = "shader", .vert = "", .frag = "", .geom = "" });
-    std::this_thread::sleep_for(UPLOAD_DELAY);
-
-    EXPECT_TRUE(context.hasPendingUploads());
-    EXPECT_EQ(1, context.pendingUploadTasks());
-}
-
-TEST_F(ResourceContextTest, LoadShaderBlockingSuccess)
-{
-    auto mock{ std::make_unique<MockResourceLoader>() };
-    MockResourceLoader* pMock{ mock.get() };
-    ResourceContext context{ std::move(mock) };
-
-    const ShaderSourceData expectedData{ .vertexSource = "vertex shader source code",
-                                         .fragmentSource = "fragment shader source code" };
-
-    const std::filesystem::path p("");
-    EXPECT_CALL(*pMock, loadShader(p, p, p)).WillOnce(::testing::Return(LoadResult{ expectedData }));
-
-    context.requestResourceBlocking(
-        ResourceContext::ShaderLoadRequest{ .name = "shader", .vert = "", .frag = "", .geom = "" }
-    );
-
-    EXPECT_EQ(context.totalResources(), 1);
-    EXPECT_NO_THROW({ [[maybe_unused]] const auto x{ context.getShader("shader") }; });
-}
-
-/// \brief Request the loading of a texture resource.
-///
-/// When a texture resource is requested, the processed texture data is stored in the upload queue of the
-/// \ref ResourceContext, waiting to be processed by the main thread.
-TEST_F(ResourceContextTest, LoadTextureSuccess)
-{
-    auto mock{ std::make_unique<MockResourceLoader>() };
-    MockResourceLoader* pMock{ mock.get() };
-    ResourceContext context{ std::move(mock) };
-
-    const TextureRawData expectedData{
-        .width = 1,
-        .height = 1,
-        .channels = 4,
-        .pixels = { std::byte(255), std::byte(255), std::byte(255), std::byte(255) }
-    };
-
-    const std::filesystem::path p("");
-    EXPECT_CALL(*pMock, loadTexture(p)).WillOnce(::testing::Return(LoadResult{ expectedData }));
-
-    context.requestResource(ResourceContext::TextureLoadRequest{ .name = "texture", .filepath = "" });
-    std::this_thread::sleep_for(UPLOAD_DELAY);
-
-    EXPECT_TRUE(context.hasPendingUploads());
-    EXPECT_EQ(1, context.pendingUploadTasks());
-}
-
-TEST_F(ResourceContextTest, LoadTextureBlockingSuccess)
-{
-    auto mock{ std::make_unique<MockResourceLoader>() };
-    MockResourceLoader* pMock{ mock.get() };
-    ResourceContext context{ std::move(mock) };
-
-    const TextureRawData expectedData{
-        .width = 1,
-        .height = 1,
-        .channels = 4,
-        .pixels = { std::byte(255), std::byte(255), std::byte(255), std::byte(255) }
-    };
-
-    const std::filesystem::path p("");
-    EXPECT_CALL(*pMock, loadTexture(p)).WillOnce(::testing::Return(LoadResult{ expectedData }));
-
-    context.requestResourceBlocking(ResourceContext::TextureLoadRequest{ .name = "texture", .filepath = "" });
-
-    EXPECT_EQ(context.totalResources(), 1);
-    EXPECT_NO_THROW({ [[maybe_unused]] const auto x{ context.getTexture("texture") }; });
-}
-
-/// \brief Load multiple resources at the same time.
-///
-/// When multiple resources are requested at the same time, the thread pool responsible for processing the initial
-/// request should handle them in parallel. The main thread should block until all resources are uploaded to the GPU.
-TEST_F(ResourceContextTest, LoadMultipleResourcesConcurrently)
-{
-    ResourceContext context{};
-
-    context.requestResource(
-        ResourceContext::ShaderLoadRequest{
-            .name = "shader", .vert = m_generator->vertPath(), .frag = m_generator->fragPath() }
-    );
-    context.requestResource(
-        ResourceContext::TextureLoadRequest{ .name = "texture", .filepath = m_generator->texPath() }
-    );
-    context.waitForAllUploads();
-
-    EXPECT_EQ(2, context.totalResources());
-    EXPECT_FALSE(context.hasPendingUploads());
-}
-
-/// \brief Clear the resource cache.
-///
-/// When the resource cache is cleared, all currently stored resources are destroyed.
-TEST_F(ResourceContextTest, ClearResourceContext)
-{
-    ResourceContext context{};
-
-    context.requestResource(
-        ResourceContext::ShaderLoadRequest{
-            .name = "shader", .vert = m_generator->vertPath(), .frag = m_generator->fragPath() }
-    );
-    context.requestResource(
-        ResourceContext::TextureLoadRequest{ .name = "texture", .filepath = m_generator->texPath() }
-    );
-    context.waitForAllUploads();
-
-    ASSERT_EQ(2, context.totalResources());
-
-    context.clear();
-
-    EXPECT_EQ(0, context.totalResources());
 }
 
 } // namespace sfa::testing

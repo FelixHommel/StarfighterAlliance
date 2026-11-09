@@ -4,7 +4,6 @@ include(${PROJECT_SOURCE_DIR}/cmake/StaticAnalyzers.cmake)
 
 add_executable(
     ${NAME}
-    ./testMain.cpp
     ./concurrency/AsyncValueTest.cpp
     ./concurrency/BlockingQueueTest.cpp
     ./concurrency/ThreadPoolTest.cpp
@@ -18,6 +17,7 @@ add_executable(
     ./ecs/ComponentRegistryTest.cpp
     ./ecs/systems/UILayoutSystemTest.cpp
     ./ecs/systems/UITransformSystemTest.cpp
+    ./testUtility/OpenGLTestContext.cpp
     ./testUtility/stb_image_write_impl.cpp
     ./testUtility/TemporaryDirectory.cpp
     ./screens/ScreenStackTest.cpp
@@ -33,15 +33,15 @@ target_sources(
     PRIVATE
         FILE_SET HEADERS
             FILES
-                ./fixtures/OpenGLTestFixture.hpp
-                ./mocks/MockOverlayScreen.hpp
-                ./mocks/MockResourceLoader.hpp
-                ./mocks/MockScreen.hpp
-                ./mocks/MockWindow.hpp
+                ./testUtility/OpenGLTestContext.hpp
                 ./testUtility/RandomNumberGenerator.hpp
                 ./testUtility/ResourceGenerator.hpp
                 ./testUtility/TemporaryDirectory.hpp
                 ./testUtility/TemporaryJsonFile.hpp
+                ./testUtility/mocks/MockOverlayScreen.hpp
+                ./testUtility/mocks/MockResourceLoader.hpp
+                ./testUtility/mocks/MockScreen.hpp
+                ./testUtility/mocks/MockWindow.hpp
 )
 
 target_compile_features(${NAME} PRIVATE cxx_std_23)
@@ -51,15 +51,12 @@ target_compile_options(
 )
 target_link_libraries(
     ${NAME}
-    PRIVATE GTest::gtest GTest::gmock StarfighterAllianceEngine
+    PRIVATE
+        Catch2::Catch2WithMain
+        trompeloeil::trompeloeil
+        StarfighterAllianceEngine
 )
 
-include(GoogleTest)
-gtest_discover_tests(${NAME})
-
-# https://discourse.cmake.org/t/differences-in-set-property-vs-set-tests-properties-for-discovered-gtest-tests/8080
-set_property(
-    DIRECTORY
-    APPEND
-    PROPERTY TEST_INCLUDE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/labelTests.cmake
-)
+include(Catch)
+include(CTest)
+catch_discover_tests(${NAME})

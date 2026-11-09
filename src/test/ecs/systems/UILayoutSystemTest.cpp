@@ -6,9 +6,9 @@
 #include "ecs/components/UITransformComponent.hpp"
 #include "ecs/systems/LayoutSystem.hpp"
 
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_floating_point.hpp>
 #include <glm/glm.hpp>
-
-#include <gtest/gtest.h>
 
 namespace
 {
@@ -31,8 +31,10 @@ constexpr auto FLEX_GROW_CHILD_B{ 3.f };
 namespace sfa::testing
 {
 
-TEST(UILayoutSystemTest, VerticalLayoutDistributesFreeSpaceByFlexGrow)
+TEST_CASE("UILayoutSystemTest", "[.][integration][ecs]")
 {
+    using Catch::Matchers::WithinRel;
+
     ComponentRegistry registry;
 
     // NOTE: Add Transform components
@@ -71,15 +73,17 @@ TEST(UILayoutSystemTest, VerticalLayoutDistributesFreeSpaceByFlexGrow)
     const auto& first{ registry.getComponent<UITransformComponent>(CHILD_A) };
     const auto& second{ registry.getComponent<UITransformComponent>(CHILD_B) };
 
-    EXPECT_FLOAT_EQ(10.f, first.localPosition.x);
-    EXPECT_FLOAT_EQ(10.f, first.localPosition.y);
-    EXPECT_FLOAT_EQ(80.f, first.size.x);
-    EXPECT_FLOAT_EQ(27.5f, first.size.y);
+    // NOLINTBEGIN(readability-magic-numbers): To be removed
+    CHECK_THAT(first.localPosition.x, WithinRel(10.f));
+    CHECK_THAT(first.localPosition.y, WithinRel(10.f));
+    CHECK_THAT(first.size.x, WithinRel(80.f));
+    CHECK_THAT(first.size.y, WithinRel(27.5f));
 
-    EXPECT_FLOAT_EQ(10.f, second.localPosition.x);
-    EXPECT_FLOAT_EQ(47.5f, second.localPosition.y);
-    EXPECT_FLOAT_EQ(80.f, second.size.x);
-    EXPECT_FLOAT_EQ(42.5f, second.size.y);
+    CHECK_THAT(second.localPosition.x, WithinRel(10.f));
+    CHECK_THAT(second.localPosition.y, WithinRel(47.5f));
+    CHECK_THAT(second.size.x, WithinRel(80.f));
+    CHECK_THAT(second.size.y, WithinRel(42.5f));
+    // NOLINTEND(readability-magic-numbers)
 }
 
 } // namespace sfa::testing

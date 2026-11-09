@@ -1,16 +1,15 @@
 #include "screens/ScreenStack.hpp"
 #include "ecs/systems/UIRenderSystem.hpp"
 #include "screens/ScreenCommand.hpp"
-
-#include "mocks/MockOverlayScreen.hpp"
-#include "mocks/MockScreen.hpp"
-#include "mocks/MockWindow.hpp"
+#include "testUtility//mocks/MockScreen.hpp"
+#include "testUtility/mocks/MockOverlayScreen.hpp"
+#include "testUtility/mocks/MockWindow.hpp"
 #include "utility/userInput/InputController.hpp"
 
-#include "gmock/gmock.h"
-#include <gtest/gtest.h>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/trompeloeil.hpp>
+#include <trompeloeil/mock.hpp>
 
-#include <memory>
 #include <utility>
 
 namespace sfa::testing
@@ -20,217 +19,207 @@ namespace sfa::testing
 ///
 /// \author Felix Hommel
 /// \date 3/4/2026
-class ScreenStackTest : public ::testing::Test
+TEST_CASE("ScreenStackTest", "[unit][screens]")
 {
-public:
-    ScreenStackTest() = default;
-    ~ScreenStackTest() override = default;
+    ScreenStack m_stack{};
 
-    ScreenStackTest(const ScreenStackTest&) = delete;
-    ScreenStackTest& operator=(const ScreenStackTest&) = delete;
-    ScreenStackTest(ScreenStackTest&&) noexcept = delete;
-    ScreenStackTest& operator=(ScreenStackTest&&) noexcept = delete;
+    /// \brief Test that the \ref ScreenStack is initially empty.
+    ///
+    /// When the \ref ScreenStack is constructed, the default construction should result in an empty stack.
+    SECTION("Default construction makes empty stack")
+    {
+        CHECK(m_stack.size() == 0);
+    }
 
-protected:
-    std::unique_ptr<ScreenStack> m_stack{ std::make_unique<ScreenStack>() };
-};
+    SECTION("Parameter constructor adds initial screen")
+    {
+        ScreenStack stack{ std::make_unique<MockScreen>() };
 
-/// \brief Test that the \ref ScreenStack is initially empty.
-///
-/// When the \ref ScreenStack is constructed, the default construction should result in an empty stack.
-TEST_F(ScreenStackTest, DefaultConstructionMakesEmptyStack)
-{
-    EXPECT_EQ(0, m_stack->size());
-}
+        CHECK(stack.size() == 1);
+    }
 
-TEST_F(ScreenStackTest, ParameterConstructorAddsInitialScreen)
-{
-    ScreenStack stack{ std::make_unique<MockScreen>() };
+    /// \brief Test that the \ref ScreenStack can process a push \ref ScreenCommand.
+    ///
+    /// When a push command was queued and processed the size should increase by one, indicating that a new screen was
+    /// pushed to the stack.
+    SECTION("Enqueue push command")
+    {
+        const auto oldSize{ m_stack.size() };
 
-    EXPECT_EQ(1, stack.size());
-}
+        m_stack.enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::make_unique<MockScreen>() });
+        m_stack.processCommands();
 
-/// \brief Test that the \ref ScreenStack can process a push \ref ScreenCommand.
-///
-/// When a push command was queued and processed the size should increase by one, indicating that a new screen was
-/// pushed to the stack.
-TEST_F(ScreenStackTest, EnqueuePushCommand)
-{
-    const auto oldSize{ m_stack->size() };
+        CHECK(m_stack.size() == oldSize + 1);
+    }
 
-    m_stack->enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::make_unique<MockScreen>() });
-    m_stack->processCommands();
+    /// \brief Test that the \ref ScreenStack can process a pop \ref ScreenCommand
+    ///
+    /// When a pop command was queued and processed the size should decrease by one, indicating that the screen is not
+    /// needed anymore.
+    SECTION("Enqueue pop command")
+    {
+        m_stack.enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::make_unique<MockScreen>() });
+        m_stack.processCommands();
+        const auto oldSize{ m_stack.size() };
 
-    EXPECT_EQ(oldSize + 1, m_stack->size());
-}
+        m_stack.enqueueCommand({ .type = ScreenCommand::Type::Pop });
+        m_stack.processCommands();
 
-/// \brief Test that the \ref ScreenStack can process a pop \ref ScreenCommand
-///
-/// When a pop command was queued and processed the size should decrease by one, indicating that the screen is not
-/// needed anymore.
-TEST_F(ScreenStackTest, EnqueuePopCommand)
-{
-    m_stack->enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::make_unique<MockScreen>() });
-    m_stack->processCommands();
-    const auto oldSize{ m_stack->size() };
+        CHECK(m_stack.size() == oldSize - 1);
+    }
 
-    m_stack->enqueueCommand({ .type = ScreenCommand::Type::Pop });
-    m_stack->processCommands();
+    /// \brief Test that the \ref ScreenStack can process a replace \ref ScreenCommand
+    ///
+    /// When a replace command was queued and processed the size should not change because one screen is poped and a new
+    /// one is emplaced instantly.
+    SECTION("Enqueue replace command")
+    {
+        m_stack.enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::make_unique<MockScreen>() });
+        m_stack.processCommands();
+        const auto oldSize{ m_stack.size() };
 
-    EXPECT_EQ(oldSize - 1, m_stack->size());
-}
+        m_stack.enqueueCommand({ .type = ScreenCommand::Type::Replace, .screen = std::make_unique<MockScreen>() });
+        m_stack.processCommands();
 
-/// \brief Test that the \ref ScreenStack can process a replace \ref ScreenCommand
-///
-/// When a replace command was queued and processed the size should not change because one screen is poped and a new
-/// one is emplaced instantly.
-TEST_F(ScreenStackTest, EnqueueReplaceCommand)
-{
-    m_stack->enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::make_unique<MockScreen>() });
-    m_stack->processCommands();
-    const auto oldSize{ m_stack->size() };
+        CHECK(m_stack.size() == oldSize);
+    }
 
-    m_stack->enqueueCommand({ .type = ScreenCommand::Type::Replace, .screen = std::make_unique<MockScreen>() });
-    m_stack->processCommands();
+    /// \brief Test that the \ref ScreenStack calls the onEnter callback function when a new screen is pushed.
+    ///
+    /// When a new screen is pushed the \ref ScreenStack should call the user specified on enter function.
+    SECTION("Screen stack push calls on enter function")
+    {
+        constexpr auto CALLBACK_VAR_INIT{ 0 };
+        auto callbackVar{ CALLBACK_VAR_INIT };
 
-    EXPECT_EQ(oldSize, m_stack->size());
-}
+        m_stack.enqueueCommand(
+            {
+                .type = ScreenCommand::Type::Push,
+                .screen = std::make_unique<MockScreen>([&callbackVar] { callbackVar++; }),
+            }
+        );
+        m_stack.processCommands();
 
-/// \brief Test that the \ref ScreenStack calls the onEnter callback function when a new screen is pushed.
-///
-/// When a new screen is pushed the \ref ScreenStack should call the user specified on enter function.
-TEST_F(ScreenStackTest, ScreenStackPushCallsOnEnterFunction)
-{
-    constexpr auto CALLBACK_VAR_INIT{ 0 };
-    auto callbackVar{ CALLBACK_VAR_INIT };
+        CHECK(callbackVar == CALLBACK_VAR_INIT + 1);
+    }
 
-    m_stack->enqueueCommand(
-        {
-            .type = ScreenCommand::Type::Push,
-            .screen = std::make_unique<MockScreen>([&callbackVar] { callbackVar++; }),
-        }
-    );
-    m_stack->processCommands();
+    /// \brief Test that the \ref ScreenStack calls the onExit callback function when a screen is poped from the stack.
+    ///
+    /// When a screen is poped, the \ref ScreenStack is supposed to call the user specified on exit function
+    SECTION("Screen stack pop calls on exit function")
+    {
+        constexpr auto CALLBACK_VAR_INIT{ 0 };
+        auto callbackVar{ CALLBACK_VAR_INIT };
 
-    EXPECT_EQ(CALLBACK_VAR_INIT + 1, callbackVar);
-}
+        m_stack.enqueueCommand(
+            {
+                .type = ScreenCommand::Type::Push,
+                .screen = std::make_unique<MockScreen>([] {}, [&callbackVar] { callbackVar--; }),
+            }
+        );
+        m_stack.enqueueCommand({ .type = ScreenCommand::Type::Pop, .screen = nullptr });
+        m_stack.processCommands();
 
-/// \brief Test that the \ref ScreenStack calls the onExit callback function when a screen is poped from the stack.
-///
-/// When a screen is poped, the \ref ScreenStack is supposed to call the user specified on exit function
-TEST_F(ScreenStackTest, ScreenStackPopCallsOnExitFunction)
-{
-    constexpr auto CALLBACK_VAR_INIT{ 0 };
-    auto callbackVar{ CALLBACK_VAR_INIT };
+        CHECK(callbackVar == CALLBACK_VAR_INIT - 1);
+    }
 
-    m_stack->enqueueCommand(
-        {
-            .type = ScreenCommand::Type::Push,
-            .screen = std::make_unique<MockScreen>([] {}, [&callbackVar] { callbackVar--; }),
-        }
-    );
-    m_stack->enqueueCommand({ .type = ScreenCommand::Type::Pop, .screen = nullptr });
-    m_stack->processCommands();
+    /// \brief Test that the \ref ScreenStack first calls the onExit function of the old screen that is being replaced and
+    /// then calls the onEnter function of the screen being pushed.
+    ///
+    /// When a screen is replaced, the \ref ScreenStack should first use the on exit function of the screen that is being
+    /// replaced and then should call the on enter function of the new screen that is being pushed.
+    SECTION("Screen stack replace calls on enter and on exit functions")
+    {
+        constexpr auto CALLBACK_VAR_INIT_FIRST_SCREEN{ 1 };
+        auto callbackVarFirstScreen{ CALLBACK_VAR_INIT_FIRST_SCREEN };
+        constexpr auto CALLBACK_VAR_INIT_SECOND_SCREEN{ 1 };
+        auto callbackVarSecondScreen{ CALLBACK_VAR_INIT_SECOND_SCREEN };
 
-    EXPECT_EQ(CALLBACK_VAR_INIT - 1, callbackVar);
-}
+        m_stack.enqueueCommand(
+            {
+                .type = ScreenCommand::Type::Push,
+                .screen = std::make_unique<MockScreen>([] {}, [&callbackVarFirstScreen] { callbackVarFirstScreen--; }),
+            }
+        );
+        m_stack.enqueueCommand(
+            {
+                .type = ScreenCommand::Type::Replace,
+                .screen = std::make_unique<MockScreen>([&callbackVarSecondScreen] { callbackVarSecondScreen++; }),
+            }
+        );
+        m_stack.processCommands();
 
-/// \brief Test that the \ref ScreenStack first calls the onExit function of the old screen that is being replaced and
-/// then calls the onEnter function of the screen being pushed.
-///
-/// When a screen is replaced, the \ref ScreenStack should first use the on exit function of the screen that is being
-/// replaced and then should call the on enter function of the new screen that is being pushed.
-TEST_F(ScreenStackTest, ScreenStackReplaceCallsOnEnterAndOnExitFunctions)
-{
-    constexpr auto CALLBACK_VAR_INIT_FIRST_SCREEN{ 1 };
-    auto callbackVarFirstScreen{ CALLBACK_VAR_INIT_FIRST_SCREEN };
-    constexpr auto CALLBACK_VAR_INIT_SECOND_SCREEN{ 1 };
-    auto callbackVarSecondScreen{ CALLBACK_VAR_INIT_SECOND_SCREEN };
+        CHECK(callbackVarFirstScreen == CALLBACK_VAR_INIT_FIRST_SCREEN - 1);
+        CHECK(callbackVarSecondScreen == CALLBACK_VAR_INIT_SECOND_SCREEN + 1);
+    }
 
-    m_stack->enqueueCommand(
-        {
-            .type = ScreenCommand::Type::Push,
-            .screen = std::make_unique<MockScreen>([] {}, [&callbackVarFirstScreen] { callbackVarFirstScreen--; }),
-        }
-    );
-    m_stack->enqueueCommand(
-        {
-            .type = ScreenCommand::Type::Replace,
-            .screen = std::make_unique<MockScreen>([&callbackVarSecondScreen] { callbackVarSecondScreen++; }),
-        }
-    );
-    m_stack->processCommands();
+    /// \brief Test that the \ref ScreenStack renders one singular screen correctly
+    ///
+    /// When there is only one screen in the stack, it should be rendered
+    SECTION("Screen stack renders one screen")
+    {
+        UIRenderSystem uiRenderer(nullptr, nullptr);
+        MockWindow window{};
 
-    EXPECT_EQ(CALLBACK_VAR_INIT_FIRST_SCREEN - 1, callbackVarFirstScreen);
-    EXPECT_EQ(CALLBACK_VAR_INIT_SECOND_SCREEN + 1, callbackVarSecondScreen);
-}
+        auto screen{ std::make_unique<MockScreen>() };
 
-/// \brief Test that the \ref ScreenStack renders one singular screen correctly
-///
-/// When there is only one screen in the stack, it should be rendered
-TEST_F(ScreenStackTest, ScreenStackRendersOneScreen)
-{
-    UIRenderSystem uiRenderer(nullptr, nullptr);
-    MockWindow window{};
+        REQUIRE_CALL(*screen.get(), render(trompeloeil::_)).TIMES(1);
 
-    auto screen{ std::make_unique<MockScreen>() };
+        m_stack.enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(screen) });
+        m_stack.processCommands();
 
-    EXPECT_CALL(*screen.get(), render(::testing::_)).Times(::testing::Exactly(1));
+        m_stack.render({ .spriteRenderer = nullptr, .uiRenderer = uiRenderer, .window = window });
+    }
 
-    m_stack->enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(screen) });
-    m_stack->processCommands();
+    /// \brief Test that the \ref ScreenStack correctly renders overlays and regular screens.
+    ///
+    /// When there are overlays on the top of the stack, the render function should render all overlays and the first
+    /// non-overlay screen.
+    SECTION("Screen stack renders all relevant screens")
+    {
+        UIRenderSystem uiRenderer(nullptr, nullptr);
+        MockWindow window{};
 
-    m_stack->render({ .spriteRenderer = nullptr, .uiRenderer = uiRenderer, .window = window });
-}
+        auto firstScreen{ std::make_unique<MockScreen>() };
+        auto secondScreen{ std::make_unique<MockScreen>() };
+        auto firstOverlay{ std::make_unique<MockOverlayScreen>() };
+        auto secondOverlay{ std::make_unique<MockOverlayScreen>() };
 
-/// \brief Test that the \ref ScreenStack correctly renders overlays and regular screens.
-///
-/// When there are overlays on the top of the stack, the render function should render all overlays and the first
-/// non-overlay screen.
-TEST_F(ScreenStackTest, ScreenStackRendersAllRelevantScreens)
-{
-    UIRenderSystem uiRenderer(nullptr, nullptr);
-    MockWindow window{};
+        REQUIRE_CALL(*firstScreen.get(), render(trompeloeil::_)).TIMES(0);
+        REQUIRE_CALL(*secondScreen.get(), render(trompeloeil::_)).TIMES(1);
+        REQUIRE_CALL(*firstOverlay.get(), render(trompeloeil::_)).TIMES(1);
+        REQUIRE_CALL(*secondOverlay.get(), render(trompeloeil::_)).TIMES(1);
 
-    auto firstScreen{ std::make_unique<MockScreen>() };
-    auto secondScreen{ std::make_unique<MockScreen>() };
-    auto firstOverlay{ std::make_unique<MockOverlayScreen>() };
-    auto secondOverlay{ std::make_unique<MockOverlayScreen>() };
+        m_stack.enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(firstScreen) });
+        m_stack.enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(secondScreen) });
+        m_stack.enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(firstOverlay) });
+        m_stack.enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(secondOverlay) });
+        m_stack.processCommands();
 
-    EXPECT_CALL(*firstScreen.get(), render(::testing::_)).Times(::testing::Exactly(0));
-    EXPECT_CALL(*secondScreen.get(), render(::testing::_)).Times(::testing::Exactly(1));
-    EXPECT_CALL(*firstOverlay.get(), render(::testing::_)).Times(::testing::Exactly(1));
-    EXPECT_CALL(*secondOverlay.get(), render(::testing::_)).Times(::testing::Exactly(1));
+        m_stack.render({ .spriteRenderer = nullptr, .uiRenderer = uiRenderer, .window = window });
+    }
 
-    m_stack->enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(firstScreen) });
-    m_stack->enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(secondScreen) });
-    m_stack->enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(firstOverlay) });
-    m_stack->enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(secondOverlay) });
-    m_stack->processCommands();
+    /// \brief Test that the \ref ScreenStack only updates the top most screen.
+    ///
+    /// When there are multiple screens in the stack, the update only affects the top most screen even if that is an overlay.
+    SECTION("Screen stack updates top most screen")
+    {
+        constexpr auto TEST_DT{ 0.01f };
 
-    m_stack->render({ .spriteRenderer = nullptr, .uiRenderer = uiRenderer, .window = window });
-}
+        InputController controller{};
 
-/// \brief Test that the \ref ScreenStack only updates the top most screen.
-///
-/// When there are multiple screens in the stack, the update only affects the top most screen even if that is an overlay.
-TEST_F(ScreenStackTest, ScreenStackUpdatesTopMostScreen)
-{
-    constexpr auto TEST_DT{ 0.01f };
+        auto screen{ std::make_unique<MockScreen>() };
+        auto overlay{ std::make_unique<MockOverlayScreen>() };
 
-    InputController controller{};
+        REQUIRE_CALL(*screen.get(), update(trompeloeil::_, trompeloeil::_)).TIMES(0);
+        REQUIRE_CALL(*overlay.get(), update(trompeloeil::_, trompeloeil::_)).TIMES(1);
 
-    auto screen{ std::make_unique<MockScreen>() };
-    auto overlay{ std::make_unique<MockOverlayScreen>() };
+        m_stack.enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(screen) });
+        m_stack.enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(overlay) });
+        m_stack.processCommands();
 
-    EXPECT_CALL(*screen.get(), update(::testing::_, ::testing::_)).Times(::testing::Exactly(0));
-    EXPECT_CALL(*overlay.get(), update(::testing::_, ::testing::_)).Times(::testing::Exactly(1));
-
-    m_stack->enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(screen) });
-    m_stack->enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(overlay) });
-    m_stack->processCommands();
-
-    m_stack->update(TEST_DT, controller);
+        m_stack.update(TEST_DT, controller);
+    }
 }
 
 } // namespace sfa::testing

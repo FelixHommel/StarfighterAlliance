@@ -49,7 +49,7 @@ public:
     ///
     /// \returns *Press* if \p button is pressed, *Release* if not
     [[nodiscard]] InputAction isMousePressed(MouseButton button) const;
-    [[nodiscard]] glm::vec2 mousePosition() const { return { m_mousePosX, m_mousePosY }; }
+    [[nodiscard]] glm::dvec2 mousePosition() const { return { m_mousePosX, m_mousePosY }; }
 
     [[nodiscard]] std::size_t queuedEvents() const noexcept { return m_inputs.size(); }
 
