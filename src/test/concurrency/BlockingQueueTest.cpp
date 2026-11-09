@@ -120,8 +120,10 @@ TEST_CASE("BlockingQueueTest", "[unit][concurrency]")
 
         const auto v{ m_queue.tryPop() };
 
+        // NOLINTBEGIN(bugprone-unchecked-optional-access): Not unchecked for the purpose of the test
         REQUIRE(v.has_value());
         CHECK(v.value() == DATA);
+        // NOLINTEND(bugprone-unchecked-optional-access)
     }
 }
 

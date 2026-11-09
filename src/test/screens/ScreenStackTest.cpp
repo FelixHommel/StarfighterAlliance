@@ -9,6 +9,7 @@
 #include <catch2/trompeloeil.hpp>
 #include <trompeloeil/mock.hpp>
 
+#include <memory>
 #include <utility>
 
 namespace sfa::testing
