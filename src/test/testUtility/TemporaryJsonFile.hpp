@@ -73,7 +73,7 @@ consteval bool areUniqueFileTypes()
     {
         for(std::size_t j{ i + 1 }; j < types.size(); ++j)
         {
-            if(types[i] == types[j])
+            if(types.at(i) == types.at(j))
                 return false;
         }
     }

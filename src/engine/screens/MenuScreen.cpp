@@ -3,6 +3,7 @@
 #include "config/SpaceshipColor.hpp"
 #include "core/RenderContext.hpp"
 #include "screens/GameSession.hpp"
+#include "screens/IScreenContext.hpp"
 #include "utility/IWindow.hpp"
 #include "utility/userInput/InputController.hpp"
 

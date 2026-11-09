@@ -18,6 +18,7 @@
 #include <format>
 #include <memory>
 #include <stdexcept>
+#include <type_traits>
 #include <utility>
 
 namespace
@@ -25,14 +26,14 @@ namespace
 
 constexpr auto SPACESHIP_CONFIG_SCHEMA_PATH{ SFA_ROOT "resources/config/spaceship_config_schema.json" };
 
-[[nodiscard]] constexpr std::filesystem::path getSpaceshipConfigPath(sfa::SpaceshipType type) noexcept
+[[nodiscard]] constexpr std::filesystem::path getSpaceshipConfigPath(sfa::SpaceshipType type)
 {
     return std::format("{}resources/config/{}.json", SFA_ROOT, type);
 }
 
 [[nodiscard]] constexpr std::filesystem::path getSpaceshipTexturePath(
     sfa::SpaceshipType type, sfa::SpaceshipColor color
-) noexcept
+)
 {
     return std::format("{}resources/textures/{}/{}_{}.png", SFA_ROOT, type, type, color);
 }
