@@ -12,13 +12,9 @@ add_library(
     ./core/resourceManagement/ResourceContext.cpp
     ./core/resourceManagement/ResourceLoader.cpp
     ./ecs/EntityManager.cpp
-    ./ecs/systems/ButtonSystem.cpp
-    ./ecs/systems/LayoutSystem.cpp
     ./ecs/systems/MovementSystem.cpp
     ./ecs/systems/SpriteRenderSystem.cpp
     ./ecs/systems/TextRenderSystem.cpp
-    ./ecs/systems/UIRenderSystem.cpp
-    ./ecs/systems/UITransformSystem.cpp
     ./external/stb_image_impl.cpp
     ./screens/MenuScreen.cpp
     ./screens/ScreenStack.cpp
@@ -57,7 +53,6 @@ target_sources(
                 ./ecs/ECSUtility.hpp
                 ./ecs/EntityManager.hpp
                 ./ecs/IComponentArray.hpp
-                ./ecs/UIHelper.hpp
                 ./ecs/components/BoxColliderComponent.hpp
                 ./ecs/components/CircleColliderComponent.hpp
                 ./ecs/components/DamageComponent.hpp
@@ -67,20 +62,10 @@ target_sources(
                 ./ecs/components/SpriteComponent.hpp
                 ./ecs/components/TextComponent.hpp
                 ./ecs/components/TransformComponent.hpp
-                ./ecs/components/UIAnchorComponent.hpp
-                ./ecs/components/UIButtonComponent.hpp
-                ./ecs/components/UIHierarchyComponent.hpp
-                ./ecs/components/UILayoutComponent.hpp
-                ./ecs/components/UILayoutElementComponent.hpp
-                ./ecs/components/UITransformComponent.hpp
                 ./ecs/components/VelocityComponent.hpp
-                ./ecs/systems/ButtonSystem.hpp
-                ./ecs/systems/LayoutSystem.hpp
                 ./ecs/systems/MovementSystem.hpp
                 ./ecs/systems/SpriteRenderSystem.hpp
                 ./ecs/systems/TextRenderSystem.hpp
-                ./ecs/systems/UIRenderSystem.hpp
-                ./ecs/systems/UITransformSystem.hpp
                 ./screens/GameSession.hpp
                 ./screens/IScreen.hpp
                 ./screens/IScreenContext.hpp

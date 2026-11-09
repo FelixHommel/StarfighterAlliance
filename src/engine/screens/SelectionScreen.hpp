@@ -72,10 +72,6 @@ private:
     std::array<std::unique_ptr<SpaceshipData>, std::to_underlying(SpaceshipType::SPACESHIP_TPYE_MAX)> m_spaceships;
     SpaceshipType m_currentSelection{ SpaceshipType::XWing };
 
-    void createCorePanelsUI(const Viewport& viewport);
-    void createSpaceshipPreviewUI(const ResourceContext& resources);
-    void createBottomButtonsUI(const Viewport& viewport);
-
     void loadSpaceshipData(ResourceContext& resources);
 };
 
