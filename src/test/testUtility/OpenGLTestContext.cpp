@@ -50,6 +50,8 @@ bool OpenGLTestContext::setup()
     if(!createWindow())
         return false;
 
+    glfwMakeContextCurrent(m_window);
+
     if(!loadGLAD())
         return false;
 
@@ -97,11 +99,7 @@ bool OpenGLTestContext::createWindow()
 
     m_window = glfwCreateWindow(1, 1, "Test", nullptr, nullptr);
     if(m_window != nullptr)
-    {
-        glfwMakeContextCurrent(m_window);
-
         return true;
-    }
 
     glfwTerminate();
 
