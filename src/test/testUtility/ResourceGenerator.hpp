@@ -46,7 +46,10 @@ private:
 
     void createTestShader() const
     {
-        static constexpr auto SHADER_CODE{ R"(#version 330 core void main() {})" };
+        static constexpr auto SHADER_CODE{ R"(
+            #version 330 core
+            void main() {}
+        )" };
 
         std::ofstream(vertPath()) << SHADER_CODE;
         std::ofstream(fragPath()) << SHADER_CODE;
