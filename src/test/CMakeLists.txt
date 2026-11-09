@@ -33,15 +33,15 @@ target_sources(
     PRIVATE
         FILE_SET HEADERS
             FILES
-                ./mocks/MockOverlayScreen.hpp
-                ./mocks/MockResourceLoader.hpp
-                ./mocks/MockScreen.hpp
-                ./mocks/MockWindow.hpp
                 ./testUtility/OpenGLTestContext.hpp
                 ./testUtility/RandomNumberGenerator.hpp
                 ./testUtility/ResourceGenerator.hpp
                 ./testUtility/TemporaryDirectory.hpp
                 ./testUtility/TemporaryJsonFile.hpp
+                ./testUtility/mocks/MockOverlayScreen.hpp
+                ./testUtility/mocks/MockResourceLoader.hpp
+                ./testUtility/mocks/MockScreen.hpp
+                ./testUtility/mocks/MockWindow.hpp
 )
 
 target_compile_features(${NAME} PRIVATE cxx_std_23)

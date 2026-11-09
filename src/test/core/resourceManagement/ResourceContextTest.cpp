@@ -1,8 +1,8 @@
 #include "core/resourceManagement/ResourceContext.hpp"
 #include "core/resourceManagement/IntermediateResourceData.hpp"
-#include "mocks/MockResourceLoader.hpp"
 #include "testUtility/OpenGLTestContext.hpp"
 #include "testUtility/ResourceGenerator.hpp"
+#include "testUtility/mocks/MockResourceLoader.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/interfaces/catch_interfaces_capture.hpp>

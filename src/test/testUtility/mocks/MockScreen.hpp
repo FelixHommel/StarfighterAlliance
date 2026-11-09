@@ -1,5 +1,5 @@
-#ifndef SFA_SRC_TEST_MOCKS_MOCK_OVERLAY_SCREEN_HPP
-#define SFA_SRC_TEST_MOCKS_MOCK_OVERLAY_SCREEN_HPP
+#ifndef SFA_SRC_TEST_TEST_UTILITY_MOCKS_MOCK_SCREEN_HPP
+#define SFA_SRC_TEST_TEST_UTILITY_MOCKS_MOCK_SCREEN_HPP
 
 #include "screens/IScreen.hpp"
 
@@ -15,23 +15,23 @@ namespace sfa::testing
 ///
 /// \author Felix Hommel
 /// \date 3/1/2026
-class MockOverlayScreen : public trompeloeil::mock_interface<IScreen>
+class MockScreen : public trompeloeil::mock_interface<IScreen>
 {
 public:
     using OnEnterFunction = std::function<void(void)>;
     using OnExitFunction = std::function<void(void)>;
 
-    MockOverlayScreen(
+    MockScreen(
         OnEnterFunction onEnter = [] {}, OnExitFunction onExit = [] {}
     )
         : m_onEnterFunction(std::move(onEnter)), m_onExitFunction(std::move(onExit))
     {}
-    ~MockOverlayScreen() override = default;
+    ~MockScreen() override = default;
 
-    MockOverlayScreen(const MockOverlayScreen&) = delete;
-    MockOverlayScreen& operator=(const MockOverlayScreen&) = delete;
-    MockOverlayScreen(MockOverlayScreen&&) noexcept = delete;
-    MockOverlayScreen& operator=(MockOverlayScreen&&) noexcept = delete;
+    MockScreen(const MockScreen&) = delete;
+    MockScreen& operator=(const MockScreen&) = delete;
+    MockScreen(MockScreen&&) noexcept = delete;
+    MockScreen& operator=(MockScreen&&) noexcept = delete;
 
     void onEnter() override
     {
@@ -47,7 +47,7 @@ public:
     IMPLEMENT_MOCK2(update);
     IMPLEMENT_MOCK1(render);
 
-    bool isOverlay() override { return true; }
+    bool isOverlay() override { return false; }
 
 private:
     OnEnterFunction m_onEnterFunction;
@@ -56,5 +56,5 @@ private:
 
 } // namespace sfa::testing
 
-#endif // !SFA_SRC_TEST_MOCKS_MOCK_OVERLAY_SCREEN_HPP
+#endif // !SFA_SRC_TEST_TEST_UTILITY_MOCKS_MOCK_SCREEN_HPP
 

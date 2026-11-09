@@ -1,9 +1,9 @@
 #include "screens/ScreenStack.hpp"
 #include "ecs/systems/UIRenderSystem.hpp"
-#include "mocks/MockOverlayScreen.hpp"
-#include "mocks/MockScreen.hpp"
-#include "mocks/MockWindow.hpp"
 #include "screens/ScreenCommand.hpp"
+#include "testUtility//mocks/MockScreen.hpp"
+#include "testUtility/mocks/MockOverlayScreen.hpp"
+#include "testUtility/mocks/MockWindow.hpp"
 #include "utility/userInput/InputController.hpp"
 
 #include <catch2/catch_test_macros.hpp>
