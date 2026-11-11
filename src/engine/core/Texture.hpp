@@ -1,6 +1,8 @@
 #ifndef SFA_SRC_ENGINE_CORE_TEXTURE_HPP
 #define SFA_SRC_ENGINE_CORE_TEXTURE_HPP
 
+#include "core/TextureView.hpp"
+
 #include <glad/gl.h>
 #include <glm/glm.hpp>
 
@@ -41,6 +43,7 @@ public:
     [[nodiscard]] int width() const noexcept { return m_width; }
     [[nodiscard]] int height() const noexcept { return m_height; }
     [[nodiscard]] glm::vec2 size() const noexcept { return { m_width, m_height }; }
+    [[nodiscard]] TextureView view() const noexcept { return { .id = m_id, .target = GL_TEXTURE_2D }; }
 
     /// \brief Configure the texture as an RGBA texture.
     void setRGBA();

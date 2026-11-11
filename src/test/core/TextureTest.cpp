@@ -1,4 +1,5 @@
 #include "core/Texture.hpp"
+#include "core/TextureView.hpp"
 #include "testUtility/OpenGLTestContext.hpp"
 
 #include <catch2/catch_test_macros.hpp>
@@ -22,7 +23,7 @@ constexpr std::array TEST_IMAGE_PIXELS{ std::byte(255), std::byte(255), std::byt
 namespace sfa::testing
 {
 
-TEST_CASE("RAIITextureTest", "[unit][core][opengl]")
+TEST_CASE("RAIITexture2DTest", "[unit][core][opengl]")
 {
     OpenGLTestContext context{};
 
@@ -36,16 +37,33 @@ TEST_CASE("RAIITextureTest", "[unit][core][opengl]")
     {
         unsigned int textureID{};
         {
-            const Texture2D texure{
+            const Texture2D texture{
                 ::TEST_IMAGE_WIDTH, ::TEST_IMAGE_HEIGHT, ::TEST_IMAGE_CHANNELS, ::TEST_IMAGE_PIXELS
             };
-            textureID = texure.getID();
+            textureID = texture.getID();
 
             CHECK(textureID != 0);
             CHECK(static_cast<bool>(glIsTexture(textureID)));
         }
 
         CHECK(!static_cast<bool>(glIsTexture(textureID)));
+    }
+
+    SECTION("view is invalid with destroyed object")
+    {
+        TextureView view{};
+        {
+            const Texture2D texture{
+                ::TEST_IMAGE_WIDTH, ::TEST_IMAGE_HEIGHT, ::TEST_IMAGE_CHANNELS, ::TEST_IMAGE_PIXELS
+            };
+            view = texture.view();
+
+            CHECK(view.id != 0);
+            CHECK(static_cast<bool>(glIsTexture(view.id)));
+        }
+
+        CHECK(view.id != 0);
+        CHECK(!static_cast<bool>(glIsTexture(view.id)));
     }
 
     /// \brief Test the \ref Texture move constructor.
@@ -83,7 +101,7 @@ TEST_CASE("RAIITextureTest", "[unit][core][opengl]")
 ///
 /// \author Felix Hommel
 /// \date 1/24/2026
-TEST_CASE("TextureTest", "[unit][core][opengl]")
+TEST_CASE("Texture2DTest", "[unit][core][opengl]")
 {
     OpenGLTestContext context{};
 
@@ -114,6 +132,15 @@ TEST_CASE("TextureTest", "[unit][core][opengl]")
 
         CHECK(boundTexture != 0);
         CHECK(texture.getID() == boundTexture);
+    }
+
+    SECTION("view provides access to the underlying OpenGL resource")
+    {
+        const auto view{ texture.view() };
+
+        CHECK(view.id == texture.getID());
+        CHECK(view.target == GL_TEXTURE_2D);
+        CHECK(static_cast<bool>(glIsTexture(view.id)));
     }
 }
 

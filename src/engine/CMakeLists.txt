@@ -41,6 +41,7 @@ target_sources(
                 ./core/SpriteRenderer.hpp
                 ./core/TextRenderer.hpp
                 ./core/Texture.hpp
+                ./core/TextureView.hpp
                 ./core/Utility.hpp
                 ./core/resourceManagement/IntermediateResourceData.hpp
                 ./core/resourceManagement/IResourceLoader.hpp
