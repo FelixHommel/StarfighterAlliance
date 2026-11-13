@@ -21,18 +21,18 @@ namespace sfa
 struct SpriteSubmission
 {
     // GL resources
-    std::optional<TextureView> texture;
-    std::shared_ptr<Shader> shader;
+    std::optional<TextureView> texture{ std::nullopt };
+    std::shared_ptr<Shader> shader{ nullptr };
 
     // Sprite component
-    glm::vec2 size;
-    glm::vec3 color;
-    unsigned int renderLayer;
+    glm::vec2 size{};
+    glm::vec3 color{};
+    unsigned int renderLayer{};
 
     // Translation component
-    glm::vec2 position;
-    glm::vec2 scale;
-    float rotation;
+    glm::vec2 position{};
+    glm::vec2 scale{};
+    float rotation{};
 };
 
 /// \brief Submission data for text.
@@ -44,11 +44,11 @@ struct TextSubmission
     // TODO: Reference to font
     std::string text;
 
-    glm::vec4 color;
-    unsigned int renderLayer;
+    glm::vec4 color{};
+    unsigned int renderLayer{};
 
-    glm::vec2 position;
-    glm::vec2 scale;
+    glm::vec2 position{};
+    glm::vec2 scale{};
 };
 
 using RenderCommand = std::variant<SpriteSubmission, TextSubmission>;
