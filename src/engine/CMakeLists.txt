@@ -16,6 +16,7 @@ add_library(
     ./ecs/systems/SpriteRenderSystem.cpp
     ./ecs/systems/TextRenderSystem.cpp
     ./external/stb_image_impl.cpp
+    ./rendering/RenderExecutor.cpp
     ./screens/MenuScreen.cpp
     ./screens/ScreenStack.cpp
     ./screens/SelectionScreen.cpp
@@ -67,6 +68,7 @@ target_sources(
                 ./ecs/systems/MovementSystem.hpp
                 ./ecs/systems/SpriteRenderSystem.hpp
                 ./ecs/systems/TextRenderSystem.hpp
+                ./rendering/RenderExecutor.hpp
                 ./screens/GameSession.hpp
                 ./screens/IScreen.hpp
                 ./screens/IScreenContext.hpp
