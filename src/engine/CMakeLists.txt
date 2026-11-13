@@ -18,6 +18,7 @@ add_library(
     ./external/stb_image_impl.cpp
     ./rendering/RenderExecutor.cpp
     ./rendering/RenderQueue.cpp
+    ./rendering/pipelines/BasicSpritePipeline.cpp
     ./screens/MenuScreen.cpp
     ./screens/ScreenStack.cpp
     ./screens/SelectionScreen.cpp
@@ -73,6 +74,8 @@ target_sources(
                 ./rendering/RenderCommand.hpp
                 ./rendering/RenderExecutor.hpp
                 ./rendering/RenderQueue.hpp
+                ./rendering/pipelines/ISpritePipeline.hpp
+                ./rendering/pipelines/BasicSpritePipeline.hpp
                 ./screens/GameSession.hpp
                 ./screens/IScreen.hpp
                 ./screens/IScreenContext.hpp
