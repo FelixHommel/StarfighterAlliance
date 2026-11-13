@@ -69,6 +69,8 @@ target_sources(
                 ./ecs/systems/MovementSystem.hpp
                 ./ecs/systems/SpriteRenderSystem.hpp
                 ./ecs/systems/TextRenderSystem.hpp
+                ./rendering/Renderer.hpp
+                ./rendering/RenderCommand.hpp
                 ./rendering/RenderExecutor.hpp
                 ./rendering/RenderQueue.hpp
                 ./screens/GameSession.hpp
