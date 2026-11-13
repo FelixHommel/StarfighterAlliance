@@ -18,6 +18,7 @@ add_executable(
     ./testUtility/OpenGLTestContext.cpp
     ./testUtility/stb_image_write_impl.cpp
     ./testUtility/TemporaryDirectory.cpp
+    ./rendering/RenderQueueTest.cpp
     ./screens/ScreenStackTest.cpp
     ./utility/exceptions/ExceptionTest.cpp
     ./utility/exceptions/ResourceUnavailableExceptionTest.cpp
