@@ -18,6 +18,7 @@ add_executable(
     ./testUtility/OpenGLTestContext.cpp
     ./testUtility/stb_image_write_impl.cpp
     ./testUtility/TemporaryDirectory.cpp
+    ./rendering/QueueExecuterIntegrationTest.cpp
     ./rendering/RenderExecutorTest.cpp
     ./rendering/RenderQueueTest.cpp
     ./screens/ScreenStackTest.cpp
