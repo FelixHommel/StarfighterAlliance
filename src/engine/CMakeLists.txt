@@ -75,6 +75,7 @@ target_sources(
                 ./rendering/RenderExecutor.hpp
                 ./rendering/RenderQueue.hpp
                 ./rendering/pipelines/ISpritePipeline.hpp
+                ./rendering/pipelines/ITextPipeline.hpp
                 ./rendering/pipelines/BasicSpritePipeline.hpp
                 ./screens/GameSession.hpp
                 ./screens/IScreen.hpp
