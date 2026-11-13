@@ -18,6 +18,7 @@ add_executable(
     ./testUtility/OpenGLTestContext.cpp
     ./testUtility/stb_image_write_impl.cpp
     ./testUtility/TemporaryDirectory.cpp
+    ./rendering/RenderExecutorTest.cpp
     ./rendering/RenderQueueTest.cpp
     ./screens/ScreenStackTest.cpp
     ./utility/exceptions/ExceptionTest.cpp
@@ -40,6 +41,8 @@ target_sources(
                 ./testUtility/mocks/MockOverlayScreen.hpp
                 ./testUtility/mocks/MockResourceLoader.hpp
                 ./testUtility/mocks/MockScreen.hpp
+                ./testUtility/mocks/MockSpritePipeline.hpp
+                ./testUtility/mocks/MockTextPipeline.hpp
                 ./testUtility/mocks/MockWindow.hpp
 )
 
