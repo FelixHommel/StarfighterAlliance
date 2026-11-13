@@ -5,6 +5,7 @@
 #include "rendering/RenderExecutor.hpp"
 #include "rendering/RenderQueue.hpp"
 #include "rendering/pipelines/ISpritePipeline.hpp"
+#include "rendering/pipelines/ITextPipeline.hpp"
 
 #include <memory>
 
@@ -14,7 +15,7 @@ namespace sfa
 class Renderer
 {
 public:
-    Renderer(std::unique_ptr<ISpritePipeline> spriteRenderer);
+    Renderer(std::unique_ptr<ISpritePipeline> spriteRenderer, std::unique_ptr<ITextPipeline> textPipeline);
     ~Renderer() = default;
 
     Renderer(const Renderer&) = delete;
