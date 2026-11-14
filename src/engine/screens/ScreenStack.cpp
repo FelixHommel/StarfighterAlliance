@@ -1,0 +1,101 @@
+#include "ScreenStack.hpp"
+
+#include "core/RenderContext.hpp"
+#include "screens/IScreen.hpp"
+#include "screens/ScreenCommand.hpp"
+#include "utility/userInput/InputController.hpp"
+
+#include <cstddef>
+#include <memory>
+#include <spdlog/spdlog.h>
+#include <utility>
+
+namespace sfa
+{
+
+ScreenStack::ScreenStack(std::unique_ptr<IScreen> screen)
+{
+    push(std::move(screen));
+}
+
+void ScreenStack::enqueueCommand(ScreenCommand command)
+{
+    m_pendingCommands.push(std::move(command));
+}
+
+void ScreenStack::processCommands()
+{
+    while(!m_pendingCommands.empty())
+    {
+        auto& cmd{ m_pendingCommands.front() };
+
+        if(cmd.type == ScreenCommand::Type::Pop)
+            pop();
+        else if(cmd.type == ScreenCommand::Type::Push)
+        {
+            if(cmd.screen != nullptr)
+                push(std::move(cmd.screen));
+        }
+        else
+        {
+            if(cmd.screen != nullptr)
+                replace(std::move(cmd.screen));
+        }
+
+        m_pendingCommands.pop();
+    }
+}
+
+void ScreenStack::update(float dt, const InputController& controller)
+{
+    if(!m_stack.empty())
+        m_stack.back()->update(dt, controller);
+}
+
+void ScreenStack::render(const RenderContext& context)
+{
+    if(m_stack.empty())
+        return;
+
+    std::size_t startIndex{ m_stack.size() - 1 };
+
+    // NOTE: Find the first non-overlay screen among the currently enqueued screens
+    while(startIndex > 0 && m_stack[startIndex]->isOverlay())
+        --startIndex;
+
+    for(std::size_t i{ startIndex }; i < m_stack.size(); ++i)
+        m_stack[i]->render(context);
+}
+
+/// \brief Push a new screen to the stack.
+///
+/// \param screen the new screen
+void ScreenStack::push(std::unique_ptr<IScreen> screen)
+{
+    m_stack.emplace_back(std::move(screen));
+    m_stack.back()->onEnter();
+    spdlog::info("Pushed new screen");
+}
+
+/// \brief Pop the top screen from the stack.
+void ScreenStack::pop()
+{
+    if(m_stack.empty())
+        return;
+
+    m_stack.back()->onExit();
+    m_stack.pop_back();
+    spdlog::info("Poped screen");
+}
+
+/// \brief Replace the top screen on the stack.
+///
+/// \param screen the new top screen
+void ScreenStack::replace(std::unique_ptr<IScreen> screen)
+{
+    pop();
+    push(std::move(screen));
+}
+
+} // namespace sfa
+

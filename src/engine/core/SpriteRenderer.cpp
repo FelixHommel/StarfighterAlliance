@@ -58,11 +58,7 @@ void SpriteRenderer::beginFrame(const glm::mat4& projection)
 }
 
 void SpriteRenderer::draw(
-    std::shared_ptr<Texture2D> texture,
-    const glm::vec2& position,
-    const glm::vec2& scale,
-    float rotate,
-    const glm::vec3& color
+    const Texture2D* pTexture, const glm::vec2& position, const glm::vec2& scale, float rotate, const glm::vec3& color
 )
 {
     m_shader->use();
@@ -87,8 +83,8 @@ void SpriteRenderer::draw(
     m_shader->setVector3f("spriteColor", color);
 
     glActiveTexture(GL_TEXTURE0);
-    if(texture != nullptr)
-        texture->bind();
+    if(pTexture != nullptr)
+        pTexture->bind();
     else
         glBindTexture(GL_TEXTURE_2D, m_fallbackTexture);
 

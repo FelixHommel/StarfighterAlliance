@@ -6,8 +6,6 @@
 
 #include "glm/glm.hpp"
 
-#include <memory>
-
 namespace sfa
 {
 
@@ -19,7 +17,7 @@ namespace sfa
 /// \date 1/26/2026
 struct SpriteComponent : public IComponent
 {
-    std::shared_ptr<Texture2D> texture;
+    const Texture2D* texture;
     glm::vec2 size{ glm::vec2(1.f) };
     glm::vec3 color{ glm::vec3(1.f) };
     unsigned int renderLayer{ 0 };

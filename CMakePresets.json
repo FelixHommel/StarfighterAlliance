@@ -21,7 +21,8 @@
             "hidden": true,
             "binaryDir": "${sourceDir}/build/debug",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
+                "CMAKE_BUILD_TYPE": "Debug",
+                "SFA_BUILD_EXAMPLES": "ON"
             }
         },
         {
@@ -109,7 +110,7 @@
             "inherits": "gcc-debug",
             "binaryDir": "${sourceDir}/build/code-coverage",
             "cacheVariables": {
-                "CODE_COVERAGE": "ON"
+                "SFA_ENABLE_CODE_COVERAGE": "ON"
             }
         }
     ],

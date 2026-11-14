@@ -1,7 +1,9 @@
 set(NAME "StarfighterAllianceEngine")
 include(${PROJECT_SOURCE_DIR}/cmake/StaticAnalyzers.cmake)
 
-add_library(${NAME}
+add_library(
+    ${NAME}
+    ./concurrency/ThreadPool.cpp
     ./core/ParticleGenerator.cpp
     ./core/Shader.cpp
     ./core/SpriteRenderer.cpp
@@ -10,96 +12,108 @@ add_library(${NAME}
     ./core/resourceManagement/ResourceContext.cpp
     ./core/resourceManagement/ResourceLoader.cpp
     ./ecs/EntityManager.cpp
-    ./ecs/systems/ButtonSystem.cpp
-    ./ecs/systems/LayoutSystem.cpp
     ./ecs/systems/MovementSystem.cpp
     ./ecs/systems/SpriteRenderSystem.cpp
     ./ecs/systems/TextRenderSystem.cpp
-    ./ecs/systems/UIRenderSystem.cpp
-    ./ecs/systems/UITextFieldSystem.cpp
-    ./ecs/systems/UITransformSystem.cpp
     ./external/stb_image_impl.cpp
+    ./rendering/RenderExecutor.cpp
+    ./rendering/RenderQueue.cpp
+    ./rendering/pipelines/BasicSpritePipeline.cpp
+    ./screens/MenuScreen.cpp
+    ./screens/ScreenStack.cpp
+    ./screens/SelectionScreen.cpp
     ./utility/GLFWWindow.cpp
-    ./utility/ThreadPool.cpp
+    ./utility/json/JsonReader.cpp
     ./utility/userInput/InputController.cpp
 )
 
-target_sources(${NAME}
+target_sources(
+    ${NAME}
     PRIVATE
         FILE_SET HEADERS
-        FILES
-            ./core/ParticleGenerator.hpp
-            ./core/Shader.hpp
-            ./core/SpriteRenderer.hpp
-            ./core/TextRenderer.hpp
-            ./core/Texture.hpp
-            ./core/Utility.hpp
-            ./core/resourceManagement/IntermediateResourceData.hpp
-            ./core/resourceManagement/IResourceLoader.hpp
-            ./core/resourceManagement/ResourceCache.hpp
-            ./core/resourceManagement/ResourceContext.hpp
-            ./core/resourceManagement/ResourceError.hpp
-            ./core/resourceManagement/ResourceLoader.hpp
-            ./ecs/ComponentArray.hpp
-            ./ecs/ComponentRegistry.hpp
-            ./ecs/ECSUtility.hpp
-            ./ecs/EntityManager.hpp
-            ./ecs/IComponentArray.hpp
-            ./ecs/components/BoxColliderComponent.hpp
-            ./ecs/components/CircleColliderComponent.hpp
-            ./ecs/components/DamageComponent.hpp
-            ./ecs/components/HealthComponent.hpp
-            ./ecs/components/IComponent.hpp
-            ./ecs/components/RigidBodyComponent.hpp
-            ./ecs/components/SpriteComponent.hpp
-            ./ecs/components/TextComponent.hpp
-            ./ecs/components/TransformComponent.hpp
-            ./ecs/components/UIAnchorComponent.hpp
-            ./ecs/components/UIButtonComponent.hpp
-            ./ecs/components/UIHierarchyComponent.hpp
-            ./ecs/components/UILayoutComponent.hpp
-            ./ecs/components/UILayoutElementComponent.hpp
-            ./ecs/components/UITextFieldComponent.hpp
-            ./ecs/components/UITransformComponent.hpp
-            ./ecs/components/VelocityComponent.hpp
-            ./ecs/systems/ButtonSystem.hpp
-            ./ecs/systems/LayoutSystem.hpp
-            ./ecs/systems/MovementSystem.hpp
-            ./ecs/systems/SpriteRenderSystem.hpp
-            ./ecs/systems/TextRenderSystem.hpp
-            ./ecs/systems/UIRenderSystem.hpp
-            ./ecs/systems/UITextFieldSystem.hpp
-            ./ecs/systems/UITransformSystem.hpp
-            ./utility/BlockingQueue.hpp
-            ./utility/ThreadPool.hpp
-            ./utility/details/Threading.hpp
-            ./utility/GLFWWindow.hpp
-            ./utility/IWindow.hpp
-            ./utility/exceptions/Exception.hpp
-            ./utility/exceptions/ResourceUnavailableException.hpp
-            ./utility/exceptions/WindowCreationException.hpp
-            ./utility/userInput/InputController.hpp
-            ./utility/userInput/InputEvent.hpp
+            FILES
+                ./concurrency/AsyncValue.hpp
+                ./concurrency/BlockingQueue.hpp
+                ./concurrency/ThreadPool.hpp
+                ./concurrency/Threading.hpp
+                ./config/SpaceshipColor.hpp
+                ./config/SpaceshipType.hpp
+                ./core/ParticleGenerator.hpp
+                ./core/RenderContext.hpp
+                ./core/Shader.hpp
+                ./core/SpriteRenderer.hpp
+                ./core/TextRenderer.hpp
+                ./core/Texture.hpp
+                ./core/TextureView.hpp
+                ./core/Utility.hpp
+                ./core/resourceManagement/IntermediateResourceData.hpp
+                ./core/resourceManagement/IResourceLoader.hpp
+                ./core/resourceManagement/ResourceCache.hpp
+                ./core/resourceManagement/ResourceContext.hpp
+                ./core/resourceManagement/ResourceError.hpp
+                ./core/resourceManagement/ResourceLoader.hpp
+                ./ecs/ComponentArray.hpp
+                ./ecs/ComponentRegistry.hpp
+                ./ecs/ECSUtility.hpp
+                ./ecs/EntityManager.hpp
+                ./ecs/IComponentArray.hpp
+                ./ecs/components/BoxColliderComponent.hpp
+                ./ecs/components/CircleColliderComponent.hpp
+                ./ecs/components/DamageComponent.hpp
+                ./ecs/components/HealthComponent.hpp
+                ./ecs/components/IComponent.hpp
+                ./ecs/components/RigidBodyComponent.hpp
+                ./ecs/components/SpriteComponent.hpp
+                ./ecs/components/TextComponent.hpp
+                ./ecs/components/TransformComponent.hpp
+                ./ecs/components/VelocityComponent.hpp
+                ./ecs/systems/MovementSystem.hpp
+                ./ecs/systems/SpriteRenderSystem.hpp
+                ./ecs/systems/TextRenderSystem.hpp
+                ./rendering/Renderer.hpp
+                ./rendering/RenderCommand.hpp
+                ./rendering/RenderExecutor.hpp
+                ./rendering/RenderQueue.hpp
+                ./rendering/pipelines/ISpritePipeline.hpp
+                ./rendering/pipelines/BasicSpritePipeline.hpp
+                ./screens/GameSession.hpp
+                ./screens/IScreen.hpp
+                ./screens/IScreenContext.hpp
+                ./screens/MenuScreen.hpp
+                ./screens/ScreenCommand.hpp
+                ./screens/ScreenStack.hpp
+                ./screens/SelectionScreen.hpp
+                ./utility/GLFWWindow.hpp
+                ./utility/IWindow.hpp
+                ./utility/exceptions/Exception.hpp
+                ./utility/exceptions/ResourceUnavailableException.hpp
+                ./utility/exceptions/WindowCreationException.hpp
+                ./utility/json/JsonError.hpp
+                ./utility/json/JsonReader.hpp
+                ./utility/json/ValidationError.hpp
+                ./utility/json/ValidationResult.hpp
+                ./utility/userInput/InputController.hpp
+                ./utility/userInput/InputEvent.hpp
 )
 
 target_compile_features(${NAME} PRIVATE cxx_std_23)
 
 if(MSVC)
-    target_compile_options(${NAME} PRIVATE
-        /external:W0
-        /external:anglebrackets
-        /external:templates-
+    target_compile_options(
+        ${NAME}
+        PRIVATE /external:W0 /external:anglebrackets /external:templates-
     )
 endif()
 
-target_link_libraries(${NAME}
-    PUBLIC
-        Glad2CMake::glad2cmake
-        glfw
-        glm::glm
-        spdlog::spdlog
+target_compile_options(
+    ${NAME}
+    INTERFACE $<$<COMPILE_LANGUAGE:CXX>:${PROJECT_WARNINGS}>
+)
+
+target_link_libraries(
+    ${NAME}
+    PUBLIC Glad2CMake::glad2cmake glfw glm::glm spdlog::spdlog
     PRIVATE
-        project_warnings
         OpenGL::GL
         SQLiteCpp
         Freetype::Freetype
@@ -107,9 +121,8 @@ target_link_libraries(${NAME}
         valijson
         fmt::fmt
 )
-target_include_directories(${NAME}
-    PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}
-    PRIVATE
-        ${Stb_INCLUDE_DIR}
+target_include_directories(
+    ${NAME}
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
+    PRIVATE ${Stb_INCLUDE_DIR}
 )

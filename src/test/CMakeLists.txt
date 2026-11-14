@@ -2,8 +2,11 @@ set(NAME "StarfighterAllianceTests")
 
 include(${PROJECT_SOURCE_DIR}/cmake/StaticAnalyzers.cmake)
 
-add_executable(${NAME}
-    ./testMain.cpp
+add_executable(
+    ${NAME}
+    ./concurrency/AsyncValueTest.cpp
+    ./concurrency/BlockingQueueTest.cpp
+    ./concurrency/ThreadPoolTest.cpp
     ./core/ShaderTest.cpp
     ./core/TextureTest.cpp
     ./core/resourceManagement/ResourceCacheTest.cpp
@@ -12,39 +15,47 @@ add_executable(${NAME}
     ./ecs/ComponentArrayTest.cpp
     ./ecs/EntityManagerTest.cpp
     ./ecs/ComponentRegistryTest.cpp
-    ./ecs/systems/UILayoutSystemTest.cpp
-    ./ecs/systems/UITextFieldSystemTest.cpp
-    ./ecs/systems/UITransformSystemTest.cpp
+    ./testUtility/OpenGLTestContext.cpp
     ./testUtility/stb_image_write_impl.cpp
-    ./utility/BlockingQueueTest.cpp
-    ./utility/ThreadPoolTest.cpp
+    ./testUtility/TemporaryDirectory.cpp
+    ./rendering/RenderQueueTest.cpp
+    ./screens/ScreenStackTest.cpp
     ./utility/exceptions/ExceptionTest.cpp
     ./utility/exceptions/ResourceUnavailableExceptionTest.cpp
     ./utility/exceptions/WindowCreationExceptionTest.cpp
+    ./utility/json/JsonReaderTest.cpp
     ./utility/userInput/InputControllerTest.cpp
 )
 
-target_sources(${NAME}
+target_sources(
+    ${NAME}
     PRIVATE
         FILE_SET HEADERS
-        FILES
-            ./fixtures/OpenGLTestFixture.hpp
-            ./mocks/MockResourceLoader.hpp
-            ./testUtility/RandomNumberGenerator.hpp
-            ./testUtility/ResourceGenerator.hpp
+            FILES
+                ./testUtility/OpenGLTestContext.hpp
+                ./testUtility/RandomNumberGenerator.hpp
+                ./testUtility/ResourceGenerator.hpp
+                ./testUtility/TemporaryDirectory.hpp
+                ./testUtility/TemporaryJsonFile.hpp
+                ./testUtility/mocks/MockOverlayScreen.hpp
+                ./testUtility/mocks/MockResourceLoader.hpp
+                ./testUtility/mocks/MockScreen.hpp
+                ./testUtility/mocks/MockWindow.hpp
 )
 
 target_compile_features(${NAME} PRIVATE cxx_std_23)
-target_link_libraries(${NAME}
+target_compile_options(
+    ${NAME}
+    INTERFACE $<$<COMPILE_LANGUAGE:CXX>:${PROJECT_WARNINGS}>
+)
+target_link_libraries(
+    ${NAME}
     PRIVATE
-        project_warnings
-        GTest::gtest
-        GTest::gmock
+        Catch2::Catch2WithMain
+        trompeloeil::trompeloeil
         StarfighterAllianceEngine
 )
 
-include(GoogleTest)
-gtest_discover_tests(${NAME})
-
-# https://discourse.cmake.org/t/differences-in-set-property-vs-set-tests-properties-for-discovered-gtest-tests/8080
-set_property(DIRECTORY APPEND PROPERTY TEST_INCLUDE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/labelTests.cmake)
+include(Catch)
+include(CTest)
+catch_discover_tests(${NAME})

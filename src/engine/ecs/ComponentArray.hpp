@@ -4,12 +4,13 @@
 #include "ECSUtility.hpp"
 #include "IComponentArray.hpp"
 #include "components/IComponent.hpp"
-#include "core/Utility.hpp"
 
 #include <array>
 #include <cassert>
 #include <cstddef>
+#include <iterator>
 #include <span>
+#include <stdexcept>
 #include <unordered_map>
 
 namespace sfa
@@ -41,12 +42,13 @@ public:
     /// \param component the new component
     void insert(EntityID entity, T component)
     {
-        SFA_ASSERT(!m_entityToIndex.contains(entity), "Component already exists");
+        if(m_entityToIndex.contains(entity))
+            throw std::runtime_error("Component already exists");
 
         const std::size_t newIndex{ m_actualSize++ };
         m_entityToIndex[entity] = newIndex;
         m_indexToEntity[newIndex] = entity;
-        m_components[newIndex] = component;
+        m_components.at(newIndex) = component;
     }
 
     /// \brief Remove the component from an entity.
@@ -54,12 +56,13 @@ public:
     /// \param entity the target entity
     void remove(EntityID entity)
     {
-        SFA_ASSERT(m_entityToIndex.contains(entity), "Component doesn't exist");
+        if(!m_entityToIndex.contains(entity))
+            throw std::runtime_error("Component doesn't exist");
 
         // NOTE: Swap with last element to maintain density
         const std::size_t indexOfRemoved{ m_entityToIndex[entity] };
         const std::size_t indexOfLast{ m_actualSize - 1 };
-        m_components[indexOfRemoved] = m_components[indexOfLast];
+        m_components.at(indexOfRemoved) = m_components.at(indexOfLast);
 
         // NOTE: Update mappings
         const EntityID entityOfLast{ m_indexToEntity[indexOfLast] };
@@ -78,9 +81,10 @@ public:
     /// \returns reference to component of \p entity
     T& get(EntityID entity)
     {
-        SFA_ASSERT(m_entityToIndex.contains(entity), "Component doesn't exist");
+        if(!m_entityToIndex.contains(entity))
+            throw std::runtime_error("Component doesn't exist");
 
-        return m_components[m_entityToIndex[entity]];
+        return m_components.at(m_entityToIndex[entity]);
     }
 
     /// \brief Get the component of an entity.
@@ -90,7 +94,8 @@ public:
     /// \returns const-ref to component of \p entity
     const T& get(EntityID entity) const
     {
-        SFA_ASSERT(m_entityToIndex.contains(entity), "Component doesn't exist");
+        if(!m_entityToIndex.contains(entity))
+            throw std::runtime_error("Component doesn't exist");
 
         return m_components.at(m_entityToIndex.at(entity));
     }
@@ -109,7 +114,8 @@ public:
     /// \returns \ref EntityID that owns the component at \p index
     EntityID entityAtIndex(std::size_t index) const
     {
-        SFA_ASSERT(index <= m_actualSize, "Index is out of range");
+        if(index > m_actualSize)
+            throw std::runtime_error("Index is out of range");
 
         return m_indexToEntity.at(index);
     }
@@ -127,8 +133,8 @@ public:
 
     auto begin() noexcept { return m_components.begin(); }
     auto cbegin() const noexcept { return m_components.cbegin(); }
-    auto end() noexcept { return m_components.begin() + static_cast<std::ptrdiff_t>(m_actualSize); }
-    auto cend() const noexcept { return m_components.cbegin() + static_cast<std::ptrdiff_t>(m_actualSize); }
+    auto end() noexcept { return std::next(m_components.begin(), static_cast<std::ptrdiff_t>(m_actualSize)); }
+    auto cend() const noexcept { return std::next(m_components.cbegin(), static_cast<std::ptrdiff_t>(m_actualSize)); }
 
     std::span<T> span() noexcept { return { m_components.data(), m_actualSize }; }
     std::span<const T> span() const noexcept { return { m_components.data(), m_actualSize }; }

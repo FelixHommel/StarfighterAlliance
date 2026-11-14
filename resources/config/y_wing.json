@@ -1,5 +1,5 @@
 {
-    "lives": 8,
+    "health": 8,
     "speed": 3,
-    "shotPower": 5 
+    "damage": 5 
 }

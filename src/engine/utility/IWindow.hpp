@@ -3,10 +3,23 @@
 
 #include "utility/userInput/InputController.hpp"
 
-#include <memory>
+#include <glm/glm.hpp>
 
 namespace sfa
 {
+
+/// \brief Simple struct containing the dimensions of the window.
+///
+/// \author Felix Hommel
+/// \date 2/19/2026
+struct Viewport
+{
+    int width;
+    int height;
+
+    explicit operator glm::vec2() const { return { width, height }; }
+};
+
 
 class IWindow
 {
@@ -20,8 +33,11 @@ public:
     IWindow& operator=(IWindow&&) noexcept = delete;
 
     [[nodiscard]] virtual bool shouldClose() const = 0;
+    [[nodiscard]] virtual Viewport viewport() const noexcept = 0;
 
-    virtual void attachInputController(std::shared_ptr<InputController> controller) = 0;
+    virtual void setShouldClose() = 0;
+
+    virtual void attachInputController(InputController* controller) = 0;
 };
 
 } // namespace sfa

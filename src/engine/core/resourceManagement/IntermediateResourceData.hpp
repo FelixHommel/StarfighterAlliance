@@ -27,7 +27,7 @@ struct ShaderSourceData
 ///
 /// \author Felix Hommel
 /// \date 2/10/2026
-struct TextureRawData
+struct TextureSourceData
 {
     int width;
     int height;
@@ -35,7 +35,7 @@ struct TextureRawData
     std::vector<std::byte> pixels;
 };
 
-using ResourceData = std::variant<ShaderSourceData, TextureRawData>;
+using ResourceData = std::variant<ShaderSourceData, TextureSourceData>;
 
 using LoadResult = std::expected<ResourceData, ResourceError>;
 

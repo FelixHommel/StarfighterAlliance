@@ -1,15 +1,16 @@
 {
   "dependencies": [
+    "catch2",
     "fmt",
     "freetype",
     "glad2cmake",
     "glfw3",
     "glm",
-    "gtest",
     "nlohmann-json",
     "spdlog",
     "sqlitecpp",
     "stb",
-    "valijson"
+    "valijson",
+    "trompeloeil"
   ]
 }
