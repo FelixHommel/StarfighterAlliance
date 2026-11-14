@@ -1,156 +1,91 @@
-# Concerns and Suggestions to Improve the Rendering Backend
+# StarfighterAlliance - Rendering
 
-Currently the Rendering is very intertwined with what we can render. We have a ```SpriteRenderer``` and
-```TextRenderer```, both of which abstract away drawing behavior with a ```draw(...)``` function that requires numerous
-arguments to be provided. Besides the fact that this approach carries the burden of state management, it also comes
-with the added disadvantage of code repetition (i.e., ```beginFrame(...)``` method in both renderers).
+## Problem
 
-## Overview of the Problem Infrastructure
+The problem is the current rendering implementation. There is a renderer for each specific renderable, which while
+being functional is not really convenient to use neither very maintainable. 
 
-```mermaid
-classDiagram
-  namespace Core{
-    class Viewport
-    class Shader
+## Solution
 
-    class TextRenderer{
-      -Shader textShader
+A better approach would be to implement rendering using a render queue system. The render queue system would not only
+make it more convenient to interact with the rendering API but also would allow for easier addition of new renderables.
+In the long term it also provides a better chance for extensibility and performance scaling because of techniques like
+batching and render passes.
 
-      +TextRenderer(Shader)
-      +beginFrame(Mat4x4) void
-      +draw(String text, Vec2 pos, Vec2 scale, Vec3 color) void
-    }
-
-    class SpriteRenderer{
-      -Shader spirteShader
-
-      +SpriteRenderer(Shader)
-      +beginFrame(Mat4x4) void
-      +draw(Texture texture, Vec2 pos, Vec2 scale, float rotation, Vec3 color) void
-    }
-  }
-
-  namespace ECS{
-    class ComponentRegistry
-
-    class SpriteRenderSystem{
-        -SpriteRenderer spriteRenderer
-
-        +SpriteRenderSystem(Shader spriteShader)
-        +render(ComponentRegistry components, Mat4x4 projectionMatrix) void
-    }
-
-    class UIRenderSystem{
-        -SpriteRenderer spriteRenderer
-        -TextRenderer textRenderer
-
-        +TextRenderer(Shader spriteShader, Shader textShader)
-        +render(ComponentRegistry components, Viewport viewport) void
-    }
-  }
-
-  namespace External{
-    class OpenGL
-    class FreeType
-  }
-
-  SpriteRenderer ..> OpenGL
-  SpriteRenderer "*" o-- "1" Shader
-
-  TextRenderer ..> OpenGL
-  TextRenderer ..> FreeType
-  TextRenderer "*" o-- "1" Shader
-
-  UIRenderSystem ..> Viewport
-  UIRenderSystem ..> ComponentRegistry
-  UIRenderSystem "*" o-- "2" Shader
-  UIRenderSystem "*" *-- "1" SpriteRenderer
-  UIRenderSystem "*" *-- "1" TextRenderer
-
-  SpriteRenderSystem ..> ComponentRegistry
-  SpriteRenderSystem "*" o-- "1" Shader
-  SpriteRenderSystem "*" *-- "1" SpriteRenderer
-```
-
-There are a few things in this entire system that makes sense. For example, it makes sense that something that renders
-text text using FreeType needs access to FreeType, and things that need Rendering need access to OpenGL. What is
-suboptimal, is that they are not labeled with the things they are using and that there is no common interface to use
-the services they provide. What that means is that everyone that uses Rendering is directly depending on OpenGL and FreeType.
-
-## Alternative: Rendering and ECS Separation
-
-Currently, the ECS and renderer are very intertwined. This is an issue because rendering and ECS systems are designed
-to do very different things. ECS systems are here to read component data, modify component data, and then write the
-modified component data. This is fundamentally different to the data flow used in rendering where the renderer is
-reading component data and then uses the data to produce an image that can be presented to the screen. To overcome this
-problem, I propose the following architecture:
+## Architecture
 
 ```mermaid
 classDiagram
-  namespace ECS{
-    class ECSRegistry
+  class SpriteSubmission{
+    +optional~TextureView~ texture
+    +shared_ptr~Shader~ shader
+    +vec2 size
+    +vec3 color
+    +vec2 position
+    +vec2 scale
+    +float rotation
   }
 
-  namespace Rendering{
-    class Mesh
-
-    class Sprite{
-      +Texture texture
-      +Vec4 color
-      +Vec2 position
-      +Vec2 scale
-      +Float rotation
-    }
-
-    class Text{
-      +String content
-      +Vec4 color
-      +Vec2 position
-      +Vec2 scale
-      +Float rotation
-    }
-
-    class FrameInfo{
-      +Mat4x4 projection
-      +Float dt
-    }
-
-    class IRenderer{
-      +beginFrame(FrameInfo)* void
-      +render(Array~Renderable~)* void
-
-      -draw(Sprite)* void
-      -draw(Text)* void
-      -draw(Mesh)* void
-    }
-
-    class OpenGLRenderer{
-      -UInt VAO
-      -UInt VBO
-
-      +beginFrame(FrameInfo) void
-      +render(Array~Renderable~) void
-
-      -draw(Sprite) void
-      -draw(Text) void
-      -draw(Mesh) void
-    }
+  class TextSubmission{
+    +string text
+    +vec4 color
+    +vec2 position
+    +vec2 scale
   }
 
-  class FontAtals{
+  class RenderCommand{
+    <<variant>>
+    SpriteSubmission
+    TextSubmission
   }
 
-  IRenderer ..> Sprite
-  IRenderer ..> Text
-  IRenderer ..> Mesh
-  IRenderer ..> FrameInfo
+  class ISpritePipeline{
+    +draw(submission: SpriteSubmission) void*
+  }
 
-  OpenGLRenderer ..|> IRenderer
+  class BasicSpritePipeline{
+    +draw(submission: SpriteSubmission) void
+  }
+
+  class RenderQueue{
+    -vector~RenderCommand~ commands
+
+    +commands() span~const RenderCommand~
+    +submit(command: RenderCommand) void
+    +clear() void
+  }
+
+  class RenderExecutor{
+    -unique_ptr~ISpritePipeline~ spritePipeline
+
+    +execute(commands: span~const RenderCommand~) void
+
+    -executeImpl(submission: SpriteSubmission) void
+    -executeImpl(submission: TextSubmission) void
+  }
+
+  class Renderer{
+    -RenderQueue queue
+    -RenderExecutor executor
+
+    +beginFrame() void
+    +endFrame() void
+    +submit(command: RenderCommand) void
+  }
+
+  Renderer "1" *-- "1" RenderQueue
+  Renderer "1" *-- "1" RenderExecutor
+  Renderer ..> RenderCommand : submits
+
+  RenderQueue "1" *-- "*" RenderCommand : contains
+
+  RenderExecutor "1" *-- "1" ISpritePipeline
+  RenderExecutor ..> RenderCommand : executes
+
+  ISpritePipeline ..> SpriteSubmission : processes
+
+  BasicSpritePipeline --|> ISpritePipeline
+
+  RenderCommand ..> SpriteSubmission
+  RenderCommand ..> TextSubmission
 ```
-
-In this design ```OpenGLRenderer``` would be responsible for creating one quad and registering a VAO and VBO for it.
-This quad can then be used across all sprite draws since it is only needed to project a color or texture onto it.
-For meshes (only relevant in the future) it is slightly different, those would have to be brought by the ```Mesh```
-primitive since it is not feasible nor realistic to load meshes each frame. It might be fine to couple
-```OpenGLRenderer``` with ```FreeType```, I am currently not sure if it is needed nor beneficial to abstract
-text rendering at this point. The introduction of a font atlas however is reasonable and should be done.

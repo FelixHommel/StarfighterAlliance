@@ -34,7 +34,7 @@ public:
     Shader& operator=(const Shader&) = delete;
 
     void use() const;
-    [[nodiscard]] unsigned int getID() const noexcept { return m_id; }
+    [[nodiscard]] GLuint getID() const noexcept { return m_id; }
 
     /// \brief Set a single float uniform value.
     void setFloat(const char* pName, float value, bool useShader = false) const;
@@ -67,12 +67,12 @@ private:
         Program
     };
 
-    unsigned int m_id{ 0 };
+    GLuint m_id{ 0 };
 
     void releaseShaderProgram() const;
 
     static GLuint compileShader(const char* pSource, CompilationType type);
-    static void checkCompileErrors(unsigned int object, CompilationType type);
+    static void checkCompileErrors(GLuint object, CompilationType type);
     static std::string_view compilationTypeToString(CompilationType type);
     static GLenum compilationTypeToGlenum(CompilationType type);
 };

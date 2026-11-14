@@ -167,7 +167,7 @@ GLuint Shader::compileShader(const char* pSource, CompilationType type)
 ///
 /// \param object the OpenGL object to be checked (shader or program)
 /// \param type type of the OpenGL object that was compiled
-void Shader::checkCompileErrors(unsigned int object, CompilationType type)
+void Shader::checkCompileErrors(GLuint object, CompilationType type)
 {
     int success{ 0 };
     std::array<char, ERROR_LOG_SIZE> infoLog{};
