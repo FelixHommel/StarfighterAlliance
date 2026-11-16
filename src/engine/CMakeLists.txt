@@ -12,6 +12,7 @@ add_library(
     ./core/resourceManagement/ResourceContext.cpp
     ./core/resourceManagement/ResourceLoader.cpp
     ./external/stb_image_impl.cpp
+    ./physics/Intersections.cpp
     ./rendering/RenderExecutor.cpp
     ./rendering/RenderQueue.cpp
     ./rendering/pipelines/BasicSpritePipeline.cpp
@@ -48,8 +49,11 @@ target_sources(
                 ./core/resourceManagement/ResourceContext.hpp
                 ./core/resourceManagement/ResourceError.hpp
                 ./core/resourceManagement/ResourceLoader.hpp
+                ./entities/interfaces/ICollidable.hpp
                 ./entities/interfaces/IRenderable.hpp
                 ./entities/interfaces/IUpdateable.hpp
+                ./physics/Intersections.hpp
+                ./physics/Shape.hpp
                 ./rendering/Renderer.hpp
                 ./rendering/RenderCommand.hpp
                 ./rendering/RenderExecutor.hpp
