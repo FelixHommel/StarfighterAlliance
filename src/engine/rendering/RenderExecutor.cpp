@@ -4,6 +4,7 @@
 #include "rendering/pipelines/ISpritePipeline.hpp"
 
 #include <memory>
+#include <span>
 #include <utility>
 #include <variant>
 
