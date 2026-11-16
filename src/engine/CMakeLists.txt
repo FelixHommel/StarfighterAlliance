@@ -48,6 +48,7 @@ target_sources(
                 ./core/resourceManagement/ResourceContext.hpp
                 ./core/resourceManagement/ResourceError.hpp
                 ./core/resourceManagement/ResourceLoader.hpp
+                ./entities/interfaces/IUpdateable.hpp
                 ./rendering/Renderer.hpp
                 ./rendering/RenderCommand.hpp
                 ./rendering/RenderExecutor.hpp
