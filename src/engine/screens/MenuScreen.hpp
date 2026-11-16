@@ -3,7 +3,6 @@
 
 #include "core/RenderContext.hpp"
 #include "core/resourceManagement/ResourceContext.hpp"
-#include "ecs/ComponentRegistry.hpp"
 #include "screens/GameSession.hpp"
 #include "screens/IScreen.hpp"
 #include "screens/IScreenContext.hpp"
@@ -53,7 +52,6 @@ private:
     OnEnterFunction m_onEnterFunction;
     OnExitFunction m_onExitFunction{ [] {} };
 
-    ComponentRegistry m_registry;
     ResourceContext resources; // FIXME: This should not be owned here
 
     static void makeColorRequest(GameSession& session);

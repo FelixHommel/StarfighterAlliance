@@ -11,10 +11,6 @@ add_library(
     ./core/Texture.cpp
     ./core/resourceManagement/ResourceContext.cpp
     ./core/resourceManagement/ResourceLoader.cpp
-    ./ecs/EntityManager.cpp
-    ./ecs/systems/MovementSystem.cpp
-    ./ecs/systems/SpriteRenderSystem.cpp
-    ./ecs/systems/TextRenderSystem.cpp
     ./external/stb_image_impl.cpp
     ./rendering/RenderExecutor.cpp
     ./rendering/RenderQueue.cpp
@@ -52,24 +48,6 @@ target_sources(
                 ./core/resourceManagement/ResourceContext.hpp
                 ./core/resourceManagement/ResourceError.hpp
                 ./core/resourceManagement/ResourceLoader.hpp
-                ./ecs/ComponentArray.hpp
-                ./ecs/ComponentRegistry.hpp
-                ./ecs/ECSUtility.hpp
-                ./ecs/EntityManager.hpp
-                ./ecs/IComponentArray.hpp
-                ./ecs/components/BoxColliderComponent.hpp
-                ./ecs/components/CircleColliderComponent.hpp
-                ./ecs/components/DamageComponent.hpp
-                ./ecs/components/HealthComponent.hpp
-                ./ecs/components/IComponent.hpp
-                ./ecs/components/RigidBodyComponent.hpp
-                ./ecs/components/SpriteComponent.hpp
-                ./ecs/components/TextComponent.hpp
-                ./ecs/components/TransformComponent.hpp
-                ./ecs/components/VelocityComponent.hpp
-                ./ecs/systems/MovementSystem.hpp
-                ./ecs/systems/SpriteRenderSystem.hpp
-                ./ecs/systems/TextRenderSystem.hpp
                 ./rendering/Renderer.hpp
                 ./rendering/RenderCommand.hpp
                 ./rendering/RenderExecutor.hpp
