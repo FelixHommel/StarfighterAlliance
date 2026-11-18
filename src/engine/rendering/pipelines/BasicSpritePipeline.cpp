@@ -1,5 +1,6 @@
 #include "BasicSpritePipeline.hpp"
 
+#include "core/TextureView.hpp"
 #include "rendering/RenderCommand.hpp"
 
 #include <glad/gl.h>
@@ -8,6 +9,8 @@
 
 #include <array>
 #include <cstddef>
+#include <type_traits>
+#include <variant>
 
 namespace
 {
@@ -87,19 +90,35 @@ void BasicSpritePipeline::draw(const SpriteSubmission& submission) const
     model = glm::scale(model, glm::vec3(submission.scale, 1.f));
 
     submission.shader->setMatrix4("model", model, true);
-    submission.shader->setVector3f("spriteColor", submission.color);
 
-    glActiveTexture(GL_TEXTURE0);
-    if(submission.texture.has_value())
-    {
-        const auto& texture{ *submission.texture };
-        glBindTexture(texture.target, texture.id);
-    }
-    else
-        glBindTexture(GL_TEXTURE_2D, m_fallbackTexture);
+    bindAppearance(submission);
 
     glBindVertexArray(m_quadVAO);
     glDrawArrays(GL_TRIANGLES, 0, ::SPRITE_VERTICES);
+}
+
+void BasicSpritePipeline::bindAppearance(const SpriteSubmission& submission) const
+{
+    static constexpr auto COLOR_WHITE{ glm::vec3(255.f) };
+
+    glActiveTexture(GL_TEXTURE0);
+    std::visit(
+        [this, &submission](const auto& appearance) {
+            using T = std::decay_t<decltype(appearance)>;
+
+            if constexpr(std::is_same_v<T, TextureView>)
+            {
+                submission.shader->setVector3f("spriteColor", COLOR_WHITE);
+                glBindTexture(appearance.target, appearance.id);
+            }
+            else if constexpr(std::is_same_v<T, glm::vec3>)
+            {
+                submission.shader->setVector3f("spriteColor", appearance);
+                glBindTexture(GL_TEXTURE_2D, m_fallbackTexture);
+            }
+        },
+        submission.appearance
+    );
 }
 
 } // namespace sfa

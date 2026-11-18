@@ -1,6 +1,7 @@
 #ifndef SFA_SRC_ENGINE_RENDERING_PIPELINES_SPRITE_PIPELINE_HPP
 #define SFA_SRC_ENGINE_RENDERING_PIPELINES_SPRITE_PIPELINE_HPP
 
+#include "core/TextureView.hpp"
 #include "rendering/RenderCommand.hpp"
 #include "rendering/pipelines/ISpritePipeline.hpp"
 
@@ -37,6 +38,8 @@ public:
 private:
     GLuint m_quadVAO{ 0 };
     GLuint m_fallbackTexture{ 0 };
+
+    void bindAppearance(const SpriteSubmission& submission) const;
 };
 
 } // namespace sfa

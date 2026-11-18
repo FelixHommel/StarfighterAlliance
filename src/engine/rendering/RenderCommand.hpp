@@ -2,12 +2,11 @@
 #define SFA_SRC_ENGINE_RENDERING_RENDER_COMMAND_HPP
 
 #include "core/Shader.hpp"
-#include "core/TextureView.hpp"
+#include "entities/components/Sprite.hpp"
 
 #include <glm/glm.hpp>
 
 #include <memory>
-#include <optional>
 #include <string>
 #include <variant>
 
@@ -21,12 +20,11 @@ namespace sfa
 struct SpriteSubmission
 {
     // GL resources
-    std::optional<TextureView> texture{ std::nullopt };
+    SpriteAppearance appearance;
     std::shared_ptr<Shader> shader{ nullptr };
 
     // Sprite component
     glm::vec2 size{};
-    glm::vec3 color{};
     unsigned int renderLayer{};
 
     // Translation component

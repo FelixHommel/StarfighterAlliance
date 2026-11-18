@@ -47,6 +47,7 @@ target_sources(
                 ./core/resourceManagement/ResourceContext.hpp
                 ./core/resourceManagement/ResourceError.hpp
                 ./core/resourceManagement/ResourceLoader.hpp
+                ./entities/components/Transform.hpp
                 ./entities/interfaces/ICollidable.hpp
                 ./entities/interfaces/IRenderable.hpp
                 ./entities/interfaces/IUpdateable.hpp
