@@ -6,7 +6,13 @@
 namespace sfa::physics
 {
 
-bool intersects(const Shape& lhs, const Shape& rhs);
+/// \brief Check for intersection of two physical shapes.
+///
+/// \param lhs The first object involved in the collision check
+/// \param rhs The second object involved in the collision check
+///
+/// \returns **true** if \p lhs and \p rhs are intersecting, **false** otherwise
+[[nodiscard]] bool intersects(const Shape& lhs, const Shape& rhs);
 
 } // namespace sfa::physics
 
