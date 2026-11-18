@@ -12,9 +12,6 @@ add_executable(
     ./core/resourceManagement/ResourceCacheTest.cpp
     ./core/resourceManagement/ResourceContextTest.cpp
     ./core/resourceManagement/ResourceLoaderTest.cpp
-    ./ecs/ComponentArrayTest.cpp
-    ./ecs/EntityManagerTest.cpp
-    ./ecs/ComponentRegistryTest.cpp
     ./testUtility/OpenGLTestContext.cpp
     ./testUtility/stb_image_write_impl.cpp
     ./testUtility/TemporaryDirectory.cpp

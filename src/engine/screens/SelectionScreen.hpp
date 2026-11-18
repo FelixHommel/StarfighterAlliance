@@ -4,7 +4,6 @@
 #include "config/SpaceshipType.hpp"
 #include "core/RenderContext.hpp"
 #include "core/resourceManagement/ResourceContext.hpp"
-#include "ecs/ComponentRegistry.hpp"
 #include "screens/GameSession.hpp"
 #include "screens/IScreen.hpp"
 #include "screens/IScreenContext.hpp"
@@ -68,7 +67,6 @@ private:
     OnEnterFunction m_onEnterFunction{ []() {} };
     OnExitFunction m_onExitFunction{ [] {} };
 
-    ComponentRegistry m_registry;
     std::array<std::unique_ptr<SpaceshipData>, std::to_underlying(SpaceshipType::SPACESHIP_TPYE_MAX)> m_spaceships;
     SpaceshipType m_currentSelection{ SpaceshipType::XWing };
 
