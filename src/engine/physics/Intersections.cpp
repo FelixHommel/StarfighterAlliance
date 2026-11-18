@@ -37,7 +37,7 @@ template<typename T, typename Variant> concept VariantAlternative = ::detail::Is
 /// \param rhs The second object that is checked for intersection
 ///
 /// \returns **true** if \p lhs and \p rhs intersect, **false** otherwise
-template<VariantAlternative<sfa::physics::Shape> T, VariantAlternative<sfa::physics::Shape> Q>
+template<::VariantAlternative<sfa::physics::Shape> T, ::VariantAlternative<sfa::physics::Shape> Q>
     requires(!std::is_same_v<T, Q>)
 bool intersectsImpl(const T& lhs, const Q& rhs)
 {
