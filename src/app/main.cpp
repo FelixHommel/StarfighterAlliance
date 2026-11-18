@@ -1,5 +1,4 @@
 #include "core/Shader.hpp"
-#include "core/SpriteRenderer.hpp"
 #include "core/TextRenderer.hpp"
 #include "screens/GameSession.hpp"
 #include "screens/MenuScreen.hpp"
@@ -61,7 +60,6 @@ int main()
     auto spriteShader{ std::make_shared<Shader>(spriteVertSrc.c_str(), spriteFragSrc.c_str()) };
     auto textShader{ std::make_shared<Shader>(textVertSrc.c_str(), textFragSrc.c_str()) };
 
-    auto spriteRenderer{ std::make_shared<SpriteRenderer>(spriteShader) };
     auto textRenderer{ std::make_shared<TextRenderer>(textShader) };
     textRenderer->load(SFA_ROOT "resources/fonts/prstart.ttf", 18);
     ScreenStack screens{};
@@ -92,7 +90,7 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
 
         screens.update(dt, input);
-        screens.render({ .spriteRenderer = spriteRenderer.get(), .window = window });
+        screens.render({ .window = window });
 
         glfwSwapBuffers(glfwGetCurrentContext());
         glfwPollEvents();

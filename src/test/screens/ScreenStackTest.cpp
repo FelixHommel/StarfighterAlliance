@@ -167,7 +167,7 @@ TEST_CASE("ScreenStackTest", "[unit][screens]")
         m_stack.enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(screen) });
         m_stack.processCommands();
 
-        m_stack.render({ .spriteRenderer = nullptr, .window = window });
+        m_stack.render({ .window = window });
     }
 
     /// \brief Test that the \ref ScreenStack correctly renders overlays and regular screens.
@@ -194,7 +194,7 @@ TEST_CASE("ScreenStackTest", "[unit][screens]")
         m_stack.enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(secondOverlay) });
         m_stack.processCommands();
 
-        m_stack.render({ .spriteRenderer = nullptr, .window = window });
+        m_stack.render({ .window = window });
     }
 
     /// \brief Test that the \ref ScreenStack only updates the top most screen.
