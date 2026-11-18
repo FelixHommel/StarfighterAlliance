@@ -2,13 +2,28 @@
 
 #include "physics/Shape.hpp"
 
+#include <concepts>
 #include <type_traits>
 #include <variant>
 
 namespace
 {
 
-template<typename T, typename Q>
+namespace detail
+{
+
+template<typename T, typename Variant>
+struct IsVariantAlternative;
+
+template<typename T, typename... Ts>
+struct IsVariantAlternative<T, std::variant<Ts...>> : std::bool_constant<(std::same_as<T, Ts> || ...)>
+{};
+
+} // namespace detail
+
+template<typename T, typename Variant> concept VariantAlternative = ::detail::IsVariantAlternative<T, Variant>::value;
+
+template<VariantAlternative<sfa::physics::Shape> T, VariantAlternative<sfa::physics::Shape> Q>
     requires(!std::is_same_v<T, Q>)
 bool intersectsImpl(const T& lhs, const Q& rhs)
 {
