@@ -60,76 +60,76 @@ void Shader::use() const
     glUseProgram(m_id);
 }
 
-void Shader::setFloat(const char* pName, float value, bool useShader) const
+void Shader::setFloat(const std::string& name, float value, bool useShader)
 {
     if(useShader)
         use();
 
-    glUniform1f(glGetUniformLocation(m_id, pName), value);
+    glUniform1f(getUniformLocation(name), value);
 }
 
-void Shader::setInteger(const char* pName, int value, bool useShader) const
+void Shader::setInteger(const std::string& name, int value, bool useShader)
 {
     if(useShader)
         use();
 
-    glUniform1i(glGetUniformLocation(m_id, pName), value);
+    glUniform1i(getUniformLocation(name), value);
 }
 
-void Shader::setVector2f(const char* pName, float x, float y, bool useShader) const
+void Shader::setVector2f(const std::string& name, float x, float y, bool useShader)
 {
     if(useShader)
         use();
 
-    glUniform2f(glGetUniformLocation(m_id, pName), x, y);
+    glUniform2f(getUniformLocation(name), x, y);
 }
 
-void Shader::setVector2f(const char* pName, const glm::vec2& value, bool useShader) const
+void Shader::setVector2f(const std::string& name, const glm::vec2& value, bool useShader)
 {
     if(useShader)
         use();
 
-    glUniform2f(glGetUniformLocation(m_id, pName), value.x, value.y);
+    glUniform2f(getUniformLocation(name), value.x, value.y);
 }
 
-void Shader::setVector3f(const char* pName, float x, float y, float z, bool useShader) const
+void Shader::setVector3f(const std::string& name, float x, float y, float z, bool useShader)
 {
     if(useShader)
         use();
 
-    glUniform3f(glGetUniformLocation(m_id, pName), x, y, z);
+    glUniform3f(getUniformLocation(name), x, y, z);
 }
 
-void Shader::setVector3f(const char* pName, const glm::vec3& value, bool useShader) const
+void Shader::setVector3f(const std::string& name, const glm::vec3& value, bool useShader)
 {
     if(useShader)
         use();
 
-    glUniform3f(glGetUniformLocation(m_id, pName), value.x, value.y, value.z);
+    glUniform3f(getUniformLocation(name), value.x, value.y, value.z);
 }
 
-void Shader::setVector4f(const char* pName, float x, float y, float z, float w, bool useShader) const
+void Shader::setVector4f(const std::string& name, float x, float y, float z, float w, bool useShader)
 {
     if(useShader)
         use();
 
-    glUniform4f(glGetUniformLocation(m_id, pName), x, y, z, w);
+    glUniform4f(getUniformLocation(name), x, y, z, w);
 }
 
-void Shader::setVector4f(const char* pName, const glm::vec4& value, bool useShader) const
+void Shader::setVector4f(const std::string& name, const glm::vec4& value, bool useShader)
 {
     if(useShader)
         use();
 
-    glUniform4f(glGetUniformLocation(m_id, pName), value.x, value.y, value.z, value.w);
+    glUniform4f(getUniformLocation(name), value.x, value.y, value.z, value.w);
 }
 
-void Shader::setMatrix4(const char* pName, const glm::mat4& matrix, bool useShader) const
+void Shader::setMatrix4(const std::string& name, const glm::mat4& matrix, bool useShader)
 {
     if(useShader)
         use();
 
-    glUniformMatrix4fv(glGetUniformLocation(m_id, pName), 1, 0, glm::value_ptr(matrix));
+    glUniformMatrix4fv(getUniformLocation(name), 1, 0, glm::value_ptr(matrix));
 }
 
 /// \brief Delete the shader program stored in this shader.
@@ -137,6 +137,22 @@ void Shader::releaseShaderProgram() const
 {
     if(m_id != 0)
         glDeleteProgram(m_id);
+}
+
+GLint Shader::getUniformLocation(const std::string& uniformName)
+{
+    constexpr auto INVALID_RETURN_VALUE{ -1 };
+
+    if(const auto it{ m_uniforms.find(uniformName) }; it != m_uniforms.cend())
+        return it->second;
+
+    const auto location{ glGetUniformLocation(m_id, uniformName.c_str()) };
+    m_uniforms.try_emplace(uniformName, location);
+
+    if(location == INVALID_RETURN_VALUE)
+        spdlog::error("Uniform '{}' not found in shader", uniformName);
+
+    return location;
 }
 
 /// \brief Compile a shader.

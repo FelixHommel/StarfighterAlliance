@@ -5,7 +5,9 @@
 #include <glm/glm.hpp>
 
 #include <cstdint>
+#include <string>
 #include <string_view>
+#include <unordered_map>
 
 namespace sfa
 {
@@ -37,25 +39,27 @@ public:
     [[nodiscard]] GLuint getID() const noexcept { return m_id; }
 
     /// \brief Set a single float uniform value.
-    void setFloat(const char* pName, float value, bool useShader = false) const;
+    void setFloat(const std::string& name, float value, bool useShader = false);
     /// \brief Set a single integer uniform value.
-    void setInteger(const char* pName, int value, bool useShader = false) const;
+    void setInteger(const std::string& name, int value, bool useShader = false);
     /// \brief Set a 2-element float vector uniform value.
-    void setVector2f(const char* pName, float x, float y, bool useShader = false) const;
+    void setVector2f(const std::string& name, float x, float y, bool useShader = false);
     /// \brief Set a 2-element float vector uniform value.
-    void setVector2f(const char* pName, const glm::vec2& value, bool useShader = false) const;
+    void setVector2f(const std::string& name, const glm::vec2& value, bool useShader = false);
     /// \brief Set a 3-element float vector uniform value.
-    void setVector3f(const char* pName, float x, float y, float z, bool useShader = false) const;
+    void setVector3f(const std::string& name, float x, float y, float z, bool useShader = false);
     /// \brief Set a 3-element float vector uniform value.
-    void setVector3f(const char* pName, const glm::vec3& value, bool useShader = false) const;
+    void setVector3f(const std::string& name, const glm::vec3& value, bool useShader = false);
     /// \brief Set a 4-element float vector uniform value.
-    void setVector4f(const char* pName, float x, float y, float z, float w, bool useShader = false) const;
+    void setVector4f(const std::string& name, float x, float y, float z, float w, bool useShader = false);
     /// \brief Set a 4-element float vector uniform value.
-    void setVector4f(const char* pName, const glm::vec4& value, bool useShader = false) const;
+    void setVector4f(const std::string& name, const glm::vec4& value, bool useShader = false);
     /// \brief Set a 4x4 float matrix uniform value.
-    void setMatrix4(const char* pName, const glm::mat4& matrix, bool useShader = false) const;
+    void setMatrix4(const std::string& name, const glm::mat4& matrix, bool useShader = false);
 
 private:
+    using UniformCache = std::unordered_map<std::string, GLint>;
+
     static constexpr int ERROR_LOG_SIZE{ 1024 };
 
     /// \brief Helper enum to describe what type of OpenGL object was compiled/linked
@@ -68,8 +72,10 @@ private:
     };
 
     GLuint m_id{ 0 };
+    UniformCache m_uniforms;
 
     void releaseShaderProgram() const;
+    GLint getUniformLocation(const std::string& uniformName);
 
     static GLuint compileShader(const char* pSource, CompilationType type);
     static void checkCompileErrors(GLuint object, CompilationType type);
