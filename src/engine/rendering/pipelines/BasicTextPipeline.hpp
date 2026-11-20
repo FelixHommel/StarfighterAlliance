@@ -58,12 +58,12 @@ public:
     /// \brief Load a font from a file.
     ///
     /// \param filepath path to the font. Should be an .fft file
-    /// \param fontSize(optional) the size the font will be
+    /// \param fontSize (optional) the size the font will be
     void load(const std::filesystem::path& filepath, unsigned int fontSize = DEFAULT_FONT_SIZE);
 
     /// \brief Begin the drawing of the next frame.
     ///
-    /// \param projection projection matrix
+    /// \param projection The projection matrix
     void beginFrame(const glm::mat4& projection);
 
     /// \brief Render text to the screen.
