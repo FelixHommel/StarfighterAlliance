@@ -15,6 +15,7 @@ add_library(
     ./rendering/RenderExecutor.cpp
     ./rendering/RenderQueue.cpp
     ./rendering/pipelines/BasicSpritePipeline.cpp
+    ./rendering/pipelines/BasicTextPipeline.cpp
     ./screens/MenuScreen.cpp
     ./screens/ScreenStack.cpp
     ./screens/SelectionScreen.cpp
@@ -60,6 +61,7 @@ target_sources(
                 ./rendering/pipelines/ISpritePipeline.hpp
                 ./rendering/pipelines/ITextPipeline.hpp
                 ./rendering/pipelines/BasicSpritePipeline.hpp
+                ./rendering/pipelines/BasicTextPipeline.hpp
                 ./screens/GameSession.hpp
                 ./screens/IScreen.hpp
                 ./screens/IScreenContext.hpp
