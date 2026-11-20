@@ -89,7 +89,7 @@ void BasicSpritePipeline::draw(const SpriteSubmission& submission) const
     // NOTE: Step 3: Scale
     model = glm::scale(model, glm::vec3(submission.scale, 1.f));
 
-    submission.shader->setMatrix4("model", model, true);
+    submission.shader->setUniform("model", model, true);
 
     bindAppearance(submission);
 
@@ -108,12 +108,12 @@ void BasicSpritePipeline::bindAppearance(const SpriteSubmission& submission) con
 
             if constexpr(std::is_same_v<T, TextureView>)
             {
-                submission.shader->setVector3f("spriteColor", COLOR_WHITE);
+                submission.shader->setUniform("spriteColor", COLOR_WHITE);
                 glBindTexture(appearance.target, appearance.id);
             }
             else if constexpr(std::is_same_v<T, glm::vec3>)
             {
-                submission.shader->setVector3f("spriteColor", appearance);
+                submission.shader->setUniform("spriteColor", appearance);
                 glBindTexture(GL_TEXTURE_2D, m_fallbackTexture);
             }
         },

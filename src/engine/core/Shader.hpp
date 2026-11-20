@@ -38,24 +38,18 @@ public:
     void use() const;
     [[nodiscard]] GLuint getID() const noexcept { return m_id; }
 
-    /// \brief Set a single float uniform value.
-    void setFloat(const std::string& name, float value, bool useShader = false);
-    /// \brief Set a single integer uniform value.
-    void setInteger(const std::string& name, int value, bool useShader = false);
-    /// \brief Set a 2-element float vector uniform value.
-    void setVector2f(const std::string& name, float x, float y, bool useShader = false);
-    /// \brief Set a 2-element float vector uniform value.
-    void setVector2f(const std::string& name, const glm::vec2& value, bool useShader = false);
-    /// \brief Set a 3-element float vector uniform value.
-    void setVector3f(const std::string& name, float x, float y, float z, bool useShader = false);
-    /// \brief Set a 3-element float vector uniform value.
-    void setVector3f(const std::string& name, const glm::vec3& value, bool useShader = false);
-    /// \brief Set a 4-element float vector uniform value.
-    void setVector4f(const std::string& name, float x, float y, float z, float w, bool useShader = false);
-    /// \brief Set a 4-element float vector uniform value.
-    void setVector4f(const std::string& name, const glm::vec4& value, bool useShader = false);
-    /// \brief Set a 4x4 float matrix uniform value.
-    void setMatrix4(const std::string& name, const glm::mat4& matrix, bool useShader = false);
+    /// \brief Set a shader uniform value.
+    ///
+    /// \tparam T Type of the uniform value
+    ///
+    /// \param name The name of the uniform field
+    /// \param value The value for the uniform
+    /// \param (optional) useShader Flag that determines whether the shader needs to be activated before setting the uniform.
+    template<typename T>
+    void setUniform(const std::string& name, const T& value, bool useShader = false)
+    {
+        setUniformImpl(name, value, useShader);
+    }
 
 private:
     using UniformCache = std::unordered_map<std::string, GLint>;
@@ -76,6 +70,13 @@ private:
 
     void releaseShaderProgram() const;
     GLint getUniformLocation(const std::string& uniformName);
+
+    void setUniformImpl(const std::string& name, float value, bool useShader);
+    void setUniformImpl(const std::string& name, int value, bool useShader);
+    void setUniformImpl(const std::string& name, const glm::vec2& value, bool useShader);
+    void setUniformImpl(const std::string& name, const glm::vec3& value, bool useShader);
+    void setUniformImpl(const std::string& name, const glm::vec4& value, bool useShader);
+    void setUniformImpl(const std::string& name, const glm::mat4& matrix, bool useShader);
 
     static GLuint compileShader(const char* pSource, CompilationType type);
     static void checkCompileErrors(GLuint object, CompilationType type);

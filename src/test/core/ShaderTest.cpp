@@ -188,7 +188,7 @@ TEST_CASE("ShaderTest", "[unit][core][opengl]")
     if(!glContext.setup())
         SKIP(glContext.getSkipReason());
 
-    const Shader shader{ ::VERTEX_SHADER_SRC, ::FRAGMENT_SHADER_SRC };
+    Shader shader{ ::VERTEX_SHADER_SRC, ::FRAGMENT_SHADER_SRC };
 
     const auto float2Location{ glGetUniformLocation(shader.getID(), ::FLOAT_2_UNIFORM) };
     const auto float3Location{ glGetUniformLocation(shader.getID(), ::FLOAT_3_UNIFORM) };
@@ -215,7 +215,7 @@ TEST_CASE("ShaderTest", "[unit][core][opengl]")
     {
         const auto floatLocation{ glGetUniformLocation(shader.getID(), ::FLOAT_UNIFORM) };
         const auto val{ generateRandomValue<float>() };
-        shader.setFloat(::FLOAT_UNIFORM, val, true);
+        shader.setUniform(::FLOAT_UNIFORM, val, true);
 
         GLfloat uniformValue{ 0 };
         ::getUniformValue<GLfloat>(shader, floatLocation, uniformValue);
@@ -230,27 +230,12 @@ TEST_CASE("ShaderTest", "[unit][core][opengl]")
     {
         const auto intLocation{ glGetUniformLocation(shader.getID(), ::INT_UNIFORM) };
         const auto val{ generateRandomValue<int>() };
-        shader.setInteger(::INT_UNIFORM, val, true);
+        shader.setUniform(::INT_UNIFORM, val, true);
 
         GLint uniformValue{ 0 };
         ::getUniformValue<GLint>(shader, intLocation, uniformValue);
 
         CHECK(uniformValue == val);
-    }
-
-    /// \brief Test uploading a 2 element float vector uniform value using 2 individual values
-    ///
-    /// When a value is uploaded to a uniform, the shader should receive the uploaded value
-    SECTION("Set two single float values with use")
-    {
-        const std::array original{ generateRandomValue<float>(), generateRandomValue<float>() };
-
-        shader.setVector2f(::FLOAT_2_UNIFORM, original[0], original[1], true);
-
-        std::array<GLfloat, original.size()> uniformValues{};
-        ::getUniformValue<GLfloat>(shader, float2Location, uniformValues);
-
-        CHECK(uniformValues == original);
     }
 
     /// \brief Test uploading a 2 element float vector uniform value using a glm::vec2
@@ -260,30 +245,13 @@ TEST_CASE("ShaderTest", "[unit][core][opengl]")
     {
         const auto vec{ glm::vec2(generateRandomValue<float>(), generateRandomValue<float>()) };
 
-        shader.setVector2f(::FLOAT_2_UNIFORM, vec, true);
+        shader.setUniform(::FLOAT_2_UNIFORM, vec, true);
 
         std::array<GLfloat, glm::vec2::length()> uniformValues{};
         ::getUniformValue<GLfloat>(shader, float2Location, uniformValues);
 
         CHECK_THAT(uniformValues.at(0), WithinRel(vec.x));
         CHECK_THAT(uniformValues.at(1), WithinRel(vec.y));
-    }
-
-    /// \brief Test uploading a 3 element float vector uniform value using 3 individual values
-    ///
-    /// When a value is uploaded to a uniform, the shader should receive the uploaded value
-    SECTION("Set three single float values with use")
-    {
-        const std::array original{ generateRandomValue<float>(),
-                                   generateRandomValue<float>(),
-                                   generateRandomValue<float>() };
-
-        shader.setVector3f(::FLOAT_3_UNIFORM, original[0], original[1], original[2], true);
-
-        std::array<GLfloat, original.size()> uniformValues{};
-        glGetUniformfv(shader.getID(), float3Location, uniformValues.data());
-
-        CHECK(uniformValues == original);
     }
 
     /// \brief Test uploading a 3 element float vector uniform value using a glm::vec3
@@ -295,7 +263,7 @@ TEST_CASE("ShaderTest", "[unit][core][opengl]")
             glm::vec3(generateRandomValue<float>(), generateRandomValue<float>(), generateRandomValue<float>())
         };
 
-        shader.setVector3f(::FLOAT_3_UNIFORM, vec, true);
+        shader.setUniform(::FLOAT_3_UNIFORM, vec, true);
 
         std::array<GLfloat, glm::vec3::length()> uniformValues{};
         glGetUniformfv(shader.getID(), float3Location, uniformValues.data());
@@ -303,25 +271,6 @@ TEST_CASE("ShaderTest", "[unit][core][opengl]")
         CHECK_THAT(uniformValues.at(0), WithinRel(vec.x));
         CHECK_THAT(uniformValues.at(1), WithinRel(vec.y));
         CHECK_THAT(uniformValues.at(2), WithinRel(vec.z));
-    }
-
-    /// \brief Test uploading a 4 element float vector uniform value using 4 individual values
-    ///
-    /// When a value is uploaded to a uniform, the shader should receive the uploaded value
-    SECTION("Set four single float values with use")
-    {
-        const std::array original{ generateRandomValue<float>(),
-                                   generateRandomValue<float>(),
-                                   generateRandomValue<float>(),
-                                   generateRandomValue<float>() };
-
-        // NOLINTNEXTLINE(readability-magic-numbers): 3 used as array index
-        shader.setVector4f(::FLOAT_4_UNIFORM, original[0], original[1], original[2], original[3], true);
-
-        std::array<GLfloat, original.size()> uniformValues{};
-        glGetUniformfv(shader.getID(), float4Location, uniformValues.data());
-
-        CHECK(uniformValues == original);
     }
 
     /// \brief Test uploading a 4 element float vector uniform value using a single glm::vec4
@@ -336,7 +285,7 @@ TEST_CASE("ShaderTest", "[unit][core][opengl]")
             generateRandomValue<float>()
         ) };
 
-        shader.setVector4f(::FLOAT_4_UNIFORM, vec, true);
+        shader.setUniform(::FLOAT_4_UNIFORM, vec, true);
 
         std::array<GLfloat, glm::vec4::length()> uniformValues{};
         glGetUniformfv(shader.getID(), float4Location, uniformValues.data());
@@ -355,7 +304,7 @@ TEST_CASE("ShaderTest", "[unit][core][opengl]")
         const auto matrix4Location{ glGetUniformLocation(shader.getID(), ::MATRIX_4_UNIFORM) };
         const auto mat{ glm::mat4(generateRandomValue<float>()) };
 
-        shader.setMatrix4(::MATRIX_4_UNIFORM, mat, true);
+        shader.setUniform(::MATRIX_4_UNIFORM, mat, true);
 
         std::array<GLfloat, static_cast<std::size_t>(glm::mat4::length() * glm::mat4::length())> uniformValues{};
         ::getUniformValue<GLfloat>(shader, matrix4Location, uniformValues);

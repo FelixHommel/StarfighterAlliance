@@ -60,7 +60,8 @@ void Shader::use() const
     glUseProgram(m_id);
 }
 
-void Shader::setFloat(const std::string& name, float value, bool useShader)
+/// \brief Set a single float uniform value.
+void Shader::setUniformImpl(const std::string& name, float value, bool useShader)
 {
     if(useShader)
         use();
@@ -68,7 +69,8 @@ void Shader::setFloat(const std::string& name, float value, bool useShader)
     glUniform1f(getUniformLocation(name), value);
 }
 
-void Shader::setInteger(const std::string& name, int value, bool useShader)
+/// \brief Set a single integer uniform value.
+void Shader::setUniformImpl(const std::string& name, int value, bool useShader)
 {
     if(useShader)
         use();
@@ -76,15 +78,8 @@ void Shader::setInteger(const std::string& name, int value, bool useShader)
     glUniform1i(getUniformLocation(name), value);
 }
 
-void Shader::setVector2f(const std::string& name, float x, float y, bool useShader)
-{
-    if(useShader)
-        use();
-
-    glUniform2f(getUniformLocation(name), x, y);
-}
-
-void Shader::setVector2f(const std::string& name, const glm::vec2& value, bool useShader)
+/// \brief Set a 2-element float vector uniform value.
+void Shader::setUniformImpl(const std::string& name, const glm::vec2& value, bool useShader)
 {
     if(useShader)
         use();
@@ -92,15 +87,8 @@ void Shader::setVector2f(const std::string& name, const glm::vec2& value, bool u
     glUniform2f(getUniformLocation(name), value.x, value.y);
 }
 
-void Shader::setVector3f(const std::string& name, float x, float y, float z, bool useShader)
-{
-    if(useShader)
-        use();
-
-    glUniform3f(getUniformLocation(name), x, y, z);
-}
-
-void Shader::setVector3f(const std::string& name, const glm::vec3& value, bool useShader)
+/// \brief Set a 3-element float vector uniform value.
+void Shader::setUniformImpl(const std::string& name, const glm::vec3& value, bool useShader)
 {
     if(useShader)
         use();
@@ -108,15 +96,8 @@ void Shader::setVector3f(const std::string& name, const glm::vec3& value, bool u
     glUniform3f(getUniformLocation(name), value.x, value.y, value.z);
 }
 
-void Shader::setVector4f(const std::string& name, float x, float y, float z, float w, bool useShader)
-{
-    if(useShader)
-        use();
-
-    glUniform4f(getUniformLocation(name), x, y, z, w);
-}
-
-void Shader::setVector4f(const std::string& name, const glm::vec4& value, bool useShader)
+/// \brief Set a 4-element float vector uniform value.
+void Shader::setUniformImpl(const std::string& name, const glm::vec4& value, bool useShader)
 {
     if(useShader)
         use();
@@ -124,7 +105,8 @@ void Shader::setVector4f(const std::string& name, const glm::vec4& value, bool u
     glUniform4f(getUniformLocation(name), value.x, value.y, value.z, value.w);
 }
 
-void Shader::setMatrix4(const std::string& name, const glm::mat4& matrix, bool useShader)
+/// \brief Set a 4x4 float matrix uniform value.
+void Shader::setUniformImpl(const std::string& name, const glm::mat4& matrix, bool useShader)
 {
     if(useShader)
         use();
