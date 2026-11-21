@@ -1,5 +1,6 @@
 #include "BasicSpritePipeline.hpp"
 
+#include "core/Shader.hpp"
 #include "core/TextureView.hpp"
 #include "rendering/RenderCommand.hpp"
 
@@ -9,7 +10,9 @@
 
 #include <array>
 #include <cstddef>
+#include <memory>
 #include <type_traits>
+#include <utility>
 #include <variant>
 
 namespace
@@ -34,7 +37,7 @@ constexpr std::array<float, SPRITE_VERTICES * SPRITE_VERTEX_ATTRIBUTES> VERTICES
 namespace sfa
 {
 
-BasicSpritePipeline::BasicSpritePipeline()
+BasicSpritePipeline::BasicSpritePipeline(std::shared_ptr<Shader> shader) : m_shader{ std::move(shader) }
 {
     glGenVertexArrays(1, &m_quadVAO);
     GLuint vbo{};
@@ -75,6 +78,8 @@ void BasicSpritePipeline::beginFrame(const glm::mat4& projection) const
 
 void BasicSpritePipeline::draw(const SpriteSubmission& submission) const
 {
+    // TODO: Let the sprite calculate its model matrix
+
     glm::mat4 model{ glm::mat4(1.f) };
 
     // NOTE: Step 1: Translate
@@ -94,7 +99,7 @@ void BasicSpritePipeline::draw(const SpriteSubmission& submission) const
     // NOTE: Step 3: Scale
     model = glm::scale(model, glm::vec3(submission.scale, 1.f));
 
-    submission.shader->setUniform("model", model, true);
+    m_shader->setUniform("model", model, true);
 
     bindAppearance(submission);
 
@@ -108,17 +113,17 @@ void BasicSpritePipeline::bindAppearance(const SpriteSubmission& submission) con
 
     glActiveTexture(GL_TEXTURE0);
     std::visit(
-        [this, &submission](const auto& appearance) {
+        [this](const auto& appearance) {
             using T = std::decay_t<decltype(appearance)>;
 
             if constexpr(std::is_same_v<T, TextureView>)
             {
-                submission.shader->setUniform("spriteColor", COLOR_WHITE);
+                m_shader->setUniform("spriteColor", COLOR_WHITE);
                 glBindTexture(appearance.target, appearance.id);
             }
             else if constexpr(std::is_same_v<T, glm::vec3>)
             {
-                submission.shader->setUniform("spriteColor", appearance);
+                m_shader->setUniform("spriteColor", appearance);
                 glBindTexture(GL_TEXTURE_2D, m_fallbackTexture);
             }
         },

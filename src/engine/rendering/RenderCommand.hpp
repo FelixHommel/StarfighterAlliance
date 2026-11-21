@@ -1,12 +1,10 @@
 #ifndef SFA_SRC_ENGINE_RENDERING_RENDER_COMMAND_HPP
 #define SFA_SRC_ENGINE_RENDERING_RENDER_COMMAND_HPP
 
-#include "core/Shader.hpp"
 #include "entities/components/Sprite.hpp"
 
 #include <glm/glm.hpp>
 
-#include <memory>
 #include <string>
 #include <variant>
 
@@ -21,7 +19,6 @@ struct SpriteSubmission
 {
     // GL resources
     SpriteAppearance appearance;
-    std::shared_ptr<Shader> shader{ nullptr };
 
     // Sprite component
     glm::vec2 size{};
