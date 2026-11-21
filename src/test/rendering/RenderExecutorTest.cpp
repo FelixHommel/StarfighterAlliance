@@ -8,26 +8,25 @@
 #include <trompeloeil/mock.hpp>
 
 #include <array>
-#include <memory>
-#include <utility>
 
 namespace sfa::testing
 {
 
 TEST_CASE("RenderExecutorTest", "[unit][rendering]")
 {
-    auto spritePipeline{ std::make_unique<MockSpritePipeline>() };
-    const auto* const pSpritePipeline{ spritePipeline.get() };
-    auto textPipeline{ std::make_unique<MockTextPipeline>() };
-    const auto* const pTextPipeline{ textPipeline.get() };
+    MockSpritePipeline spritePipeline{};
+    MockTextPipeline textPipeline{};
 
-    RenderExecutor executor{ std::move(spritePipeline), std::move(textPipeline) };
+    ALLOW_CALL(spritePipeline, endFrame());
+    ALLOW_CALL(textPipeline, endFrame());
+
+    RenderExecutor executor{ spritePipeline, textPipeline };
 
     SECTION("submission of sprite renderable calls draw in the ISpritePipeline implementation")
     {
         const std::array<RenderCommand, 1> commands{ SpriteSubmission{} };
 
-        REQUIRE_CALL(*pSpritePipeline, draw(trompeloeil::_)).TIMES(1);
+        REQUIRE_CALL(spritePipeline, draw(trompeloeil::_)).TIMES(1);
 
         executor.execute(commands);
     }
@@ -36,7 +35,7 @@ TEST_CASE("RenderExecutorTest", "[unit][rendering]")
     {
         const std::array<RenderCommand, 1> commands{ TextSubmission{} };
 
-        REQUIRE_CALL(*pTextPipeline, draw(trompeloeil::_)).TIMES(1);
+        REQUIRE_CALL(textPipeline, draw(trompeloeil::_)).TIMES(1);
 
         executor.execute(commands);
     }
@@ -47,8 +46,8 @@ TEST_CASE("RenderExecutorTest", "[unit][rendering]")
     {
         const std::array<RenderCommand, 2> commands{ SpriteSubmission{}, TextSubmission{} };
 
-        REQUIRE_CALL(*pTextPipeline, draw(trompeloeil::_)).TIMES(1);
-        REQUIRE_CALL(*pSpritePipeline, draw(trompeloeil::_)).TIMES(1);
+        REQUIRE_CALL(textPipeline, draw(trompeloeil::_)).TIMES(1);
+        REQUIRE_CALL(spritePipeline, draw(trompeloeil::_)).TIMES(1);
 
         executor.execute(commands);
     }

@@ -8,20 +8,18 @@
 #include <catch2/trompeloeil.hpp>
 #include <trompeloeil/mock.hpp>
 
-#include <memory>
-#include <utility>
-
 namespace sfa::testing
 {
 
 TEST_CASE("QueueExecutorIntegrationTest", "[.][integration][rendering]")
 {
-    auto spritePipeline{ std::make_unique<MockSpritePipeline>() };
-    const auto* const pSpritePipeline{ spritePipeline.get() };
-    auto textPipeline{ std::make_unique<MockTextPipeline>() };
-    const auto* const pTextPipeline{ textPipeline.get() };
+    MockSpritePipeline spritePipeline{};
+    MockTextPipeline textPipeline{};
 
-    RenderExecutor executor{ std::move(spritePipeline), std::move(textPipeline) };
+    ALLOW_CALL(spritePipeline, endFrame());
+    ALLOW_CALL(textPipeline, endFrame());
+
+    RenderExecutor executor{ spritePipeline, textPipeline };
     RenderQueue queue{};
 
     queue.submit(SpriteSubmission{});
@@ -30,8 +28,8 @@ TEST_CASE("QueueExecutorIntegrationTest", "[.][integration][rendering]")
 
     CHECK(queue.size() == 3);
 
-    REQUIRE_CALL(*pSpritePipeline, draw(trompeloeil::_)).TIMES(2);
-    REQUIRE_CALL(*pTextPipeline, draw(trompeloeil::_)).TIMES(1);
+    REQUIRE_CALL(spritePipeline, draw(trompeloeil::_)).TIMES(2);
+    REQUIRE_CALL(textPipeline, draw(trompeloeil::_)).TIMES(1);
 
     executor.execute(queue.commands());
 }

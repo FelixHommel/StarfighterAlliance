@@ -16,8 +16,6 @@ RenderExecutor::RenderExecutor(ISpritePipeline& spritePipeline, ITextPipeline& t
 
 void RenderExecutor::execute(std::span<const RenderCommand> commands) const
 {
-    beginFrame();
-
     for(const auto& command : commands)
         std::visit([this](const auto& cmd) { executeImpl(cmd); }, command);
 
@@ -43,7 +41,7 @@ void RenderExecutor::executeImpl(const SpriteSubmission& submission) const
 /// \param submission The information of the submitted sprite.
 void RenderExecutor::executeImpl(const TextSubmission& submission) const
 {
-    m_textPipeline->draw(submission);
+    m_textPipeline.draw(submission);
 }
 
 } // namespace sfa
