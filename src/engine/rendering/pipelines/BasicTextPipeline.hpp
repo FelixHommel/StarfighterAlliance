@@ -52,8 +52,8 @@ public:
 
     BasicTextPipeline(const BasicTextPipeline&) = delete;
     BasicTextPipeline& operator=(const BasicTextPipeline&) = delete;
-    BasicTextPipeline(BasicTextPipeline&&) = delete;
-    BasicTextPipeline& operator=(BasicTextPipeline&&) = delete;
+    BasicTextPipeline(BasicTextPipeline&&) noexcept = delete;
+    BasicTextPipeline& operator=(BasicTextPipeline&&) noexcept = delete;
 
     /// \brief Load a font from a file.
     ///
@@ -64,7 +64,8 @@ public:
     /// \brief Begin the drawing of the next frame.
     ///
     /// \param projection The projection matrix
-    void beginFrame(const glm::mat4& projection);
+    void beginFrame(const glm::mat4& projection) const override;
+    void endFrame() const override {}
 
     /// \brief Render text to the screen.
     ///

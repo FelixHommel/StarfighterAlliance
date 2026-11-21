@@ -22,6 +22,9 @@ public:
     BasicSpritePipeline(BasicSpritePipeline&&) noexcept = delete;
     BasicSpritePipeline& operator=(BasicSpritePipeline&&) noexcept = delete;
 
+    void beginFrame(const glm::mat4& projection) const override;
+    void endFrame() const override {}
+
     /// \brief Draw a textured quad to the screen
     ///
     /// The order of actions within the function is important, especially the translation, rotation, and scale order.

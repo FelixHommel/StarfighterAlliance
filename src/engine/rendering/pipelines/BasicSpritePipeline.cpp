@@ -68,6 +68,11 @@ BasicSpritePipeline::~BasicSpritePipeline()
         glDeleteTextures(1, &m_fallbackTexture);
 }
 
+void BasicSpritePipeline::beginFrame(const glm::mat4& projection) const
+{
+    m_shader->setUniform("projection", projection, true);
+}
+
 void BasicSpritePipeline::draw(const SpriteSubmission& submission) const
 {
     glm::mat4 model{ glm::mat4(1.f) };

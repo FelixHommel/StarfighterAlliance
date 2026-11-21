@@ -15,7 +15,6 @@
 #include <array>
 #include <cstddef>
 #include <filesystem>
-#include <iostream>
 #include <limits>
 #include <memory>
 #include <string>
@@ -118,7 +117,7 @@ void BasicTextPipeline::load(const std::filesystem::path& filepath, unsigned int
     FT_Done_FreeType(ft);
 }
 
-void BasicTextPipeline::beginFrame(const glm::mat4& projection)
+void BasicTextPipeline::beginFrame(const glm::mat4& projection) const
 {
     m_shader->setUniform("projection", projection, true);
 }
