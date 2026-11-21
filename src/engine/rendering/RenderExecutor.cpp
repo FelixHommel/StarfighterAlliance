@@ -4,24 +4,30 @@
 #include "rendering/pipelines/ISpritePipeline.hpp"
 #include "rendering/pipelines/ITextPipeline.hpp"
 
-#include <memory>
 #include <span>
-#include <utility>
 #include <variant>
 
 namespace sfa
 {
 
-RenderExecutor::RenderExecutor(
-    std::unique_ptr<ISpritePipeline> spritePipeline, std::unique_ptr<ITextPipeline> textPipeline
-)
-    : m_spritePipeline{ std::move(spritePipeline) }, m_textPipeline{ std::move(textPipeline) }
+RenderExecutor::RenderExecutor(ISpritePipeline& spritePipeline, ITextPipeline& textPipeline)
+    : m_spritePipeline{ spritePipeline }, m_textPipeline{ textPipeline }
 {}
 
 void RenderExecutor::execute(std::span<const RenderCommand> commands) const
 {
+    beginFrame();
+
     for(const auto& command : commands)
         std::visit([this](const auto& cmd) { executeImpl(cmd); }, command);
+
+    endFrame();
+}
+
+void RenderExecutor::endFrame() const
+{
+    m_spritePipeline.endFrame();
+    m_textPipeline.endFrame();
 }
 
 /// \brief Forward \ref SpriteSubmission to an implementation of \ref ISpritePipeline.
@@ -29,7 +35,7 @@ void RenderExecutor::execute(std::span<const RenderCommand> commands) const
 /// \param submission The information of the submitted sprite.
 void RenderExecutor::executeImpl(const SpriteSubmission& submission) const
 {
-    m_spritePipeline->draw(submission);
+    m_spritePipeline.draw(submission);
 }
 
 /// \brief Forward \ref SpriteSubmission to an implementation of \ref ITextPipeline.
