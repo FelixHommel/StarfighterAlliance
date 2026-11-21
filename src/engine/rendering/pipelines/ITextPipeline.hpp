@@ -3,6 +3,8 @@
 
 #include "rendering/RenderCommand.hpp"
 
+#include <glm/glm.hpp>
+
 namespace sfa
 {
 
@@ -20,6 +22,13 @@ public:
     ITextPipeline& operator=(const ITextPipeline&) = delete;
     ITextPipeline(ITextPipeline&&) noexcept = delete;
     ITextPipeline& operator=(ITextPipeline&&) noexcept = delete;
+
+    /// \brief Start a new frame.
+    ///
+    /// \param projection The projection matrix
+    virtual void beginFrame(const glm::mat4& projection) const = 0;
+    /// \brief End the current frame.
+    virtual void endFrame() const = 0;
 
     /// \brief Render a \ref TextSubmission to the screen.
     ///

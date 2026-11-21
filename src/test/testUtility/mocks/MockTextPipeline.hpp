@@ -14,6 +14,9 @@ namespace sfa::testing
 /// \date 11/13/2026
 class MockTextPipeline : public trompeloeil::mock_interface<ITextPipeline>
 {
+    IMPLEMENT_CONST_MOCK1(beginFrame);
+    IMPLEMENT_CONST_MOCK0(endFrame);
+
     IMPLEMENT_CONST_MOCK1(draw);
 };
 
