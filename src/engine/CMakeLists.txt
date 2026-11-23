@@ -59,6 +59,7 @@ target_sources(
                 ./rendering/RenderCommand.hpp
                 ./rendering/RenderExecutor.hpp
                 ./rendering/RenderQueue.hpp
+                ./rendering/pipelines/IRenderPipeline.hpp
                 ./rendering/pipelines/ISpritePipeline.hpp
                 ./rendering/pipelines/ITextPipeline.hpp
                 ./rendering/pipelines/BasicSpritePipeline.hpp

@@ -23,13 +23,6 @@ public:
     ITextPipeline(ITextPipeline&&) noexcept = delete;
     ITextPipeline& operator=(ITextPipeline&&) noexcept = delete;
 
-    /// \brief Start a new frame.
-    ///
-    /// \param projection The projection matrix
-    virtual void beginFrame(const glm::mat4& projection) const = 0;
-    /// \brief End the current frame.
-    virtual void endFrame() const = 0;
-
     /// \brief Render a \ref TextSubmission to the screen.
     ///
     /// \param submission Data of the submitted text renderable.
