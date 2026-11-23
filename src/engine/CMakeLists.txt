@@ -72,6 +72,7 @@ target_sources(
                 ./screens/SelectionScreen.hpp
                 ./utility/GLFWWindow.hpp
                 ./utility/IWindow.hpp
+                ./utility/PreCondition.hpp
                 ./utility/exceptions/Exception.hpp
                 ./utility/exceptions/ResourceUnavailableException.hpp
                 ./utility/exceptions/WindowCreationException.hpp
