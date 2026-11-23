@@ -26,6 +26,9 @@ void Renderer::beginFrame(const glm::mat4& projection)
 
 void Renderer::endFrame()
 {
+    m_spritePipeline->endFrame();
+    m_textPipeline->endFrame();
+
     if(m_queue.empty())
         return;
 

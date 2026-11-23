@@ -18,14 +18,6 @@ void RenderExecutor::execute(std::span<const RenderCommand> commands) const
 {
     for(const auto& command : commands)
         std::visit([this](const auto& cmd) { executeImpl(cmd); }, command);
-
-    endFrame();
-}
-
-void RenderExecutor::endFrame() const
-{
-    m_spritePipeline.endFrame();
-    m_textPipeline.endFrame();
 }
 
 /// \brief Forward \ref SpriteSubmission to an implementation of \ref ISpritePipeline.

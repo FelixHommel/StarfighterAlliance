@@ -34,8 +34,6 @@ private:
     ISpritePipeline& m_spritePipeline;
     ITextPipeline& m_textPipeline;
 
-    void endFrame() const;
-
     void executeImpl(const SpriteSubmission& submission) const;
     void executeImpl(const TextSubmission& submission) const;
 };
