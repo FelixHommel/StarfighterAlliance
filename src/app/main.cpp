@@ -1,5 +1,7 @@
 #include "core/Shader.hpp"
-#include "core/TextRenderer.hpp"
+#include "rendering/Renderer.hpp"
+#include "rendering/pipelines/BasicSpritePipeline.hpp"
+#include "rendering/pipelines/BasicTextPipeline.hpp"
 #include "screens/GameSession.hpp"
 #include "screens/MenuScreen.hpp"
 #include "screens/ScreenCommand.hpp"
@@ -17,6 +19,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <utility>
 
 namespace
 {
@@ -60,8 +63,11 @@ int main()
     auto spriteShader{ std::make_shared<Shader>(spriteVertSrc.c_str(), spriteFragSrc.c_str()) };
     auto textShader{ std::make_shared<Shader>(textVertSrc.c_str(), textFragSrc.c_str()) };
 
-    auto textRenderer{ std::make_shared<TextRenderer>(textShader) };
+    auto spriteRenderer{ std::make_unique<BasicSpritePipeline>(spriteShader) };
+    auto textRenderer{ std::make_unique<BasicTextPipeline>(textShader) };
     textRenderer->load(SFA_ROOT "resources/fonts/prstart.ttf", 18);
+    Renderer renderer(std::move(spriteRenderer), std::move(textRenderer));
+
     ScreenStack screens{};
     GameSession session{};
     screens.enqueueCommand(
@@ -90,7 +96,7 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
 
         screens.update(dt, input);
-        screens.render({ .window = window });
+        screens.render({ .window = window, .renderer = renderer });
 
         glfwSwapBuffers(glfwGetCurrentContext());
         glfwPollEvents();

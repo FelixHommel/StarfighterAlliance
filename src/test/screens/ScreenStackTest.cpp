@@ -1,4 +1,5 @@
 #include "screens/ScreenStack.hpp"
+#include "rendering/Renderer.hpp"
 #include "screens/ScreenCommand.hpp"
 #include "testUtility//mocks/MockScreen.hpp"
 #include "testUtility/mocks/MockOverlayScreen.hpp"
@@ -159,6 +160,7 @@ TEST_CASE("ScreenStackTest", "[unit][screens]")
     SECTION("Screen stack renders one screen")
     {
         MockWindow window{};
+        Renderer renderer(nullptr, nullptr);
 
         auto screen{ std::make_unique<MockScreen>() };
 
@@ -167,7 +169,7 @@ TEST_CASE("ScreenStackTest", "[unit][screens]")
         m_stack.enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(screen) });
         m_stack.processCommands();
 
-        m_stack.render({ .window = window });
+        m_stack.render({ .window = window, .renderer = renderer });
     }
 
     /// \brief Test that the \ref ScreenStack correctly renders overlays and regular screens.
@@ -177,6 +179,7 @@ TEST_CASE("ScreenStackTest", "[unit][screens]")
     SECTION("Screen stack renders all relevant screens")
     {
         MockWindow window{};
+        Renderer renderer(nullptr, nullptr);
 
         auto firstScreen{ std::make_unique<MockScreen>() };
         auto secondScreen{ std::make_unique<MockScreen>() };
@@ -194,7 +197,7 @@ TEST_CASE("ScreenStackTest", "[unit][screens]")
         m_stack.enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(secondOverlay) });
         m_stack.processCommands();
 
-        m_stack.render({ .window = window });
+        m_stack.render({ .window = window, .renderer = renderer });
     }
 
     /// \brief Test that the \ref ScreenStack only updates the top most screen.

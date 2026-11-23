@@ -1,6 +1,7 @@
 #ifndef SFA_SRC_ENGINE_CORE_RENDER_CONTEXT_HPP
 #define SFA_SRC_ENGINE_CORE_RENDER_CONTEXT_HPP
 
+#include "rendering/Renderer.hpp"
 #include "utility/IWindow.hpp"
 
 namespace sfa
@@ -10,6 +11,7 @@ namespace sfa
 struct RenderContext
 {
     const IWindow& window;
+    const Renderer& renderer;
 };
 // NOLINTEND(cppcoreguidelines-avoid-const-or-ref-data-members)
 
