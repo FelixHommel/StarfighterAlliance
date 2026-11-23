@@ -7,6 +7,8 @@
 #include "rendering/pipelines/ISpritePipeline.hpp"
 #include "rendering/pipelines/ITextPipeline.hpp"
 
+#include <glm/glm.hpp>
+
 #include <memory>
 
 namespace sfa
@@ -15,7 +17,7 @@ namespace sfa
 class Renderer
 {
 public:
-    Renderer(std::unique_ptr<ISpritePipeline> spriteRenderer, std::unique_ptr<ITextPipeline> textPipeline);
+    Renderer(std::unique_ptr<ISpritePipeline> spritePipeline, std::unique_ptr<ITextPipeline> textPipeline);
     ~Renderer() = default;
 
     Renderer(const Renderer&) = delete;
@@ -23,12 +25,15 @@ public:
     Renderer(Renderer&&) noexcept = delete;
     Renderer& operator=(Renderer&&) noexcept = delete;
 
-    void beginFrame();
+    void beginFrame(const glm::mat4& projection);
     void endFrame();
 
     void submit(RenderCommand command);
 
 private:
+    std::unique_ptr<ISpritePipeline> m_spritePipeline;
+    std::unique_ptr<ITextPipeline> m_textPipeline;
+
     RenderQueue m_queue;
     RenderExecutor m_executor;
 };
