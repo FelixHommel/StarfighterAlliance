@@ -32,8 +32,7 @@ void Renderer::endFrame()
     if(m_queue.empty())
         return;
 
-    m_executor.execute(m_queue.commands());
-    m_queue.clear();
+    m_executor.execute(m_queue.takeCommands());
 }
 
 void Renderer::submit(RenderCommand command)
