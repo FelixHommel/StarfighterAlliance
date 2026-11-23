@@ -12,6 +12,7 @@ add_library(
     ./core/resourceManagement/ResourceLoader.cpp
     ./external/stb_image_impl.cpp
     ./physics/Intersections.cpp
+    ./rendering/Renderer.cpp
     ./rendering/RenderExecutor.cpp
     ./rendering/RenderQueue.cpp
     ./rendering/pipelines/BasicSpritePipeline.cpp
