@@ -23,7 +23,7 @@ namespace sfa
 
 TextRenderer::TextRenderer(std::shared_ptr<Shader> shader) : m_shader(std::move(shader))
 {
-    m_shader->setInteger("text", 0);
+    m_shader->setUniform("text", 0);
 
     glGenVertexArrays(1, &m_vao);
     glGenBuffers(1, &m_vbo);
@@ -107,12 +107,12 @@ void TextRenderer::load(const std::filesystem::path& filepath, unsigned int font
 
 void TextRenderer::beginFrame(const glm::mat4& projection)
 {
-    m_shader->setMatrix4("projection", projection, true);
+    m_shader->setUniform("projection", projection, true);
 }
 
 void TextRenderer::render(const std::string& text, const glm::vec2& pos, const glm::vec2& scale, glm::vec3 color)
 {
-    m_shader->setVector3f("textColor", color, true);
+    m_shader->setUniform("textColor", color, true);
     glActiveTexture(GL_TEXTURE0);
     glBindVertexArray(m_vao);
 

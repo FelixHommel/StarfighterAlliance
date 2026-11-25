@@ -72,8 +72,8 @@ void ParticleGenerator::draw()
     {
         if(particle.life > 0.0f)
         {
-            m_shader->setVector2f("offset", particle.position);
-            m_shader->setVector4f("color", particle.color);
+            m_shader->setUniform("offset", particle.position);
+            m_shader->setUniform("color", particle.color);
             m_texture->bind();
             glBindVertexArray(m_vao);
             glDrawArrays(GL_TRIANGLES, 0, PARTICLE_QUAD_VERTICES);
