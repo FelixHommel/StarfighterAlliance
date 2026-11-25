@@ -39,7 +39,10 @@ void Renderer::endFrame()
     m_textPipeline->endFrame();
 
     if(m_queue.empty())
+    {
+        m_inFrame = false;
         return;
+    }
 
     m_executor.execute(m_queue.takeCommands());
 
