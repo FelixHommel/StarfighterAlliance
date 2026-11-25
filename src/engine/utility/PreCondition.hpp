@@ -19,7 +19,7 @@ template<typename ExceptionT, typename... Args>
 void require(bool condition, Args&&... args)
 {
     if(!condition)
-        ExceptionT(std::forward<Args>(args)...);
+        throw ExceptionT(std::forward<Args>(args)...);
 }
 
 } // namespace sfa::pre
