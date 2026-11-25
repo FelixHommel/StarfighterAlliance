@@ -2,6 +2,7 @@
 #define SFA_SRC_ENGINE_RENDERING_PIPELINES_I_TEXT_PIPELINE_HPP
 
 #include "rendering/RenderCommand.hpp"
+#include "rendering/pipelines/IRenderPipeline.hpp"
 
 #include <glm/glm.hpp>
 
@@ -12,21 +13,16 @@ namespace sfa
 ///
 /// \author Felix Hommel
 /// \date 11/13/2026
-class ITextPipeline
+class ITextPipeline : public IRenderPipeline<TextSubmission>
 {
 public:
     ITextPipeline() = default;
-    virtual ~ITextPipeline() = default;
+    ~ITextPipeline() override = default;
 
     ITextPipeline(const ITextPipeline&) = delete;
     ITextPipeline& operator=(const ITextPipeline&) = delete;
     ITextPipeline(ITextPipeline&&) noexcept = delete;
     ITextPipeline& operator=(ITextPipeline&&) noexcept = delete;
-
-    /// \brief Render a \ref TextSubmission to the screen.
-    ///
-    /// \param submission Data of the submitted text renderable.
-    virtual void draw(const TextSubmission& submission) const = 0;
 };
 
 } // namespace sfa

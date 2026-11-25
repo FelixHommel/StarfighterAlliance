@@ -17,7 +17,7 @@ namespace sfa
 ///
 /// \author Felix Hommel
 /// \date 11/20/2026
-class BasicSpritePipeline : public ISpritePipeline
+class BasicSpritePipeline final : public ISpritePipeline
 {
 public:
     BasicSpritePipeline(std::shared_ptr<Shader> shader);

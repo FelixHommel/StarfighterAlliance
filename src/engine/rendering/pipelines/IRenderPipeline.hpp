@@ -1,13 +1,19 @@
 #ifndef SFA_SRC_ENGINE_RENDERING_PIPELINES_I_RENDER_PIPELINE_HPP
 #define SFA_SRC_ENGINE_RENDERING_PIPELINES_I_RENDER_PIPELINE_HPP
 
+#include "rendering/RenderCommand.hpp"
+#include "utility/concepts/VariantAlternative.hpp"
+
 #include <glm/glm.hpp>
 
 namespace sfa
 {
 
-// TODO: This needs concept to ensure DrawParamT is in RenderCommand optional, see physics/Intersections.hpp
-template<typename DrawParamT>
+/// \brief Interface definition for any type of render pipeline.
+///
+/// \author Felix Hommel
+/// \date 11/23/2026
+template<concepts::VariantAlternative<RenderCommand> DrawParamT>
 class IRenderPipeline
 {
 public:
@@ -26,7 +32,7 @@ public:
     /// \brief End the current frame.
     virtual void endFrame() const = 0;
 
-    /// \brief Render a \ref TextSubmission to the screen.
+    /// \brief Render an instance of \p DrawParamT to the screen.
     ///
     /// \param submission Data of the submitted text renderable.
     virtual void draw(const DrawParamT& submission) const = 0;

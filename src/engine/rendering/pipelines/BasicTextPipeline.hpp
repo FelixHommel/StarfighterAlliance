@@ -44,7 +44,7 @@ struct TextBounds
 ///
 /// \author Felix Hommel
 /// \date 11/20/2026
-class BasicTextPipeline : public ITextPipeline
+class BasicTextPipeline final : public ITextPipeline
 {
 public:
     explicit BasicTextPipeline(std::shared_ptr<Shader> shader);
