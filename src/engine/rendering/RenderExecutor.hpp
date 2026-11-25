@@ -3,8 +3,8 @@
 
 #include "rendering/RenderCommand.hpp"
 #include "rendering/pipelines/ISpritePipeline.hpp"
+#include "rendering/pipelines/ITextPipeline.hpp"
 
-#include <memory>
 #include <span>
 
 namespace sfa
@@ -17,7 +17,7 @@ namespace sfa
 class RenderExecutor
 {
 public:
-    RenderExecutor(std::unique_ptr<ISpritePipeline> spritePipeline);
+    RenderExecutor(ISpritePipeline& spritePipeline, ITextPipeline& textPipeline);
     ~RenderExecutor() = default;
 
     RenderExecutor(const RenderExecutor&) = delete;
@@ -25,10 +25,14 @@ public:
     RenderExecutor(RenderExecutor&&) noexcept = delete;
     RenderExecutor& operator=(RenderExecutor&&) noexcept = delete;
 
+    /// \brief Execute a collection of \ref RenderCommand using rendering pipelines.
+    ///
+    /// \param commands The collection of \ref RenderCommand
     void execute(std::span<const RenderCommand> commands) const;
 
 private:
-    std::unique_ptr<ISpritePipeline> m_spritePipeline;
+    ISpritePipeline& m_spritePipeline;
+    ITextPipeline& m_textPipeline;
 
     void executeImpl(const SpriteSubmission& submission) const;
     void executeImpl(const TextSubmission& submission) const;

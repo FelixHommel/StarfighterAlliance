@@ -12,12 +12,11 @@ add_executable(
     ./core/resourceManagement/ResourceCacheTest.cpp
     ./core/resourceManagement/ResourceContextTest.cpp
     ./core/resourceManagement/ResourceLoaderTest.cpp
-    ./ecs/ComponentArrayTest.cpp
-    ./ecs/EntityManagerTest.cpp
-    ./ecs/ComponentRegistryTest.cpp
     ./testUtility/OpenGLTestContext.cpp
     ./testUtility/stb_image_write_impl.cpp
     ./testUtility/TemporaryDirectory.cpp
+    ./rendering/QueueExecuterIntegrationTest.cpp
+    ./rendering/RenderExecutorTest.cpp
     ./rendering/RenderQueueTest.cpp
     ./screens/ScreenStackTest.cpp
     ./utility/exceptions/ExceptionTest.cpp
@@ -40,6 +39,8 @@ target_sources(
                 ./testUtility/mocks/MockOverlayScreen.hpp
                 ./testUtility/mocks/MockResourceLoader.hpp
                 ./testUtility/mocks/MockScreen.hpp
+                ./testUtility/mocks/MockSpritePipeline.hpp
+                ./testUtility/mocks/MockTextPipeline.hpp
                 ./testUtility/mocks/MockWindow.hpp
 )
 

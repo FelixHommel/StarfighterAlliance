@@ -6,19 +6,17 @@ add_library(
     ./concurrency/ThreadPool.cpp
     ./core/ParticleGenerator.cpp
     ./core/Shader.cpp
-    ./core/SpriteRenderer.cpp
     ./core/TextRenderer.cpp
     ./core/Texture.cpp
     ./core/resourceManagement/ResourceContext.cpp
     ./core/resourceManagement/ResourceLoader.cpp
-    ./ecs/EntityManager.cpp
-    ./ecs/systems/MovementSystem.cpp
-    ./ecs/systems/SpriteRenderSystem.cpp
-    ./ecs/systems/TextRenderSystem.cpp
     ./external/stb_image_impl.cpp
+    ./physics/Intersections.cpp
+    ./rendering/Renderer.cpp
     ./rendering/RenderExecutor.cpp
     ./rendering/RenderQueue.cpp
     ./rendering/pipelines/BasicSpritePipeline.cpp
+    ./rendering/pipelines/BasicTextPipeline.cpp
     ./screens/MenuScreen.cpp
     ./screens/ScreenStack.cpp
     ./screens/SelectionScreen.cpp
@@ -41,7 +39,6 @@ target_sources(
                 ./core/ParticleGenerator.hpp
                 ./core/RenderContext.hpp
                 ./core/Shader.hpp
-                ./core/SpriteRenderer.hpp
                 ./core/TextRenderer.hpp
                 ./core/Texture.hpp
                 ./core/TextureView.hpp
@@ -52,30 +49,21 @@ target_sources(
                 ./core/resourceManagement/ResourceContext.hpp
                 ./core/resourceManagement/ResourceError.hpp
                 ./core/resourceManagement/ResourceLoader.hpp
-                ./ecs/ComponentArray.hpp
-                ./ecs/ComponentRegistry.hpp
-                ./ecs/ECSUtility.hpp
-                ./ecs/EntityManager.hpp
-                ./ecs/IComponentArray.hpp
-                ./ecs/components/BoxColliderComponent.hpp
-                ./ecs/components/CircleColliderComponent.hpp
-                ./ecs/components/DamageComponent.hpp
-                ./ecs/components/HealthComponent.hpp
-                ./ecs/components/IComponent.hpp
-                ./ecs/components/RigidBodyComponent.hpp
-                ./ecs/components/SpriteComponent.hpp
-                ./ecs/components/TextComponent.hpp
-                ./ecs/components/TransformComponent.hpp
-                ./ecs/components/VelocityComponent.hpp
-                ./ecs/systems/MovementSystem.hpp
-                ./ecs/systems/SpriteRenderSystem.hpp
-                ./ecs/systems/TextRenderSystem.hpp
+                ./entities/components/Transform.hpp
+                ./entities/interfaces/ICollidable.hpp
+                ./entities/interfaces/IRenderable.hpp
+                ./entities/interfaces/IUpdateable.hpp
+                ./physics/Intersections.hpp
+                ./physics/Shape.hpp
                 ./rendering/Renderer.hpp
                 ./rendering/RenderCommand.hpp
                 ./rendering/RenderExecutor.hpp
                 ./rendering/RenderQueue.hpp
+                ./rendering/pipelines/IRenderPipeline.hpp
                 ./rendering/pipelines/ISpritePipeline.hpp
+                ./rendering/pipelines/ITextPipeline.hpp
                 ./rendering/pipelines/BasicSpritePipeline.hpp
+                ./rendering/pipelines/BasicTextPipeline.hpp
                 ./screens/GameSession.hpp
                 ./screens/IScreen.hpp
                 ./screens/IScreenContext.hpp
@@ -85,6 +73,8 @@ target_sources(
                 ./screens/SelectionScreen.hpp
                 ./utility/GLFWWindow.hpp
                 ./utility/IWindow.hpp
+                ./utility/PreCondition.hpp
+                ./utility/concepts/VariantAlternative.hpp
                 ./utility/exceptions/Exception.hpp
                 ./utility/exceptions/ResourceUnavailableException.hpp
                 ./utility/exceptions/WindowCreationException.hpp
