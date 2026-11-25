@@ -74,6 +74,7 @@ target_sources(
                 ./utility/GLFWWindow.hpp
                 ./utility/IWindow.hpp
                 ./utility/PreCondition.hpp
+                ./utility/concepts/VariantAlternative.hpp
                 ./utility/exceptions/Exception.hpp
                 ./utility/exceptions/ResourceUnavailableException.hpp
                 ./utility/exceptions/WindowCreationException.hpp
