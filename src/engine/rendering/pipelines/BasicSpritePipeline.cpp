@@ -109,7 +109,7 @@ void BasicSpritePipeline::draw(const SpriteSubmission& submission) const
 
 void BasicSpritePipeline::bindAppearance(const SpriteSubmission& submission) const
 {
-    static constexpr auto COLOR_WHITE{ glm::vec3(255.f) };
+    static constexpr auto COLOR_WHITE{ glm::vec3(1.f) };
 
     glActiveTexture(GL_TEXTURE0);
     std::visit(
