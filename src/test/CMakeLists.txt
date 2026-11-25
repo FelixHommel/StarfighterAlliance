@@ -16,6 +16,7 @@ add_executable(
     ./testUtility/stb_image_write_impl.cpp
     ./testUtility/TemporaryDirectory.cpp
     ./rendering/QueueExecuterIntegrationTest.cpp
+    ./rendering/RendererTest.cpp
     ./rendering/RenderExecutorTest.cpp
     ./rendering/RenderQueueTest.cpp
     ./screens/ScreenStackTest.cpp
