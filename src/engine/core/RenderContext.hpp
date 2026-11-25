@@ -11,7 +11,7 @@ namespace sfa
 struct RenderContext
 {
     const IWindow& window;
-    const Renderer& renderer;
+    Renderer& renderer;
 };
 // NOLINTEND(cppcoreguidelines-avoid-const-or-ref-data-members)
 
