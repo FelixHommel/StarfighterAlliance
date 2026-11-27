@@ -27,7 +27,7 @@ public:
     /// \brief Check if the entity collides another entity.
     ///
     /// \param other the \ref ICollidable.
-    virtual void onCollision(const ICollidable& other) const = 0;
+    virtual void onCollision(const ICollidable& other) = 0;
 };
 
 } // namespace sfa
