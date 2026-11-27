@@ -16,8 +16,8 @@ public:
     IRenderable() = default;
     virtual ~IRenderable() = default;
 
-    IRenderable(const IRenderable&) = default;
-    IRenderable& operator=(const IRenderable&) = default;
+    IRenderable(const IRenderable&) = delete;
+    IRenderable& operator=(const IRenderable&) = delete;
     IRenderable(IRenderable&&) noexcept = default;
     IRenderable& operator=(IRenderable&&) noexcept = default;
 

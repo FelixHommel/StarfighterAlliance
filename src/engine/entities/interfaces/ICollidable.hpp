@@ -16,8 +16,8 @@ public:
     ICollidable() = default;
     virtual ~ICollidable() = default;
 
-    ICollidable(const ICollidable&) = default;
-    ICollidable& operator=(const ICollidable&) = default;
+    ICollidable(const ICollidable&) = delete;
+    ICollidable& operator=(const ICollidable&) = delete;
     ICollidable(ICollidable&&) = default;
     ICollidable& operator=(ICollidable&&) = default;
 

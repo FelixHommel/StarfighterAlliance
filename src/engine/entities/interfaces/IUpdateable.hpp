@@ -14,8 +14,8 @@ public:
     IUpdateable() = default;
     virtual ~IUpdateable() = default;
 
-    IUpdateable(const IUpdateable&) = default;
-    IUpdateable& operator=(const IUpdateable&) = default;
+    IUpdateable(const IUpdateable&) = delete;
+    IUpdateable& operator=(const IUpdateable&) = delete;
     IUpdateable(IUpdateable&&) noexcept = default;
     IUpdateable& operator=(IUpdateable&&) noexcept = default;
 
