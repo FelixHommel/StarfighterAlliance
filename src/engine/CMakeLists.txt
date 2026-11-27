@@ -6,7 +6,6 @@ add_library(
     ./concurrency/ThreadPool.cpp
     ./core/ParticleGenerator.cpp
     ./core/Shader.cpp
-    ./core/TextRenderer.cpp
     ./core/Texture.cpp
     ./core/resourceManagement/ResourceContext.cpp
     ./core/resourceManagement/ResourceLoader.cpp
@@ -39,7 +38,6 @@ target_sources(
                 ./core/ParticleGenerator.hpp
                 ./core/RenderContext.hpp
                 ./core/Shader.hpp
-                ./core/TextRenderer.hpp
                 ./core/Texture.hpp
                 ./core/TextureView.hpp
                 ./core/Utility.hpp
