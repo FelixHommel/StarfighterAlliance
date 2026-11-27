@@ -67,7 +67,7 @@ private:
     OnEnterFunction m_onEnterFunction{ []() {} };
     OnExitFunction m_onExitFunction{ [] {} };
 
-    std::array<std::unique_ptr<SpaceshipData>, std::to_underlying(SpaceshipType::SPACESHIP_TPYE_MAX)> m_spaceships;
+    std::array<std::unique_ptr<SpaceshipData>, std::to_underlying(SpaceshipType::SPACESHIP_TYPE_MAX)> m_spaceships;
     SpaceshipType m_currentSelection{ SpaceshipType::XWing };
 
     void loadSpaceshipData(ResourceContext& resources);

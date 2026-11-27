@@ -17,7 +17,7 @@ enum class SpaceshipType : std::uint8_t
     XWing = 0,
     YWing = 1,
     MilleniumFalcon = 2,
-    SPACESHIP_TPYE_MAX = 3
+    SPACESHIP_TYPE_MAX = 3
 };
 
 namespace spaceshipType

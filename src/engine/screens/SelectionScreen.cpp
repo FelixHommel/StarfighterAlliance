@@ -72,7 +72,7 @@ void SelectionScreen::render(const RenderContext& context) {}
 /// \param resources the \ref ResourceContext needed to load the preview images
 void SelectionScreen::loadSpaceshipData(ResourceContext& resources)
 {
-    for(std::underlying_type_t<SpaceshipType> i{ 0 }; i < std::to_underlying(SpaceshipType::SPACESHIP_TPYE_MAX); ++i)
+    for(std::underlying_type_t<SpaceshipType> i{ 0 }; i < std::to_underlying(SpaceshipType::SPACESHIP_TYPE_MAX); ++i)
     {
         const auto spaceshipType{ static_cast<SpaceshipType>(i) };
         const auto spaceshipColor{ m_session.spaceshipConfig.color.get() };
