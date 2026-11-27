@@ -2,7 +2,7 @@
 #define SFA_SRC_ENGINE_RENDERING_RENDER_COMMAND_HPP
 
 #include "core/FontMap.hpp"
-#include "entities/components/Sprite.hpp"
+#include "rendering/SpriteAppearance.hpp"
 
 #include <glm/glm.hpp>
 

@@ -56,6 +56,7 @@ target_sources(
                 ./physics/Intersections.hpp
                 ./physics/Shape.hpp
                 ./rendering/IRenderSubmitter.hpp
+                ./rendering/SpriteAppearance.hpp
                 ./rendering/Renderer.hpp
                 ./rendering/RenderCommand.hpp
                 ./rendering/RenderExecutor.hpp
