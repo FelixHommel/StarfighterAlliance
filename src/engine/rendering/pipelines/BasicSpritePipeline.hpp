@@ -51,6 +51,9 @@ private:
     GLuint m_fallbackTexture{ 0 };
 
     void bindAppearance(const SpriteSubmission& submission) const;
+
+    void applyAppearanceImpl(TextureView appearance) const;
+    void applyAppearanceImpl(const glm::vec3& appearance) const;
 };
 
 } // namespace sfa

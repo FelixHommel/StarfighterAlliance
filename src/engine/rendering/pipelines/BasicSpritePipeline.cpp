@@ -11,7 +11,6 @@
 #include <array>
 #include <cstddef>
 #include <memory>
-#include <type_traits>
 #include <utility>
 #include <variant>
 
@@ -109,26 +108,22 @@ void BasicSpritePipeline::draw(const SpriteSubmission& submission) const
 
 void BasicSpritePipeline::bindAppearance(const SpriteSubmission& submission) const
 {
+    glActiveTexture(GL_TEXTURE0);
+    std::visit([this](const auto& appearance) { applyAppearanceImpl(appearance); }, submission.appearance);
+}
+
+void BasicSpritePipeline::applyAppearanceImpl(const glm::vec3& appearance) const
+{
+    m_shader->setUniform("spriteColor", appearance);
+    glBindTexture(GL_TEXTURE_2D, m_fallbackTexture);
+}
+
+void BasicSpritePipeline::applyAppearanceImpl(TextureView appearance) const
+{
     static constexpr auto COLOR_WHITE{ glm::vec3(1.f) };
 
-    glActiveTexture(GL_TEXTURE0);
-    std::visit(
-        [this](const auto& appearance) {
-            using T = std::decay_t<decltype(appearance)>;
-
-            if constexpr(std::is_same_v<T, TextureView>)
-            {
-                m_shader->setUniform("spriteColor", COLOR_WHITE);
-                glBindTexture(appearance.target, appearance.id);
-            }
-            else if constexpr(std::is_same_v<T, glm::vec3>)
-            {
-                m_shader->setUniform("spriteColor", appearance);
-                glBindTexture(GL_TEXTURE_2D, m_fallbackTexture);
-            }
-        },
-        submission.appearance
-    );
+    m_shader->setUniform("spriteColor", COLOR_WHITE);
+    glBindTexture(appearance.target, appearance.id);
 }
 
 } // namespace sfa
