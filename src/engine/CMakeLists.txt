@@ -55,6 +55,7 @@ target_sources(
                 ./entities/interfaces/IUpdateable.hpp
                 ./physics/Intersections.hpp
                 ./physics/Shape.hpp
+                ./rendering/IRenderSubmitter.hpp
                 ./rendering/Renderer.hpp
                 ./rendering/RenderCommand.hpp
                 ./rendering/RenderExecutor.hpp

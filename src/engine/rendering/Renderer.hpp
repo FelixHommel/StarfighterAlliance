@@ -1,6 +1,7 @@
 #ifndef SFA_SRC_ENGINE_RENDERING_RENDERER_HPP
 #define SFA_SRC_ENGINE_RENDERING_RENDERER_HPP
 
+#include "rendering/IRenderSubmitter.hpp"
 #include "rendering/RenderCommand.hpp"
 #include "rendering/RenderExecutor.hpp"
 #include "rendering/RenderQueue.hpp"
@@ -18,7 +19,7 @@ namespace sfa
 ///
 /// \author Felix Hommel
 /// \date 11/23/2026
-class Renderer
+class Renderer final : public IRenderSubmitter
 {
 public:
     /// \brief Create a new \ref Renderer by providing it the pipelines it is going to use.
@@ -26,7 +27,7 @@ public:
     /// \param spritePipeline An implementation of \ref ISpritePipeline
     /// \param textPipeline An implementation of \ref ITextPipeline
     Renderer(std::unique_ptr<ISpritePipeline> spritePipeline, std::unique_ptr<ITextPipeline> textPipeline);
-    ~Renderer() = default;
+    ~Renderer() override = default;
 
     Renderer(const Renderer&) = delete;
     Renderer& operator=(const Renderer&) = delete;
@@ -49,7 +50,7 @@ public:
     /// If no frame was started, the command will be discarded.
     ///
     /// \param command The \ref RenderCommand that is submitted
-    void submit(RenderCommand command);
+    void submit(RenderCommand command) override;
 
 private:
     std::unique_ptr<ISpritePipeline> m_spritePipeline;

@@ -1,10 +1,10 @@
 #ifndef SFA_SRC_ENGINE_ENTITIES_INTERFACES_I_RENDERABLE_HPP
 #define SFA_SRC_ENGINE_ENTITIES_INTERFACES_I_RENDERABLE_HPP
 
+#include "rendering/IRenderSubmitter.hpp"
+
 namespace sfa
 {
-
-class Renderer;
 
 /// Interface definition for Entities that can be rendered.
 ///
@@ -24,7 +24,7 @@ public:
     /// \brief Render the entity.
     ///
     /// \param renderer The \ref Renderer that is used to render the entity.
-    virtual void render(Renderer& renderer) const = 0;
+    virtual void render(IRenderSubmitter& renderer) const = 0;
 };
 
 } // namespace sfa
