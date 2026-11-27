@@ -16,6 +16,7 @@
 #include <filesystem>
 #include <memory>
 #include <mutex>
+#include <optional>
 #include <string>
 #include <thread>
 #include <variant>
@@ -39,7 +40,7 @@ public:
         std::string name;
         std::filesystem::path vert;
         std::filesystem::path frag;
-        std::filesystem::path geom;
+        std::optional<std::filesystem::path> geom{ std::nullopt };
     };
 
     /// \brief Containing information needed to load and upload a texture.

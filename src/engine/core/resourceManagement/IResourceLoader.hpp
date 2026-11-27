@@ -4,6 +4,7 @@
 #include "core/resourceManagement/IntermediateResourceData.hpp"
 
 #include <filesystem>
+#include <optional>
 
 namespace sfa
 {
@@ -39,7 +40,7 @@ public:
     virtual LoadResult loadShader(
         const std::filesystem::path& vert,
         const std::filesystem::path& frag,
-        const std::filesystem::path& geom = std::filesystem::path("")
+        const std::optional<std::filesystem::path>& geom = std::nullopt
     ) = 0;
     /// \brief Load a texture from the disk.
     ///

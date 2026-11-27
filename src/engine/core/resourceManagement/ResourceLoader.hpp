@@ -7,6 +7,7 @@
 
 #include <expected>
 #include <filesystem>
+#include <optional>
 #include <string>
 
 namespace sfa
@@ -22,7 +23,7 @@ public:
     LoadResult loadShader(
         const std::filesystem::path& vert,
         const std::filesystem::path& frag,
-        const std::filesystem::path& geom = std::filesystem::path("")
+        const std::optional<std::filesystem::path>& geom = std::nullopt
     ) override;
     LoadResult loadTexture(const std::filesystem::path& filepath) override;
 

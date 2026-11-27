@@ -142,7 +142,7 @@ void ResourceContext::uploadToGPU(const std::string& key, const ShaderSourceData
             std::make_shared<Shader>(
                 data.vertexSource.c_str(),
                 data.fragmentSource.c_str(),
-                data.geometrySource.empty() ? nullptr : data.geometrySource.c_str()
+                data.geometrySource.has_value() ? data.geometrySource.value().c_str() : nullptr
             )
         );
 

@@ -29,14 +29,14 @@ TEST_CASE("ThreadPoolTest", "[unit][concurrency]")
     SECTION("Multiple tasks")
     {
         constexpr std::size_t THREAD_POOL_SIZE{ 4 };
-        constexpr auto NUM_TASKS{ 100 };
+        constexpr std::size_t NUM_TASKS{ 100 };
 
         ThreadPool pool(THREAD_POOL_SIZE);
 
-        std::vector<std::future<int>> futures;
+        std::vector<std::future<std::size_t>> futures;
         std::atomic<int> counter{ 0 };
 
-        for(int i{ 0 }; i < NUM_TASKS; ++i)
+        for(std::size_t i{ 0 }; i < NUM_TASKS; ++i)
         {
             futures.push_back(pool.enqueue([&counter, i]() {
                 counter.fetch_add(1, std::memory_order_relaxed);
@@ -45,7 +45,7 @@ TEST_CASE("ThreadPoolTest", "[unit][concurrency]")
             }));
         }
 
-        for(int i{ 0 }; i < NUM_TASKS; ++i)
+        for(std::size_t i{ 0 }; i < NUM_TASKS; ++i)
             CHECK(i == futures[i].get());
 
         CHECK(NUM_TASKS == counter);

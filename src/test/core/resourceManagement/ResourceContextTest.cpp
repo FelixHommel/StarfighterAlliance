@@ -13,6 +13,7 @@
 #include <cstddef>
 #include <filesystem>
 #include <memory>
+#include <optional>
 #include <thread>
 #include <utility>
 
@@ -132,7 +133,7 @@ TEST_CASE("ResourceContextMockTest", "[unit][core][opengl][concurrency]")
     /// When the resource cache is cleared, all currently stored resources are destroyed.
     SECTION("Clear resource context")
     {
-        ALLOW_CALL(*pMockLoader, loadShader(MOCK_FS_PATH, MOCK_FS_PATH, MOCK_FS_PATH))
+        ALLOW_CALL(*pMockLoader, loadShader(MOCK_FS_PATH, MOCK_FS_PATH, std::nullopt))
             .RETURN(LoadResult{ EXPECTED_SHADER_DATA });
         ALLOW_CALL(*pMockLoader, loadTexture(MOCK_FS_PATH)).RETURN(LoadResult{ EXPECTED_TEXTURE_DATA });
 

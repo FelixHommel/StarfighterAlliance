@@ -32,6 +32,7 @@ target_sources(
     PRIVATE
         FILE_SET HEADERS
             FILES
+                ./testUtility/CompilerWarnings.hpp
                 ./testUtility/OpenGLTestContext.hpp
                 ./testUtility/RandomNumberGenerator.hpp
                 ./testUtility/ResourceGenerator.hpp

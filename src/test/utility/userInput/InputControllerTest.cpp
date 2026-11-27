@@ -40,7 +40,7 @@ TEST_CASE("InputControllerTest", "[unit][utility]")
     /// When a new \ref MouseMoveEvent is registered, the internal event queue should be increased by one.
     SECTION("Register a new mouse move event")
     {
-        controller.registerEvent(MouseMoveEvent{ .posX = 1.f, .posY = 1.f });
+        controller.registerEvent(MouseMoveEvent{ .posX = 1.0, .posY = 1.0 });
 
         CHECK(controller.queuedEvents() == 1);
     }

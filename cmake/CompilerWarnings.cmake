@@ -23,7 +23,7 @@ function(set_project_warnings project_name)
         /permissive-
     )
 
-    set(CLANG_WARNIGNS
+    set(CLANG_WARNINGS
         -Wall
         -Wextra
         -Wnon-virtual-dtor
@@ -58,11 +58,11 @@ function(set_project_warnings project_name)
     )
 
     if(MSVC)
-        set(PROJECT_WARNINGS ${MSVC_WARNINGS})
+        set(PROJECT_WARNINGS ${MSVC_WARNINGS} PARENT_SCOPE)
     elseif(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
-        set(PROJECT_WARNINGS ${CLANG_WARNINGS})
+        set(PROJECT_WARNINGS ${CLANG_WARNINGS} PARENT_SCOPE)
     elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-        set(PROJECT_WARNINGS ${GCC_WARNINGS})
+        set(PROJECT_WARNINGS ${GCC_WARNINGS} PARENT_SCOPE)
     endif()
 
     target_compile_options(${project_name} INTERFACE ${PROJECT_WARNINGS})

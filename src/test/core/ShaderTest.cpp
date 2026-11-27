@@ -1,4 +1,5 @@
 #include "core/Shader.hpp"
+#include "testUtility/CompilerWarnings.hpp"
 #include "testUtility/OpenGLTestContext.hpp"
 #include "testUtility/RandomNumberGenerator.hpp"
 
@@ -168,7 +169,11 @@ TEST_CASE("RAIIShaderTest", "[unit][core][opengl]")
         Shader shader{ ::VERTEX_SHADER_SRC, ::FRAGMENT_SHADER_SRC };
         const auto originalShaderID{ shader.getID() };
 
+        DISABLE_SELF_MOVE_WARNING_BEGIN
+
         shader = std::move(shader);
+
+        DISABLE_SELF_MOVE_WARNING_END
 
         CHECK(static_cast<bool>(glIsProgram(originalShaderID)));
         CHECK(shader.getID() == originalShaderID);
@@ -201,11 +206,11 @@ TEST_CASE("ShaderTest", "[unit][core][opengl]")
     {
         shader.use();
 
-        int currentProgram{ 0 };
+        GLint currentProgram{ 0 };
         glGetIntegerv(GL_CURRENT_PROGRAM, &currentProgram);
 
         CHECK(currentProgram != 0);
-        CHECK(shader.getID() == currentProgram);
+        CHECK(shader.getID() == static_cast<GLuint>(currentProgram));
     }
 
     /// \brief Test uploading a single float uniform value

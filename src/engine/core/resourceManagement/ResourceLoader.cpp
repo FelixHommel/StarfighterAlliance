@@ -12,6 +12,7 @@
 #include <filesystem>
 #include <fstream>
 #include <limits>
+#include <optional>
 #include <sstream>
 #include <utility>
 #include <vector>
@@ -20,7 +21,9 @@ namespace sfa
 {
 
 LoadResult ResourceLoader::loadShader(
-    const std::filesystem::path& vert, const std::filesystem::path& frag, const std::filesystem::path& geom
+    const std::filesystem::path& vert,
+    const std::filesystem::path& frag,
+    const std::optional<std::filesystem::path>& geom
 )
 {
     ShaderSourceData data;
@@ -35,9 +38,9 @@ LoadResult ResourceLoader::loadShader(
         return std::unexpected(result.error());
     data.fragmentSource = std::move(*result);
 
-    if(!geom.empty())
+    if(geom.has_value())
     {
-        result = readFile(geom);
+        result = readFile(*geom);
         if(!result)
             return std::unexpected(result.error());
         data.geometrySource = std::move(*result);

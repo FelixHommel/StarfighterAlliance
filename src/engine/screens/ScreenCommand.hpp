@@ -27,7 +27,7 @@ struct ScreenCommand
     };
 
     Type type;
-    std::unique_ptr<IScreen> screen;
+    std::unique_ptr<IScreen> screen{ nullptr };
 };
 
 } // namespace sfa

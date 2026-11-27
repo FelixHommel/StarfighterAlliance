@@ -5,6 +5,7 @@
 
 #include <cstddef>
 #include <expected>
+#include <optional>
 #include <string>
 #include <variant>
 #include <vector>
@@ -20,7 +21,7 @@ struct ShaderSourceData
 {
     std::string vertexSource;
     std::string fragmentSource;
-    std::string geometrySource; ///< Empty string if shader does not use geometry shaders
+    std::optional<std::string> geometrySource{ std::nullopt };
 };
 
 /// \brief Information from which an OpenGL texture can be created.

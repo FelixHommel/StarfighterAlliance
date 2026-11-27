@@ -127,11 +127,11 @@ TEST_CASE("Texture2DTest", "[unit][core][opengl]")
     {
         texture.bind();
 
-        int boundTexture{ 0 };
+        GLint boundTexture{ 0 };
         glGetIntegerv(GL_TEXTURE_BINDING_2D, &boundTexture);
 
         CHECK(boundTexture != 0);
-        CHECK(texture.getID() == boundTexture);
+        CHECK(texture.getID() == static_cast<GLuint>(boundTexture));
     }
 
     SECTION("view provides access to the underlying OpenGL resource")

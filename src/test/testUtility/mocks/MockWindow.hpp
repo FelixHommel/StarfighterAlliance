@@ -25,7 +25,7 @@ public:
     [[nodiscard]] bool shouldClose() const override { return m_shouldClose; }
     [[nodiscard]] Viewport viewport() const noexcept override { return m_viewport; }
     void setShouldClose() override { m_shouldClose = true; }
-    void attachInputController(InputController* controller) override {}
+    void attachInputController([[maybe_unused]] InputController* controller) override {}
 
     void setViewport(const Viewport& viewport) { m_viewport = viewport; }
 
