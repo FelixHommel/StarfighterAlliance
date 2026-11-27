@@ -40,7 +40,7 @@ namespace spaceshipColor
     case Yellow:
         return "yellow";
     case Orange:
-        return "ornage";
+        return "orange";
     case Green:
         return "green";
     case Violet:
