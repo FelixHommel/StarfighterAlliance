@@ -1,3 +1,6 @@
+#ifndef SFA_SRC_ENGINE_UTILITY_CONCEPTS_VARIANT_ALTERNATIVE_HPP
+#define SFA_SRC_ENGINE_UTILITY_CONCEPTS_VARIANT_ALTERNATIVE_HPP
+
 #include <concepts>
 #include <type_traits>
 #include <variant>
@@ -23,4 +26,6 @@ struct IsVariantAlternative<T, std::variant<Ts...>> : std::bool_constant<(std::s
 template<typename T, typename Variant> concept VariantAlternative = detail::IsVariantAlternative<T, Variant>::value;
 
 } // namespace sfa::concepts
+
+#endif // !SFA_SRC_ENGINE_UTILITY_CONCEPTS_VARIANT_ALTERNATIVE_HPP
 
