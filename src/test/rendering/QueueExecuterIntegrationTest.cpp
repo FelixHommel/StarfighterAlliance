@@ -11,7 +11,8 @@
 namespace sfa::testing
 {
 
-TEST_CASE("QueueExecutorIntegrationTest", "[.][integration][rendering]")
+// NOTE: Not hidden because it has no real hard dependencies and can only work with mocks but still not a unit test
+TEST_CASE("QueueExecutorIntegrationTest", "[integration][rendering]")
 {
     MockSpritePipeline spritePipeline{};
     MockTextPipeline textPipeline{};
