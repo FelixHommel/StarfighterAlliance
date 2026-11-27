@@ -65,7 +65,8 @@ int main()
 
     auto spriteRenderer{ std::make_unique<BasicSpritePipeline>(spriteShader) };
     auto textRenderer{ std::make_unique<BasicTextPipeline>(textShader) };
-    textRenderer->load(SFA_ROOT "resources/fonts/prstart.ttf", 18);
+    // TODO: Create a FontMap object instead
+    // textRenderer->load(SFA_ROOT "resources/fonts/prstart.ttf", 18);
     Renderer renderer(std::move(spriteRenderer), std::move(textRenderer));
 
     ScreenStack screens{};

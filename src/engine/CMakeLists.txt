@@ -4,6 +4,7 @@ include(${PROJECT_SOURCE_DIR}/cmake/StaticAnalyzers.cmake)
 add_library(
     ${NAME}
     ./concurrency/ThreadPool.cpp
+    ./core/FontMap.cpp
     ./core/ParticleGenerator.cpp
     ./core/Shader.cpp
     ./core/Texture.cpp
@@ -35,6 +36,7 @@ target_sources(
                 ./concurrency/Threading.hpp
                 ./config/SpaceshipColor.hpp
                 ./config/SpaceshipType.hpp
+                ./core/FontMap.hpp
                 ./core/ParticleGenerator.hpp
                 ./core/RenderContext.hpp
                 ./core/Shader.hpp

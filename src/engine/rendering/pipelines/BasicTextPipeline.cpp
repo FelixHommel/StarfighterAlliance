@@ -1,21 +1,14 @@
 #include "BasicTextPipeline.hpp"
 
+#include "core/FontMap.hpp"
 #include "core/Shader.hpp"
 #include "rendering/RenderCommand.hpp"
 
-#include <ft2build.h>
-// NOLINTNEXTLINE(misc-include-cleaner): FT_FREETYPE_H is a macro that is created by FreeType. That is it's inteded use.
-#include FT_FREETYPE_H
-
 #include <glad/gl.h>
 #include <glm/glm.hpp>
-#include <spdlog/spdlog.h>
 
-#include <algorithm>
 #include <array>
 #include <cstddef>
-#include <filesystem>
-#include <limits>
 #include <memory>
 #include <string>
 #include <utility>
@@ -58,65 +51,6 @@ BasicTextPipeline::~BasicTextPipeline()
     glDeleteVertexArrays(1, &m_vao);
 }
 
-void BasicTextPipeline::load(const std::filesystem::path& filepath, unsigned int fontSize)
-{
-    constexpr std::size_t LOADED_ASCII_CHARS{ 128 };
-
-    m_characters.clear();
-
-    FT_Library ft{};
-    if(FT_Init_FreeType(&ft) != 0)
-        spdlog::error("FREETYPE: Could not init FreeType Library");
-
-    FT_Face face{};
-    if(FT_New_Face(ft, reinterpret_cast<const char*>(filepath.u8string().c_str()), 0, &face) != 0)
-        spdlog::error("FREETYPE: Failed to load font from: {}", filepath.string());
-
-    FT_Set_Pixel_Sizes(face, 0, fontSize);
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-    // NOTE: Load Glyph for the first 128 ASCII Characters
-    for(GLubyte c{ 0 }; c < LOADED_ASCII_CHARS; ++c)
-    {
-        if(FT_Load_Char(face, c, FT_LOAD_RENDER) != 0)
-        {
-            spdlog::error("FREETYTPE: Failed to load Glyph for '{}'", c);
-            continue;
-        }
-
-        unsigned int texture{ 0 };
-        glGenTextures(1, &texture);
-        glBindTexture(GL_TEXTURE_2D, texture);
-        glTexImage2D(
-            GL_TEXTURE_2D,
-            0,
-            GL_RED,
-            static_cast<int>(face->glyph->bitmap.width),
-            static_cast<int>(face->glyph->bitmap.rows),
-            0,
-            GL_RED,
-            GL_UNSIGNED_BYTE,
-            face->glyph->bitmap.buffer
-        );
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        Character character{
-            .textureID = texture,
-            .size = glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-            .bearing = glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-            .advance = static_cast<unsigned int>(face->glyph->advance.x),
-        };
-        m_characters.insert({ static_cast<unsigned char>(c), std::move(character) });
-    }
-
-    FT_Done_Face(face);
-    FT_Done_FreeType(ft);
-}
-
 void BasicTextPipeline::beginFrame(const glm::mat4& projection) const
 {
     m_shader->setUniform("projection", projection, true);
@@ -131,11 +65,13 @@ void BasicTextPipeline::draw(const TextSubmission& submission) const
     float x{ submission.position.x };
     for(auto c{ submission.text.cbegin() }; c != submission.text.cend(); c++)
     {
-        const Character ch{ m_characters.at(*c) };
+        // TODO: Add a sort of clamping mechanism here to ensure that characters are valid
+        const auto ch{ submission.font->at(*c) };
 
         const float xpos{ x + (static_cast<float>(ch.bearing.x) * submission.scale.x) };
         const float ypos{ submission.position.y
-                          + (static_cast<float>(m_characters.at('H').bearing.y - ch.bearing.y) * submission.scale.y) };
+                          + (static_cast<float>(submission.font->at('H').bearing.y - ch.bearing.y)
+                             * submission.scale.y) };
 
         const float w{ static_cast<float>(ch.size.x) * submission.scale.x };
         const float h{ static_cast<float>(ch.size.y) * submission.scale.y };
@@ -153,51 +89,6 @@ void BasicTextPipeline::draw(const TextSubmission& submission) const
         // NOTE: Bitshift by 6 == 2^6, advance is 1/64 of a pixel
         x += static_cast<float>(ch.advance >> ADVANCE_BITSHIFT) * submission.scale.x;
     }
-}
-
-TextBounds BasicTextPipeline::measureBounds(const std::string& text, const glm::vec2& scale) const
-{
-    if(text.empty() || m_characters.empty())
-        return {};
-
-    const auto hIt{ m_characters.find('H') };
-    const float hBearing{ hIt != m_characters.end() ? static_cast<float>(hIt->second.bearing.y) : 0.f };
-
-    float penX{ 0.f };
-    float minX{ std::numeric_limits<float>::max() };
-    float minY{ std::numeric_limits<float>::max() };
-    float maxX{ std::numeric_limits<float>::lowest() };
-    float maxY{ std::numeric_limits<float>::lowest() };
-
-    for(const auto c : text)
-    {
-        if(const auto it{ m_characters.find(c) }; it != m_characters.end())
-        {
-            const auto& ch{ it->second };
-
-            const float xpos{ penX + (static_cast<float>(ch.bearing.x) * scale.x) };
-            const float ypos{ (hBearing - static_cast<float>(ch.bearing.y)) * scale.y };
-            const float w{ static_cast<float>(ch.size.x) * scale.x };
-            const float h{ static_cast<float>(ch.size.y) * scale.y };
-
-            minX = std::min(minX, xpos);
-            minY = std::min(minY, ypos);
-            maxX = std::max(maxX, xpos + w);
-            maxY = std::max(maxY, ypos + h);
-
-            penX += static_cast<float>(ch.advance >> ::ADVANCE_BITSHIFT) * scale.x;
-        }
-    }
-
-    if(minX > maxX || minY > maxY)
-        return {};
-
-    return { .min = glm::vec2(minX, minY), .size = glm::vec2(maxX - minX, maxY - minY) };
-}
-
-glm::vec2 BasicTextPipeline::measure(const std::string& text, const glm::vec2& scale) const
-{
-    return measureBounds(text, scale).size;
 }
 
 } // namespace sfa

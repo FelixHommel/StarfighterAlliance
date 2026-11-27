@@ -1,6 +1,7 @@
 #ifndef SFA_SRC_ENGINE_RENDERING_RENDER_COMMAND_HPP
 #define SFA_SRC_ENGINE_RENDERING_RENDER_COMMAND_HPP
 
+#include "core/FontMap.hpp"
 #include "entities/components/Sprite.hpp"
 
 #include <glm/glm.hpp>
@@ -36,7 +37,7 @@ struct SpriteSubmission
 /// \date 11/11/2026
 struct TextSubmission
 {
-    // TODO: Reference to font
+    const FontMap* font{ nullptr };
     std::string text;
 
     glm::vec4 color{};
