@@ -21,8 +21,7 @@
             "hidden": true,
             "binaryDir": "${sourceDir}/build/debug",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "SFA_BUILD_EXAMPLES": "ON"
+                "CMAKE_BUILD_TYPE": "Debug"
             }
         },
         {

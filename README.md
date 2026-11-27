@@ -87,14 +87,6 @@ labeled as such and can be filtered out by ctest.
     ./build/release/src/app/StarfighterAlliance
     ```
 
-## Examples
-
-Examples can be built by enabling ```SFA_BUILD_EXAMPLES``` in the CMake configure step by adding ```-DSFA_BUILD_EXAMPLES=ON```.
-
-> On CMake Preset ```Debug``` builds, examples are enabled by default.
-
-Once built, the example can be found in ```build/examples/```.
-
 ## Acknowledgments / Credits
 
 - [LearnOpenGL.com](https://learnopengl.com/)
