@@ -47,6 +47,7 @@ public:
 private:
     std::shared_ptr<Shader> m_shader;
 
+    GLuint m_vbo{ 0 };
     GLuint m_quadVAO{ 0 };
     GLuint m_fallbackTexture{ 0 };
 

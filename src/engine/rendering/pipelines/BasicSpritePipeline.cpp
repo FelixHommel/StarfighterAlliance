@@ -39,10 +39,9 @@ namespace sfa
 BasicSpritePipeline::BasicSpritePipeline(std::shared_ptr<Shader> shader) : m_shader{ std::move(shader) }
 {
     glGenVertexArrays(1, &m_quadVAO);
-    GLuint vbo{};
-    glGenBuffers(1, &vbo);
+    glGenBuffers(1, &m_vbo);
 
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
     glBufferData(GL_ARRAY_BUFFER, ::VERTICES.size() * sizeof(float), ::VERTICES.data(), GL_STATIC_DRAW);
 
     glBindVertexArray(m_quadVAO);
@@ -50,8 +49,6 @@ BasicSpritePipeline::BasicSpritePipeline(std::shared_ptr<Shader> shader) : m_sha
         0, ::SPRITE_VERTEX_ATTRIBUTES, GL_FLOAT, GL_FALSE, ::SPRITE_VERTEX_ATTRIBUTES * sizeof(float), nullptr
     );
     glEnableVertexAttribArray(0);
-
-    glDeleteBuffers(1, &vbo);
 
     glGenTextures(1, &m_fallbackTexture);
     glBindTexture(GL_TEXTURE_2D, m_fallbackTexture);
@@ -64,6 +61,7 @@ BasicSpritePipeline::BasicSpritePipeline(std::shared_ptr<Shader> shader) : m_sha
 
 BasicSpritePipeline::~BasicSpritePipeline()
 {
+    glDeleteBuffers(1, &m_vbo);
     glDeleteVertexArrays(1, &m_quadVAO);
 
     if(m_fallbackTexture != 0)
