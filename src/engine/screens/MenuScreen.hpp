@@ -1,8 +1,8 @@
 #ifndef SFA_SRC_ENGINE_SCREENS_MENU_SCREEN_HPP
 #define SFA_SRC_ENGINE_SCREENS_MENU_SCREEN_HPP
 
-#include "core/RenderContext.hpp"
 #include "core/resourceManagement/ResourceContext.hpp"
+#include "rendering/RenderContext.hpp"
 #include "screens/GameSession.hpp"
 #include "screens/IScreen.hpp"
 #include "screens/IScreenContext.hpp"

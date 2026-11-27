@@ -38,7 +38,6 @@ target_sources(
                 ./config/SpaceshipType.hpp
                 ./core/FontMap.hpp
                 ./core/ParticleGenerator.hpp
-                ./core/RenderContext.hpp
                 ./core/Shader.hpp
                 ./core/Texture.hpp
                 ./core/TextureView.hpp
@@ -59,6 +58,7 @@ target_sources(
                 ./rendering/SpriteAppearance.hpp
                 ./rendering/Renderer.hpp
                 ./rendering/RenderCommand.hpp
+                ./rendering/RenderContext.hpp
                 ./rendering/RenderExecutor.hpp
                 ./rendering/RenderQueue.hpp
                 ./rendering/pipelines/IRenderPipeline.hpp

@@ -2,8 +2,8 @@
 
 #include "config/SpaceshipColor.hpp"
 #include "config/SpaceshipType.hpp"
-#include "core/RenderContext.hpp"
 #include "core/resourceManagement/ResourceContext.hpp"
+#include "rendering/RenderContext.hpp"
 #include "screens/GameSession.hpp"
 #include "screens/IScreenContext.hpp"
 #include "screens/SelectionScreen.hpp"

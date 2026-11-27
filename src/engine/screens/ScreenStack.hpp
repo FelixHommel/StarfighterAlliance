@@ -1,7 +1,7 @@
 #ifndef SFA_SRC_ENGINE_SCREENS_SCREEN_STACK_HPP
 #define SFA_SRC_ENGINE_SCREENS_SCREEN_STACK_HPP
 
-#include "core/RenderContext.hpp"
+#include "rendering/RenderContext.hpp"
 #include "screens/IScreen.hpp"
 #include "screens/IScreenContext.hpp"
 #include "screens/ScreenCommand.hpp"

@@ -1,7 +1,7 @@
 #ifndef SFA_SRC_ENGINE_SCREENS_I_SCREEN_HPP
 #define SFA_SRC_ENGINE_SCREENS_I_SCREEN_HPP
 
-#include "core/RenderContext.hpp"
+#include "rendering/RenderContext.hpp"
 #include "utility/userInput/InputController.hpp"
 
 namespace sfa

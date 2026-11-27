@@ -1,6 +1,6 @@
 #include "ScreenStack.hpp"
 
-#include "core/RenderContext.hpp"
+#include "rendering/RenderContext.hpp"
 #include "screens/IScreen.hpp"
 #include "screens/ScreenCommand.hpp"
 #include "utility/userInput/InputController.hpp"

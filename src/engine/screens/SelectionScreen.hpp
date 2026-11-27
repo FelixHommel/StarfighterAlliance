@@ -2,8 +2,8 @@
 #define SFA_SRC_ENGINE_SCREENS_SELECTION_SCREEN_HPP
 
 #include "config/SpaceshipType.hpp"
-#include "core/RenderContext.hpp"
 #include "core/resourceManagement/ResourceContext.hpp"
+#include "rendering/RenderContext.hpp"
 #include "screens/GameSession.hpp"
 #include "screens/IScreen.hpp"
 #include "screens/IScreenContext.hpp"

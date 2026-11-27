@@ -1,7 +1,7 @@
-#ifndef SFA_SRC_ENGINE_CORE_RENDER_CONTEXT_HPP
-#define SFA_SRC_ENGINE_CORE_RENDER_CONTEXT_HPP
+#ifndef SFA_SRC_ENGINE_RENDERING_RENDER_CONTEXT_HPP
+#define SFA_SRC_ENGINE_RENDERING_RENDER_CONTEXT_HPP
 
-#include "rendering/Renderer.hpp"
+#include "rendering/IRenderSubmitter.hpp"
 #include "utility/IWindow.hpp"
 
 namespace sfa
@@ -11,11 +11,11 @@ namespace sfa
 struct RenderContext
 {
     const IWindow& window;
-    Renderer& renderer;
+    IRenderSubmitter& renderer;
 };
 // NOLINTEND(cppcoreguidelines-avoid-const-or-ref-data-members)
 
 } // namespace sfa
 
-#endif // !SFA_SRC_ENGINE_CORE_RENDER_CONTEXT_HPP
+#endif // !SFA_SRC_ENGINE_RENDERING_RENDER_CONTEXT_HPP
 
