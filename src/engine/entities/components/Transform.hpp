@@ -13,8 +13,8 @@ namespace sfa
 struct Transform
 {
     glm::vec2 position;
-    glm::vec2 scale;
-    float rotation{ 0.f };
+    glm::vec2 scale{ glm::vec2(1.f) };
+    float rotation{ 0.f }; //< Rotation angle in degrees
 };
 
 } // namespace sfa
