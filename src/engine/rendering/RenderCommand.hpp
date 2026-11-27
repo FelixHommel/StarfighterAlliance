@@ -18,14 +18,10 @@ namespace sfa
 /// \date 11/11/2026
 struct SpriteSubmission
 {
-    // GL resources
     SpriteAppearance appearance;
 
-    // Sprite component
-    glm::vec2 size{};
     unsigned int renderLayer{};
 
-    // Translation component
     glm::vec2 position{};
     glm::vec2 scale{};
     float rotation{};
