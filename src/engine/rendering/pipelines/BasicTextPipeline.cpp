@@ -51,12 +51,12 @@ BasicTextPipeline::~BasicTextPipeline()
     glDeleteVertexArrays(1, &m_vao);
 }
 
-void BasicTextPipeline::beginFrame(const glm::mat4& projection) const
+void BasicTextPipeline::beginFrame(const glm::mat4& projection)
 {
     m_shader->setUniform("projection", projection, true);
 }
 
-void BasicTextPipeline::draw(const TextSubmission& submission) const
+void BasicTextPipeline::draw(const TextSubmission& submission)
 {
     m_shader->setUniform("textColor", submission.color, true);
     glActiveTexture(GL_TEXTURE0);

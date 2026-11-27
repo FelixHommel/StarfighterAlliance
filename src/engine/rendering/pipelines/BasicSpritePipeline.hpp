@@ -28,8 +28,8 @@ public:
     BasicSpritePipeline(BasicSpritePipeline&&) noexcept = delete;
     BasicSpritePipeline& operator=(BasicSpritePipeline&&) noexcept = delete;
 
-    void beginFrame(const glm::mat4& projection) const override;
-    void endFrame() const override {}
+    void beginFrame(const glm::mat4& projection) override;
+    void endFrame() override {}
 
     /// \brief Draw a textured quad to the screen
     ///
@@ -42,7 +42,7 @@ public:
     /// transformations, which achieves the same visual results.
     ///
     /// \param submission \ref SpriteSubmission with the data of the sprite that is drawn
-    void draw(const SpriteSubmission& submission) const override;
+    void draw(const SpriteSubmission& submission) override;
 
 private:
     std::shared_ptr<Shader> m_shader;
@@ -50,10 +50,10 @@ private:
     GLuint m_quadVAO{ 0 };
     GLuint m_fallbackTexture{ 0 };
 
-    void bindAppearance(const SpriteSubmission& submission) const;
+    void bindAppearance(const SpriteSubmission& submission);
 
-    void applyAppearanceImpl(TextureView appearance) const;
-    void applyAppearanceImpl(const glm::vec3& appearance) const;
+    void applyAppearanceImpl(TextureView appearance);
+    void applyAppearanceImpl(const glm::vec3& appearance);
 };
 
 } // namespace sfa

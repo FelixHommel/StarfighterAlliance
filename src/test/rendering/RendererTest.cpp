@@ -23,9 +23,9 @@ TEST_CASE("RendererTest", "[unit][rendering]")
     using Catch::Matchers::MessageMatches;
 
     auto spritePipeline{ std::make_unique<MockSpritePipeline>() };
-    const auto* const pSpritePipeline{ spritePipeline.get() };
+    auto* const pSpritePipeline{ spritePipeline.get() };
     auto textPipeline{ std::make_unique<MockTextPipeline>() };
-    const auto* const pTextPipeline{ textPipeline.get() };
+    auto* const pTextPipeline{ textPipeline.get() };
 
     Renderer renderer{ std::move(spritePipeline), std::move(textPipeline) };
 

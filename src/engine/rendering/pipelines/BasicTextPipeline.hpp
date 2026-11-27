@@ -33,13 +33,13 @@ public:
     /// \brief Begin the drawing of the next frame.
     ///
     /// \param projection The projection matrix
-    void beginFrame(const glm::mat4& projection) const override;
-    void endFrame() const override {}
+    void beginFrame(const glm::mat4& projection) override;
+    void endFrame() override {}
 
     /// \brief Render text to the screen.
     ///
     /// \param submission The \ref TextSubmission containing the data
-    void draw(const TextSubmission& submission) const override;
+    void draw(const TextSubmission& submission) override;
 
 private:
     std::shared_ptr<Shader> m_shader;

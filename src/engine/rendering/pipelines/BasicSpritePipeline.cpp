@@ -70,12 +70,12 @@ BasicSpritePipeline::~BasicSpritePipeline()
         glDeleteTextures(1, &m_fallbackTexture);
 }
 
-void BasicSpritePipeline::beginFrame(const glm::mat4& projection) const
+void BasicSpritePipeline::beginFrame(const glm::mat4& projection)
 {
     m_shader->setUniform("projection", projection, true);
 }
 
-void BasicSpritePipeline::draw(const SpriteSubmission& submission) const
+void BasicSpritePipeline::draw(const SpriteSubmission& submission)
 {
     // TODO: Let the sprite calculate its model matrix
 
@@ -106,19 +106,19 @@ void BasicSpritePipeline::draw(const SpriteSubmission& submission) const
     glDrawArrays(GL_TRIANGLES, 0, ::SPRITE_VERTICES);
 }
 
-void BasicSpritePipeline::bindAppearance(const SpriteSubmission& submission) const
+void BasicSpritePipeline::bindAppearance(const SpriteSubmission& submission)
 {
     glActiveTexture(GL_TEXTURE0);
     std::visit([this](const auto& appearance) { applyAppearanceImpl(appearance); }, submission.appearance);
 }
 
-void BasicSpritePipeline::applyAppearanceImpl(const glm::vec3& appearance) const
+void BasicSpritePipeline::applyAppearanceImpl(const glm::vec3& appearance)
 {
     m_shader->setUniform("spriteColor", appearance);
     glBindTexture(GL_TEXTURE_2D, m_fallbackTexture);
 }
 
-void BasicSpritePipeline::applyAppearanceImpl(TextureView appearance) const
+void BasicSpritePipeline::applyAppearanceImpl(TextureView appearance)
 {
     static constexpr auto COLOR_WHITE{ glm::vec3(1.f) };
 

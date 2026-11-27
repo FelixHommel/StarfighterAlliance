@@ -28,14 +28,14 @@ public:
     /// \brief Start a new frame.
     ///
     /// \param projection The projection matrix
-    virtual void beginFrame(const glm::mat4& projection) const = 0;
+    virtual void beginFrame(const glm::mat4& projection) = 0;
     /// \brief End the current frame.
-    virtual void endFrame() const = 0;
+    virtual void endFrame() = 0;
 
     /// \brief Render an instance of \p DrawParamT to the screen.
     ///
     /// \param submission Data of the submitted text renderable.
-    virtual void draw(const DrawParamT& submission) const = 0;
+    virtual void draw(const DrawParamT& submission) = 0;
 };
 
 } // namespace sfa
