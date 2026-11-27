@@ -29,7 +29,6 @@ public:
     [[nodiscard]] bool empty() const noexcept { return m_commands.empty(); }
     [[nodiscard]] std::size_t size() const noexcept { return m_commands.size(); }
     [[nodiscard]] std::span<const RenderCommand> commands() const noexcept { return m_commands; }
-    [[nodiscard]] std::vector<RenderCommand> takeCommands() noexcept { return std::move(m_commands); }
 
     /// \brief Submit a new \ref RenderCommand to the queue.
     ///

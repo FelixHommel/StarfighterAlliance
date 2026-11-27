@@ -34,19 +34,13 @@ void Renderer::beginFrame(const glm::mat4& projection)
 void Renderer::endFrame()
 {
     pre::require<std::runtime_error>(m_inFrame, "Cannot end a frame if no frame is currently being rendered");
+    m_inFrame = false;
 
     m_spritePipeline->endFrame();
     m_textPipeline->endFrame();
 
-    if(m_queue.empty())
-    {
-        m_inFrame = false;
-        return;
-    }
-
-    m_executor.execute(m_queue.takeCommands());
-
-    m_inFrame = false;
+    m_executor.execute(m_queue.commands());
+    m_queue.clear();
 }
 
 void Renderer::submit(RenderCommand command)

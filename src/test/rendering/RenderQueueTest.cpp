@@ -32,19 +32,6 @@ TEST_CASE("RenderQueueTest", "[unit][rendering]")
 
         CHECK(commands.size() == 2);
     }
-
-    SECTION("submit new commands after taking")
-    {
-        queue.submit(SpriteSubmission{});
-
-        const auto commands{ queue.takeCommands() };
-
-        CHECK(commands.size() == 1);
-
-        queue.submit(SpriteSubmission{});
-
-        CHECK(queue.size() == 1);
-    }
 }
 
 } // namespace sfa::testing
