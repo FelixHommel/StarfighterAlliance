@@ -3,6 +3,8 @@
 #include "screens/ScreenCommand.hpp"
 #include "testUtility//mocks/MockScreen.hpp"
 #include "testUtility/mocks/MockOverlayScreen.hpp"
+#include "testUtility/mocks/MockSpritePipeline.hpp"
+#include "testUtility/mocks/MockTextPipeline.hpp"
 #include "testUtility/mocks/MockWindow.hpp"
 #include "utility/userInput/InputController.hpp"
 
@@ -154,17 +156,43 @@ TEST_CASE("ScreenStackTest", "[unit][screens]")
         CHECK(callbackVarSecondScreen == CALLBACK_VAR_INIT_SECOND_SCREEN + 1);
     }
 
+    /// \brief Test that the \ref ScreenStack only updates the top most screen.
+    ///
+    /// When there are multiple screens in the stack, the update only affects the top most screen even if that is an overlay.
+    SECTION("Screen stack updates top most screen")
+    {
+        constexpr auto TEST_DT{ 0.01f };
+
+        InputController controller{};
+
+        auto screen{ std::make_unique<MockScreen>() };
+        auto* const pScreen{ screen.get() };
+        auto overlay{ std::make_unique<MockOverlayScreen>() };
+        auto* const pOverlay{ overlay.get() };
+
+        REQUIRE_CALL(*pScreen, update(trompeloeil::_, trompeloeil::_)).TIMES(0);
+        REQUIRE_CALL(*pOverlay, update(trompeloeil::_, trompeloeil::_)).TIMES(1);
+
+        m_stack.enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(screen) });
+        m_stack.enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(overlay) });
+        m_stack.processCommands();
+
+        m_stack.update(TEST_DT, controller);
+    }
+
+    Renderer renderer(std::make_unique<MockSpritePipeline>(), std::make_unique<MockTextPipeline>());
+
     /// \brief Test that the \ref ScreenStack renders one singular screen correctly
     ///
     /// When there is only one screen in the stack, it should be rendered
     SECTION("Screen stack renders one screen")
     {
         MockWindow window{};
-        Renderer renderer(nullptr, nullptr);
 
         auto screen{ std::make_unique<MockScreen>() };
+        auto* const pScreen{ screen.get() };
 
-        REQUIRE_CALL(*screen.get(), render(trompeloeil::_)).TIMES(1);
+        REQUIRE_CALL(*pScreen, render(trompeloeil::_)).TIMES(1);
 
         m_stack.enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(screen) });
         m_stack.processCommands();
@@ -179,17 +207,20 @@ TEST_CASE("ScreenStackTest", "[unit][screens]")
     SECTION("Screen stack renders all relevant screens")
     {
         MockWindow window{};
-        Renderer renderer(nullptr, nullptr);
 
         auto firstScreen{ std::make_unique<MockScreen>() };
+        auto* const pFirstScreen{ firstScreen.get() };
         auto secondScreen{ std::make_unique<MockScreen>() };
+        auto* const pSecondScreen{ secondScreen.get() };
         auto firstOverlay{ std::make_unique<MockOverlayScreen>() };
+        auto* const pFirstOverlay{ firstOverlay.get() };
         auto secondOverlay{ std::make_unique<MockOverlayScreen>() };
+        auto* const pSecondOverlay{ secondOverlay.get() };
 
-        REQUIRE_CALL(*firstScreen.get(), render(trompeloeil::_)).TIMES(0);
-        REQUIRE_CALL(*secondScreen.get(), render(trompeloeil::_)).TIMES(1);
-        REQUIRE_CALL(*firstOverlay.get(), render(trompeloeil::_)).TIMES(1);
-        REQUIRE_CALL(*secondOverlay.get(), render(trompeloeil::_)).TIMES(1);
+        REQUIRE_CALL(*pFirstScreen, render(trompeloeil::_)).TIMES(0);
+        REQUIRE_CALL(*pSecondScreen, render(trompeloeil::_)).TIMES(1);
+        REQUIRE_CALL(*pFirstOverlay, render(trompeloeil::_)).TIMES(1);
+        REQUIRE_CALL(*pSecondOverlay, render(trompeloeil::_)).TIMES(1);
 
         m_stack.enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(firstScreen) });
         m_stack.enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(secondScreen) });
@@ -198,28 +229,6 @@ TEST_CASE("ScreenStackTest", "[unit][screens]")
         m_stack.processCommands();
 
         m_stack.render({ .window = window, .renderer = renderer });
-    }
-
-    /// \brief Test that the \ref ScreenStack only updates the top most screen.
-    ///
-    /// When there are multiple screens in the stack, the update only affects the top most screen even if that is an overlay.
-    SECTION("Screen stack updates top most screen")
-    {
-        constexpr auto TEST_DT{ 0.01f };
-
-        InputController controller{};
-
-        auto screen{ std::make_unique<MockScreen>() };
-        auto overlay{ std::make_unique<MockOverlayScreen>() };
-
-        REQUIRE_CALL(*screen.get(), update(trompeloeil::_, trompeloeil::_)).TIMES(0);
-        REQUIRE_CALL(*overlay.get(), update(trompeloeil::_, trompeloeil::_)).TIMES(1);
-
-        m_stack.enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(screen) });
-        m_stack.enqueueCommand({ .type = ScreenCommand::Type::Push, .screen = std::move(overlay) });
-        m_stack.processCommands();
-
-        m_stack.update(TEST_DT, controller);
     }
 }
 
